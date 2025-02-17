@@ -1,9 +1,14 @@
-const injectStyles = (stylesheets, version = 1) => {
+const injectStyles = (stylesheets, baseUrl) => {
   stylesheets.forEach((stylesheet) => {
     const link = document.createElement("link");
 
     link.setAttribute("rel", "stylesheet");
-    link.setAttribute("href", `${stylesheet}?v=${version}`);
+
+    const stylesheetLink = `${baseUrl ? `${baseUrl}/` : ""}${stylesheet}?v=${
+      Math.random().toString().substring(2)
+    }`;
+
+    link.setAttribute("href", stylesheetLink);
     document.head.appendChild(link);
   });
 };
