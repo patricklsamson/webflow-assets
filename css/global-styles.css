@@ -1,8 +1,4 @@
 
-body {
-  font-size: 100px;
-}
-
 /* Make text look crisper and more legible in all browsers */
 body {
   -webkit-font-smoothing: antialiased;
