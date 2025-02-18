@@ -4,13 +4,13 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--background-color--background-blue);
+  background-color: var(--background-color--background-secondary);
   border-radius: 0.5rem;
   transition: background-color 0.25s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--background-color--background-primary);
+  background-color: var(--background-color--background-alternate);
 }
 
 ::-webkit-scrollbar-track {
