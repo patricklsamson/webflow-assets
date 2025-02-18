@@ -41,7 +41,7 @@
   margin: -0.25rem;
 }
 
-.grid_wrapper[data-grid_gutter="xsmall"] .grid_column_component {
+.grid_wrapper[data-grid_gutter="xsmall"] .grid-column_component {
   padding: 0.25rem;
 }
 
@@ -49,7 +49,7 @@
   margin: -0.5rem;
 }
 
-.grid_wrapper[data-grid_gutter="small"] .grid_column_component {
+.grid_wrapper[data-grid_gutter="small"] .grid-column_component {
   padding: 0.5rem;
 }
 
@@ -57,7 +57,7 @@
   margin: -1rem;
 }
 
-.grid_wrapper[data-grid_gutter="medium"] .grid_column_component {
+.grid_wrapper[data-grid_gutter="medium"] .grid-column_component {
   padding: 1rem;
 }
 
@@ -65,7 +65,7 @@
   margin: -1.5rem;
 }
 
-.grid_wrapper[data-grid_gutter="large"] .grid_column_component {
+.grid_wrapper[data-grid_gutter="large"] .grid-column_component {
   padding: 1.5rem;
 }
 
@@ -73,7 +73,7 @@
   margin: -2rem;
 }
 
-.grid_wrapper[data-grid_gutter="xlarge"] .grid_column_component {
+.grid_wrapper[data-grid_gutter="xlarge"] .grid-column_component {
   padding: 2rem;
 }
 
@@ -82,7 +82,7 @@
     margin: -0.75rem;
   }
 
-  .grid_wrapper[data-grid_gutter="medium"] .grid_column_component {
+  .grid_wrapper[data-grid_gutter="medium"] .grid-column_component {
     padding: 0.75rem;
   }
 
@@ -90,7 +90,7 @@
     margin: -1.25rem;
   }
 
-  .grid_wrapper[data-grid_gutter="large"] .grid_column_component {
+  .grid_wrapper[data-grid_gutter="large"] .grid-column_component {
     padding: 1.25rem;
   }
 
@@ -98,7 +98,7 @@
     margin: -1.5rem;
   }
 
-  .grid_wrapper[data-grid_gutter="xlarge"] .grid_column_component {
+  .grid_wrapper[data-grid_gutter="xlarge"] .grid-column_component {
     padding: 1.5rem;
   }
 }
@@ -108,7 +108,7 @@
     margin: -0.625rem;
   }
 
-  .grid_wrapper[data-grid_gutter="medium"] .grid_column_component {
+  .grid_wrapper[data-grid_gutter="medium"] .grid-column_component {
     padding: 0.625rem;
   }
 
@@ -116,7 +116,7 @@
     margin: -0.75rem;
   }
 
-  .grid_wrapper[data-grid_gutter="large"] .grid_column_component {
+  .grid_wrapper[data-grid_gutter="large"] .grid-column_component {
     padding: 0.75rem;
   }
 
@@ -124,7 +124,7 @@
     margin: -1rem;
   }
 
-  .grid_wrapper[data-grid_gutter="xlarge"] .grid_column_component {
+  .grid_wrapper[data-grid_gutter="xlarge"] .grid-column_component {
     padding: 1rem;
   }
 }
