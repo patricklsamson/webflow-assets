@@ -4,15 +4,17 @@
 cdn.jsdelivr.net/gh/USERNAME/REPOSITORY@BRANCH/PATH-TO-FILE
 ```
 
-``` shell
-To bypass caching
+## To Bypass Caching
 
+``` shell
 cdn.jsdelivr.net/gh/USERNAME/REPOSITORY@BRANCH/PATH-TO-FILE?v=VERSION
 cdn.jsdelivr.net/gh/USERNAME/REPOSITORY@latest/PATH-TO-FILE?v=VERSION
 ```
 
+## To Purge Caching
+
 ```shell
-To purge caching, access
+Access in browser
 
 purge.jsdelivr.net/gh/USERNAME/REPOSITORY@BRANCH/PATH-TO-FILE
 ```
