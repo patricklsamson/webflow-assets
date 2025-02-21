@@ -12,14 +12,14 @@ const injectStylesheets = (stylesheets) => {
   });
 };
 
-const resolveHeadings = () => {
-  const headings = document.querySelectorAll("[data-styled_heading]");
+const resolveSpans = () => {
+  const texts = document.querySelectorAll("[data-span_style]");
 
-  headings.forEach((heading) => {
-    const spanClasses = heading.dataset.styled_heading.split("|");
+  texts.forEach((text) => {
+    const spanClasses = text.dataset.span_style.split("|");
     let index = 0;
 
-    const resolvedHeading = heading.innerHTML.replace(
+    const resolvedText = text.innerHTML.replace(
       /{{(.*?)}}/g,
       (_, content) => {
         const spanClass = spanClasses[index];
@@ -36,7 +36,7 @@ const resolveHeadings = () => {
       }
     );
 
-    heading.innerHTML = resolvedHeading;
+    text.innerHTML = resolvedText;
   });
 };
 
