@@ -1,93 +1,41 @@
 .grid_wrapper[data-grid_gutter="xsmall"] {
-  margin: -0.25rem;
+  margin: calc(var(--_grid---gutter-xsmall) * -1);
 }
 
 .grid_wrapper[data-grid_gutter="xsmall"] .grid-column_component {
-  padding: 0.25rem;
+  padding: var(--_grid---gutter-xsmall);
 }
 
 .grid_wrapper[data-grid_gutter="small"] {
-  margin: -0.5rem;
+  margin: calc(var(--_grid---gutter-small) * -1);
 }
 
 .grid_wrapper[data-grid_gutter="small"] .grid-column_component {
-  padding: 0.5rem;
+  padding: var(--_grid---gutter-small);
 }
 
 .grid_wrapper[data-grid_gutter="medium"] {
-  margin: -1rem;
+  margin: calc(var(--_grid---gutter-medium) * -1);
 }
 
 .grid_wrapper[data-grid_gutter="medium"] .grid-column_component {
-  padding: 1rem;
+  padding: var(--_grid---gutter-medium);
 }
 
 .grid_wrapper[data-grid_gutter="large"] {
-  margin: -1.5rem;
+  margin: calc(var(--_grid---gutter-large) * -1);
 }
 
 .grid_wrapper[data-grid_gutter="large"] .grid-column_component {
-  padding: 1.5rem;
+  padding: var(--_grid---gutter-large);
 }
 
 .grid_wrapper[data-grid_gutter="xlarge"] {
-  margin: -2rem;
+  margin: calc(var(--_grid---gutter-xlarge) * -1);
 }
 
 .grid_wrapper[data-grid_gutter="xlarge"] .grid-column_component {
-  padding: 2rem;
-}
-
-@media only screen and (max-width: 991px) {
-  .grid_wrapper[data-grid_gutter="medium"] {
-    margin: -0.75rem;
-  }
-
-  .grid_wrapper[data-grid_gutter="medium"] .grid-column_component {
-    padding: 0.75rem;
-  }
-
-  .grid_wrapper[data-grid_gutter="large"] {
-    margin: -1.25rem;
-  }
-
-  .grid_wrapper[data-grid_gutter="large"] .grid-column_component {
-    padding: 1.25rem;
-  }
-
-  .grid_wrapper[data-grid_gutter="xlarge"] {
-    margin: -1.5rem;
-  }
-
-  .grid_wrapper[data-grid_gutter="xlarge"] .grid-column_component {
-    padding: 1.5rem;
-  }
-}
-
-@media only screen and (max-width: 767px) {
-  .grid_wrapper[data-grid_gutter="medium"] {
-    margin: -0.625rem;
-  }
-
-  .grid_wrapper[data-grid_gutter="medium"] .grid-column_component {
-    padding: 0.625rem;
-  }
-
-  .grid_wrapper[data-grid_gutter="large"] {
-    margin: -0.75rem;
-  }
-
-  .grid_wrapper[data-grid_gutter="large"] .grid-column_component {
-    padding: 0.75rem;
-  }
-
-  .grid_wrapper[data-grid_gutter="xlarge"] {
-    margin: -1rem;
-  }
-
-  .grid_wrapper[data-grid_gutter="xlarge"] .grid-column_component {
-    padding: 1rem;
-  }
+  padding: var(--_grid---gutter-xlarge);
 }
 
 .grid-column_component[data-column="1"] {
