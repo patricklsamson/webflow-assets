@@ -210,16 +210,18 @@ const runOnMediaMatch = (breakpoint, onMatch, onUnmatch) => {
 };
 
 const initSlider = (identifier, config, breakpoint) => {
+  let slider = null;
+
   if (breakpoint) {
     const runOnMatch = (media) => {
-      config.init = false;
-
-      const slider = new Swiper(identifier, config);
-
-      if (media.matches) {
+      if (media.matches && !slider) {
+        slider = new Swiper(identifier, config);
         slider.init();
-      } else {
+      }
+
+      if (!media.matches && slider) {
         slider.destroy();
+        slider = null;
       }
     };
 
@@ -237,7 +239,7 @@ const initSlider = (identifier, config, breakpoint) => {
 
     media.addEventListener("change", runOnMatch);
   } else {
-    new Swiper(identifier, config);
+    slider = new Swiper(identifier, config);
   }
 };
 
