@@ -1,7 +1,3 @@
-html {
-  scroll-behavior: smooth;
-}
-
 .grid_wrapper[data-grid_gutter="xsmall"] {
   margin: calc(var(--_grid---gutter-xsmall) * -1);
 }
