@@ -215,6 +215,7 @@ const initSlider = (identifier, config, breakpoint) => {
   if (breakpoint) {
     const runOnMatch = (media) => {
       if (media.matches && !slider) {
+        config.init = false;
         slider = new Swiper(identifier, config);
         slider.init();
       }
