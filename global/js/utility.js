@@ -209,6 +209,52 @@ const runOnMediaMatch = (breakpoint, onMatch, onUnmatch) => {
   media.addEventListener("change", runOnMatch);
 };
 
+const initMasonry = (identifier, config, breakpoint) => {
+  let masonry = null;
+
+  const resolveConfig = (config) => {
+    config.container = identifier;
+    config.surroundingGutter = config.surroundingGutter ?? false;
+    config.minify = config.minify ?? false;
+    config.wedge = config.wedge ?? true;
+
+    return config;
+  };
+
+  if (breakpoint) {
+    const runOnMatch = (media) => {
+      if (media.matches && !masonry) {
+        const resolvedConfig = resolveConfig(config);
+
+        masonry = new MiniMasonry(resolvedConfig);
+      }
+
+      if (!media.matches && masonry) {
+        masonry.destroy();
+        masonry = null;
+      }
+    };
+
+    const media = window.matchMedia(
+      `only screen and (${breakpoint >= 0 ? "min" : "max"}-width: ${
+        breakpoint >= 0 ? breakpoint : breakpoint * -1
+      }px)`
+    );
+
+    runOnMatch(media);
+
+    window.addEventListener("resize", () => {
+      runOnMatch(media);
+    });
+
+    media.addEventListener("change", runOnMatch);
+  } else {
+    const resolvedConfig = resolveConfig(config);
+
+    masonry = new MiniMasonry(resolvedConfig);
+  }
+};
+
 const initSlider = (identifier, config, breakpoint) => {
   let slider = null;
 
