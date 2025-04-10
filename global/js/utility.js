@@ -78,6 +78,50 @@ const openActiveAccordions = () => {
   }
 };
 
+const initSocialShare = () => {
+  const urlSharers = document.querySelectorAll("[data-share_url]");
+
+  if(urlSharers.length > 0) {
+    urlSharers.forEach((sharer) => {
+      switch (sharer.dataset.share_url) {
+        case "clipboard":
+          sharer.addEventListener("click", function () {
+            navigator.clipboard.writeText(
+              `${window.location.origin}${this.dataset.slug}`
+            );
+          });
+
+          break;
+        case "facebook":
+          sharer.href = `https://www.facebook.com/sharer/sharer.php?u=${
+            window.location.origin
+          }${sharer.dataset.slug}`;
+
+          break;
+        case "twitter":
+        case "x":
+          sharer.href = `https://twitter.com/intent/tweet?url=${
+            window.location.origin
+          }${sharer.dataset.slug}`;
+
+          break;
+        case "linkedin":
+          const linkedInUrl = "https://www.linkedin.com/sharing/share-offsite/?url=";
+
+          sharer.href = `${linkedInUrl}${window.location.origin}${
+            sharer.dataset.slug
+          }`;
+
+          break;
+        default:
+          const { share_url, slug } = sharer.dataset;
+
+          sharer.href = `${share_url}${window.location.origin}${slug}`;
+      }
+    });
+  }
+};
+
 const removeInvisibleElements = () => {
   const invisibleElements = document.querySelectorAll(".w-content-invisible");
 
