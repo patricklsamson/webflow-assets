@@ -193,18 +193,19 @@ const initFormSubmit = (
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
+    const { elements: inputs, parentNode, style } = this;
+    const successMessage = parentNode.querySelector(".w-form-done");
+    const errorMessage = parentNode.querySelector(".w-form-fail");
+
     try {
-      const { elements: inputs, parentNode } = this;
       const body = resolvedBodyCallback(inputs);
-      const successMessage = parentNode.querySelector(".w-form-done");
-      const errorMessage = parentNode.querySelector(".w-form-fail");
       const response = await fetch(url, { method, headers, body });
 
       if (!response.ok) {
         throw new Error("No response");
       }
 
-      this.style.display = "none";
+      style.display = "none";
 
       if (successMessage) {
         successMessage.style.display = "block";
@@ -214,7 +215,7 @@ const initFormSubmit = (
         errorMessage.style.display = "none";
       }
     } catch (error) {
-      this.style.display = "block";
+      style.display = "block";
 
       if (successMessage) {
         successMessage.style.display = "none";
