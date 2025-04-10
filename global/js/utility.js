@@ -193,12 +193,11 @@ const initFormSubmit = (
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const { elements: inputs, parentNode } = this;
-    const body = resolvedBodyCallback(inputs);
-    const successMessage = parentNode.querySelector(".w-form-done");
-    const errorMessage = parentNode.querySelector(".w-form-fail");
-
     try {
+      const { elements: inputs, parentNode } = this;
+      const body = resolvedBodyCallback(inputs);
+      const successMessage = parentNode.querySelector(".w-form-done");
+      const errorMessage = parentNode.querySelector(".w-form-fail");
       const response = await fetch(url, { method, headers, body });
 
       if (!response.ok) {
