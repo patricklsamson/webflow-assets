@@ -181,46 +181,51 @@ const requestApi = async (
   }
 };
 
-const handleFormSubmit = async (form, url, body, method, headers) => {
-  const formWrapper = form.parentNode;
-  const successMessage = formWrapper.querySelector(".w-form-done");
-  const errorMessage = formWrapper.querySelector(".w-form-fail");
+const initFormSubmit = (
+  identifier,
+  url,
+  resolvedBodyCallback,
+  method = "POST",
+  headers = { "Content-Type": "application/json" }
+) => {
+  const form = document.getElementById(identifier);
 
-  try {
-    if (!headers["Content-Type"]) {
-      headers["Content-Type"] = "application/json";
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const { elements: inputs, parentNode } = this;
+    const body = resolvedBodyCallback(inputs);
+    const successMessage = parentNode.querySelector(".w-form-done");
+    const errorMessage = parentNode.querySelector(".w-form-fail");
+
+    try {
+      const response = await fetch(url, { method, headers, body });
+
+      if (!response.ok) {
+        throw new Error("No response");
+      }
+
+      this.style.display = "none";
+
+      if (successMessage) {
+        successMessage.style.display = "block";
+      }
+
+      if (errorMessage) {
+        errorMessage.style.display = "none";
+      }
+    } catch (error) {
+      this.style.display = "block";
+
+      if (successMessage) {
+        successMessage.style.display = "none";
+      }
+
+      if (errorMessage) {
+        errorMessage.style.display = "block";
+      }
     }
-
-    if (body && headers["Content-Type"] === "application/json") {
-      body = JSON.stringify(body);
-    }
-
-    const response = await fetch(url, { method, headers, body });
-
-    if (!response.ok) {
-      throw new Error("No response");
-    }
-
-    form.style.display = "none";
-
-    if (successMessage) {
-      successMessage.style.display = "block";
-    }
-
-    if (errorMessage) {
-      errorMessage.style.display = "none";
-    }
-  } catch (error) {
-    form.style.display = "block";
-
-    if (successMessage) {
-      successMessage.style.display = "none";
-    }
-
-    if (errorMessage) {
-      errorMessage.style.display = "block";
-    }
-  }
+  });
 };
 
 const initMediaMatch = (breakpoint, callback) => {
