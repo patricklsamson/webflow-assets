@@ -83,40 +83,42 @@ const initSocialShare = () => {
 
   if(urlSharers.length > 0) {
     urlSharers.forEach((sharer) => {
+      const { share_url, slug } = sharer.dataset;
+      const { origin, href } = window.location;
+
       switch (sharer.dataset.share_url) {
         case "clipboard":
           sharer.addEventListener("click", function () {
-            navigator.clipboard.writeText(
-              `${window.location.origin}${this.dataset.slug}`
-            );
+            const { slug } = this.dataset;
+            const { origin, href } = window.location;
+
+            navigator.clipboard.writeText(`${
+              slug ? `${origin}${slug}` : href
+            }`);
           });
 
           break;
         case "facebook":
-          sharer.href = `https://www.facebook.com/sharer/sharer.php?u=${
-            window.location.origin
-          }${sharer.dataset.slug}`;
+          const facebookUrl = "https://www.facebook.com/sharer/sharer.php?u=";
+
+          sharer.href = `${slug ? `${facebookUrl}${origin}${slug}` : href}`;
 
           break;
         case "twitter":
         case "x":
-          sharer.href = `https://twitter.com/intent/tweet?url=${
-            window.location.origin
-          }${sharer.dataset.slug}`;
+          const xUrl = "https://twitter.com/intent/tweet?url=";
+
+          sharer.href = `${slug ? `${xUrl}${origin}${slug}` : href}`;
 
           break;
         case "linkedin":
           const linkedInUrl = "https://www.linkedin.com/sharing/share-offsite/?url=";
 
-          sharer.href = `${linkedInUrl}${window.location.origin}${
-            sharer.dataset.slug
-          }`;
+          sharer.href = `${slug ? `${linkedInUrl}${origin}${slug}` : href}`;
 
           break;
         default:
-          const { share_url, slug } = sharer.dataset;
-
-          sharer.href = `${share_url}${window.location.origin}${slug}`;
+          sharer.href = `${slug ? `${share_url}${origin}${slug}` : href}`;
       }
     });
   }
