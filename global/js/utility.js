@@ -86,7 +86,7 @@ const initSocialShare = () => {
       const { share_url, slug } = sharer.dataset;
       const { origin, href } = window.location;
 
-      switch (sharer.dataset.share_url) {
+      switch (share_url) {
         case "clipboard":
           sharer.addEventListener("click", function () {
             const { slug } = this.dataset;
