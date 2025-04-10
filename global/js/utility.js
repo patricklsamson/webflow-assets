@@ -123,6 +123,10 @@ const initSocialShare = () => {
         sharer.href = `${
           slug ? `${socialMediaUrl ?? share_url}${origin}${slug}` : href
         }`;
+
+        if (!sharer.target) {
+          sharer.target = "_blank";
+        }
       }
     });
   }
