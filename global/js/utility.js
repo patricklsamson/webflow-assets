@@ -86,6 +86,7 @@ const initSocialShare = () => {
       const { share_url, slug } = sharer.dataset;
       const { origin, href } = window.location;
       let socialMediaUrl = null;
+      let defaultShare = false;
 
       switch (share_url) {
         case "facebook":
@@ -102,19 +103,23 @@ const initSocialShare = () => {
 
           break;
         default:
-          sharer.addEventListener("click", function (e) {
-            e.preventDefault();
+          if (!socialMediaUrl && !share_url.includes("https")) {
+            defaultShare = true;
 
-            const { slug } = this.dataset;
-            const { origin, href } = window.location;
+            sharer.addEventListener("click", function (e) {
+              e.preventDefault();
 
-            navigator.clipboard.writeText(`${
-              slug ? `${origin}${slug}` : href
-            }`);
-          });
+              const { slug } = this.dataset;
+              const { origin, href } = window.location;
+
+              navigator.clipboard.writeText(`${
+                slug ? `${origin}${slug}` : href
+              }`);
+            });
+          }
       }
 
-      if (sharer.tagName === "A") {
+      if (!defaultShare) {
         sharer.href = `${
           slug ? `${socialMediaUrl ?? share_url}${origin}${slug}` : href
         }`;
