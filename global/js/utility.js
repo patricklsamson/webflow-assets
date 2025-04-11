@@ -78,6 +78,29 @@ const openActiveAccordions = () => {
   }
 };
 
+const initTimeToRead = (
+  wordsBefore,
+  wordsAfter = "read",
+  unit = "min",
+  wordsPerMinute = 200
+) => {
+  const timeSources = document.querySelectorAll("[data-time_source]");
+
+  timeSources.forEach((source) => {
+    const words = source.innerText.split(" ").length;
+    const minutes = Math.floor(words / wordsPerMinute);
+    const timeToRead = minutes > 1 ? `${minute} ${unit}s` : `1 ${unit}`;
+
+    const timeTarget = document.querySelector(
+      `[data-time_target="${source.dataset.source}"]`
+    );
+
+    timeTarget.innerHTML = `${wordsBefore ? `${wordsBefore} ` : ""}${
+      timeToRead
+    }${wordsAfter ? ` ${wordsAfter}` : ""}`;
+  });
+};
+
 const initSocialShare = () => {
   const urlSharers = document.querySelectorAll("[data-share_url]");
 
