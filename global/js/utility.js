@@ -89,7 +89,7 @@ const initTimeToRead = (
   timeSources.forEach((source) => {
     const words = source.innerText.split(" ").length;
     const minutes = Math.floor(words / wordsPerMinute);
-    const timeToRead = minutes > 1 ? `${minute} ${unit}s` : `1 ${unit}`;
+    const timeToRead = minutes > 1 ? `${minutes} ${unit}s` : `1 ${unit}`;
 
     const timeTarget = document.querySelector(
       `[data-time_target="${source.dataset.source}"]`
