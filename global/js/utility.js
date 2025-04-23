@@ -88,7 +88,15 @@ const initTimeToRead = (
 
   timeSources.forEach((source) => {
     const words = source.innerText.split(" ").length;
-    const minutes = Math.floor(words / wordsPerMinute);
+    const images = source.querySelectorAll("img").length;
+    const videos = source.querySelectorAll("iframe").length;
+
+    const minutes = Math.floor(
+      (words / wordsPerMinute) +
+      ((images * 10) / 60) +
+      (videos * 3)
+    );
+
     const timeToRead = minutes > 1 ? `${minutes} ${unit}s` : `1 ${unit}`;
 
     const timeTarget = document.querySelector(
