@@ -82,7 +82,7 @@ const initTimeToRead = (
   wordsBefore,
   wordsAfter = "read",
   unit = "min",
-  wordsPerMinute = 200
+  wordsPerMinute = 100
 ) => {
   const timeSources = document.querySelectorAll("[data-time_source]");
 
@@ -92,7 +92,7 @@ const initTimeToRead = (
     const timeToRead = minutes > 1 ? `${minutes} ${unit}s` : `1 ${unit}`;
 
     const timeTarget = document.querySelector(
-      `[data-time_target="${source.dataset.source}"]`
+      `[data-time_target="${source.dataset.time_source}"]`
     );
 
     timeTarget.innerHTML = `${wordsBefore ? `${wordsBefore} ` : ""}${
