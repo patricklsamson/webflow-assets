@@ -7,7 +7,7 @@ th, td {
   text-align: initial;
 }
 
-.text-style-1line p {
+.text-style-1line * {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
