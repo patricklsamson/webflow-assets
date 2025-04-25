@@ -7,10 +7,14 @@ th, td {
   text-align: initial;
 }
 
-.text-style-1line * {
+.text-style-1line p {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.text-style-1line *:not(div):not(p) {
+  display: none;
 }
 
 .grid_wrapper[data-grid_gutter="xsmall"] {
