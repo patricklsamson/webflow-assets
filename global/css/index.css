@@ -389,6 +389,10 @@ th, td {
   }
 }
 
+.initial_text::first-letter {
+  font-size: initial;
+}
+
 .vertical-tab_wrapper::before,
 .vertical-tab_wrapper::after {
   display: none;
