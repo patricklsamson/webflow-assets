@@ -20,7 +20,7 @@ const resolveSpans = () => {
     let index = 0;
 
     const resolvedText = text.innerHTML.replace(
-      /\|([^\s|]+)\|/g,
+      /\|([^|]+?)\|/g,
       (_, content) => {
         const spanClass = spanClasses[index];
 
