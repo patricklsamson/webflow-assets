@@ -212,10 +212,13 @@ const requestApi = async (
   }
 };
 
+
+
 const initFormSubmit = (
   identifier,
   url,
   resolvedBodyCallback,
+  display = "block",
   method = "POST",
   headers = { "Content-Type": "application/json" }
 ) => {
@@ -229,7 +232,7 @@ const initFormSubmit = (
     const errorMessage = parentNode.querySelector(".w-form-fail");
 
     try {
-      const body = resolvedBodyCallback(inputs);
+      const body = JSON.stringify(resolvedBodyCallback(inputs));
       const response = await fetch(url, { method, headers, body });
 
       if (!response.ok) {
@@ -246,7 +249,7 @@ const initFormSubmit = (
         errorMessage.style.display = "none";
       }
     } catch (error) {
-      style.display = "block";
+      style.display = display;
 
       if (successMessage) {
         successMessage.style.display = "none";
@@ -255,6 +258,8 @@ const initFormSubmit = (
       if (errorMessage) {
         errorMessage.style.display = "block";
       }
+
+      throw error;
     }
   });
 };
