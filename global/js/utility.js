@@ -3,55 +3,63 @@ const runOnDomReady = (callback) => {
 };
 
 const injectStylesheets = (stylesheets) => {
-  stylesheets.forEach((stylesheet) => {
-    const link = document.createElement("link");
+  if (stylesheets.length > 0) {
+    stylesheets.forEach((stylesheet) => {
+      const link = document.createElement("link");
 
-    link.setAttribute("rel", "stylesheet");
-    link.setAttribute("href", stylesheet);
-    document.head.appendChild(link);
-  });
+      link.setAttribute("rel", "stylesheet");
+      link.setAttribute("href", stylesheet);
+      document.head.appendChild(link);
+    });
+  }
 };
 
 const resolveSpans = () => {
   const texts = document.querySelectorAll("[data-span_style]");
 
-  texts.forEach((text) => {
-    const spanClasses = text.dataset.span_style.split("|");
-    let index = 0;
+  if (texts.length > 0) {
+    texts.forEach((text) => {
+      const spanClasses = text.dataset.span_style.split("|");
+      let index = 0;
 
-    const resolvedText = text.innerHTML.replace(
-      /\|([^|]+?)\|/g,
-      (_, content) => {
-        const spanClass = spanClasses[index];
+      const resolvedText = text.innerHTML.replace(
+        /\|([^|]+?)\|/g,
+        (_, content) => {
+          const spanClass = spanClasses[index];
 
-        if (spanClasses.length > 1) {
-          index++;
+          if (spanClasses.length > 1) {
+            index++;
+          }
+
+          if (spanClass) {
+            return `<span class="${spanClass}">${content}</span>`;
+          }
+
+          return content;
         }
+      );
 
-        if (spanClass) {
-          return `<span class="${spanClass}">${content}</span>`;
-        }
-
-        return content;
-      }
-    );
-
-    text.innerHTML = resolvedText;
-  });
+      text.innerHTML = resolvedText;
+    });
+  }
 };
 
-const clickElement = (element) => {
-  let isClicked = false;
+const clickElement = (identifier) => {
+  const element = document.getElementById(identifier);
 
-  element.addEventListener("click", () => {
-    isClicked = true;
-  }, { once: true });
+  if (element) {
+    let isClicked = false;
 
-  element.click();
+    element.addEventListener("click", () => {
+      isClicked = true;
+    }, { once: true });
 
-  if (!isClicked) {
-    element.dispatchEvent(new Event("mousedown"));
-    element.dispatchEvent(new Event("mouseup"));
+    element.click();
+
+    if (!isClicked) {
+      element.dispatchEvent(new Event("mousedown"));
+      element.dispatchEvent(new Event("mouseup"));
+    }
   }
 };
 
@@ -86,27 +94,29 @@ const initTimeToRead = (
 ) => {
   const timeSources = document.querySelectorAll("[data-time_source]");
 
-  timeSources.forEach((source) => {
-    const words = source.innerText.split(" ").length;
-    const images = source.querySelectorAll("img").length;
-    const videos = source.querySelectorAll("iframe").length;
+  if (timeSources.length > 0) {
+    timeSources.forEach((source) => {
+      const words = source.innerText.split(" ").length;
+      const images = source.querySelectorAll("img").length;
+      const videos = source.querySelectorAll("iframe").length;
 
-    const minutes = Math.floor(
-      (words / wordsPerMinute) +
-      ((images * 10) / 60) +
-      (videos * 3)
-    );
+      const minutes = Math.floor(
+        (words / wordsPerMinute) +
+        ((images * 10) / 60) +
+        (videos * 3)
+      );
 
-    const timeToRead = minutes > 1 ? `${minutes} ${unit}s` : `1 ${unit}`;
+      const timeToRead = minutes > 1 ? `${minutes} ${unit}s` : `1 ${unit}`;
 
-    const timeTarget = document.querySelector(
-      `[data-time_target="${source.dataset.time_source}"]`
-    );
+      const timeTarget = document.querySelector(
+        `[data-time_target="${source.dataset.time_source}"]`
+      );
 
-    timeTarget.innerHTML = `${wordsBefore ? `${wordsBefore} ` : ""}${
-      timeToRead
-    }${wordsAfter ? ` ${wordsAfter}` : ""}`;
-  });
+      timeTarget.innerHTML = `${wordsBefore ? `${wordsBefore} ` : ""}${
+        timeToRead
+      }${wordsAfter ? ` ${wordsAfter}` : ""}`;
+    });
+  }
 };
 
 const initSocialShare = () => {
@@ -224,44 +234,46 @@ const initFormSubmit = (
 ) => {
   const form = document.getElementById(identifier);
 
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-    const { elements: inputs, parentNode, style } = this;
-    const successMessage = parentNode.querySelector(".w-form-done");
-    const errorMessage = parentNode.querySelector(".w-form-fail");
+      const { elements: inputs, parentNode, style } = this;
+      const successMessage = parentNode.querySelector(".w-form-done");
+      const errorMessage = parentNode.querySelector(".w-form-fail");
 
-    try {
-      const body = JSON.stringify(resolvedBodyCallback(inputs));
-      const response = await fetch(url, { method, headers, body });
+      try {
+        const body = JSON.stringify(resolvedBodyCallback(inputs));
+        const response = await fetch(url, { method, headers, body });
 
-      if (!response.ok) {
-        throw new Error("No response");
+        if (!response.ok) {
+          throw new Error("No response");
+        }
+
+        style.display = "none";
+
+        if (successMessage) {
+          successMessage.style.display = "block";
+        }
+
+        if (errorMessage) {
+          errorMessage.style.display = "none";
+        }
+      } catch (error) {
+        style.display = display;
+
+        if (successMessage) {
+          successMessage.style.display = "none";
+        }
+
+        if (errorMessage) {
+          errorMessage.style.display = "block";
+        }
+
+        throw error;
       }
-
-      style.display = "none";
-
-      if (successMessage) {
-        successMessage.style.display = "block";
-      }
-
-      if (errorMessage) {
-        errorMessage.style.display = "none";
-      }
-    } catch (error) {
-      style.display = display;
-
-      if (successMessage) {
-        successMessage.style.display = "none";
-      }
-
-      if (errorMessage) {
-        errorMessage.style.display = "block";
-      }
-
-      throw error;
-    }
-  });
+    });
+  }
 };
 
 const initMediaMatch = (breakpoint, callback) => {
