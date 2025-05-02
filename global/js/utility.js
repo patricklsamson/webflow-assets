@@ -222,8 +222,6 @@ const requestApi = async (
   }
 };
 
-
-
 const initFormSubmit = (
   identifier,
   url,
