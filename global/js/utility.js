@@ -254,10 +254,10 @@ const initFormSubmit = (
 
         const body = JSON.stringify(buildBody(inputs));
         const response = await fetch(url, { method, headers, body });
-        const result = await response.json();
+        const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(result.message || "Error occurred");
+          throw new Error(data.message || "Error occurred");
         }
 
         style.display = "none";
@@ -274,7 +274,7 @@ const initFormSubmit = (
               successMessageBlock.innerHTML =
                 typeof customSuccess === "string"
                   ? customSuccess
-                  : customSuccess(result);
+                  : customSuccess(data);
             }
           }
 
