@@ -441,7 +441,9 @@ const removeSliderTransform = (swiper, targetIdentifier) => {
   });
 };
 
-const runAfterFinsweet = (attributeModules, callback) => {
+
+
+const runAfterFinsweet = (attributeModules, callback, onRenderCallback) => {
   window.fsAttributes = window.fsAttributes || [];
 
   const attributeFlag = attributeModules.reduce((init, attributeModule) => {
@@ -450,18 +452,34 @@ const runAfterFinsweet = (attributeModules, callback) => {
     return init;
   }, {});
 
-  attributeModules.forEach((attributeModule) => {
+  for (const attributeModule of attributeModules) {
     window.fsAttributes.push([
-      attributeModule,
-      () => {
+    attributeModule,
+      (instances) => {
         attributeFlag[attributeModule] = true;
 
-        if (Object.values(attributeFlag).every((flag) => flag)) {
-          callback();
+        const allModulesRendered = Object.values(
+          attributeFlag
+        ).every((flag) => flag);
+
+        if (allModulesRendered) {
+          if (callback) {
+            callback();
+          }
+
+          if (onRenderCallback) {
+            for (const instance of instances) {
+              if (instance.listInstance) {
+                instance.listInstance.on("renderitems", (renderedItems) => {
+                  onRenderCallback();
+                });
+              }
+            }
+          }
         }
       }
     ]);
-  });
+  }
 };
 
 const resetWebflowAfterWized = (onEndRequests, onceRequests) => {
