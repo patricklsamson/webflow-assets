@@ -229,8 +229,7 @@ const initFormSubmit = (
     buildBody,
     formDisplay = "block",
     customSuccess = null,
-    displayError = false,
-    customError = null,
+    displayApiError = false,
     method = "POST",
     headers = { "Content-Type": "application/json" }
   }
@@ -244,7 +243,7 @@ const initFormSubmit = (
 
       const { elements: inputs, parentNode, style } = this;
       const successMessage = parentNode.querySelector(".w-form-done");
-      const loadingMessage = this.querySelector("[data-loading_message]");
+      const loadingMessage = this.querySelector("[data-message='loading']");
       const errorMessage = parentNode.querySelector(".w-form-fail");
 
       try {
@@ -275,6 +274,11 @@ const initFormSubmit = (
                 typeof customSuccess === "string"
                   ? customSuccess
                   : customSuccess(data);
+            } else {
+              successMessage.innerHTML =
+                typeof customSuccess === "string"
+                  ? customSuccess
+                  : customSuccess(data);
             }
           }
 
@@ -296,15 +300,13 @@ const initFormSubmit = (
         }
 
         if (errorMessage) {
-          if (displayError || customError) {
+          if (displayApiError) {
             const errorMessageBlock = errorMessage.querySelector("div");
 
             if (errorMessageBlock) {
-              errorMessageBlock.innerHTML = customError || error.message ||
-                "Error occurred";
+              errorMessageBlock.innerHTML = error.message || "Error occurred";
             } else {
-              errorMessage.innerHTML = customError || error.message ||
-                "Error occurred";
+              errorMessage.innerHTML = error.message || "Error occurred";
             }
           }
 
