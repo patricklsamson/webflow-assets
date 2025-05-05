@@ -224,12 +224,18 @@ const requestApi = async (
 
 const initFormSubmit = (
   identifier,
-  url,
-  resolvedBodyCallback,
-  display = "block",
-  method = "POST",
-  headers = { "Content-Type": "application/json" }
+  {
+    url,
+    buildBody,
+    formDisplay = "block",
+    customSuccess = null,
+    displayError = false,
+    customError = null,
+    method = "POST",
+    headers = { "Content-Type": "application/json" }
+  }
 ) => {
+
   const form = document.getElementById(identifier);
 
   if (form) {
@@ -238,19 +244,41 @@ const initFormSubmit = (
 
       const { elements: inputs, parentNode, style } = this;
       const successMessage = parentNode.querySelector(".w-form-done");
+      const loadingMessage = this.querySelector("[data-loading_message]");
       const errorMessage = parentNode.querySelector(".w-form-fail");
 
       try {
-        const body = JSON.stringify(resolvedBodyCallback(inputs));
+        if (loadingMessage) {
+          loadingMessage.style.display = "block";
+        }
+
+        const body = JSON.stringify(buildBody(inputs));
         const response = await fetch(url, { method, headers, body });
 
         if (!response.ok) {
-          throw new Error("No response");
+          throw new Error(result.message || "Error occurred");
         }
+
+        const result = await response.json();
 
         style.display = "none";
 
+        if (loadingMessage) {
+          loadingMessage.style.display = "none";
+        }
+
         if (successMessage) {
+          if (customSuccess) {
+            const successMessageBlock = successMessage.querySelector("div");
+
+            if (successMessageBlock) {
+              successMessageBlock.innerHTML =
+                typeof customSuccess === "string"
+                  ? customSuccess
+                  : customSuccess(result);
+            }
+          }
+
           successMessage.style.display = "block";
         }
 
@@ -258,13 +286,29 @@ const initFormSubmit = (
           errorMessage.style.display = "none";
         }
       } catch (error) {
-        style.display = display;
+        style.display = formDisplay;
+
+        if (loadingMessage) {
+          loadingMessage.style.display = "none";
+        }
 
         if (successMessage) {
           successMessage.style.display = "none";
         }
 
         if (errorMessage) {
+          if (displayError || customError) {
+            const errorMessageBlock = errorMessage.querySelector("div");
+
+            if (errorMessageBlock) {
+              errorMessageBlock.innerHTML = customError || error.message ||
+                "Error occurred";
+            } else {
+              errorMessage.innerHTML = customError || error.message ||
+                "Error occurred";
+            }
+          }
+
           errorMessage.style.display = "block";
         }
 
