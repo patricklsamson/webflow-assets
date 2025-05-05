@@ -454,7 +454,7 @@ const runAfterFinsweet = (attributeModules, callback, onRenderCallback) => {
 
   for (const attributeModule of attributeModules) {
     window.fsAttributes.push([
-    attributeModule,
+      attributeModule,
       (instances) => {
         attributeFlag[attributeModule] = true;
 
