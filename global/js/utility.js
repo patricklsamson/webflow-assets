@@ -254,12 +254,11 @@ const initFormSubmit = (
 
         const body = JSON.stringify(buildBody(inputs));
         const response = await fetch(url, { method, headers, body });
+        const result = await response.json();
 
         if (!response.ok) {
           throw new Error(result.message || "Error occurred");
         }
-
-        const result = await response.json();
 
         style.display = "none";
 
