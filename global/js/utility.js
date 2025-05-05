@@ -441,8 +441,6 @@ const removeSliderTransform = (swiper, targetIdentifier) => {
   });
 };
 
-
-
 const runAfterFinsweet = (attributeModules, callback, onRenderCallback) => {
   window.fsAttributes = window.fsAttributes || [];
 
