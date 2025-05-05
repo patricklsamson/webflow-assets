@@ -227,11 +227,11 @@ const initFormSubmit = (
   {
     url,
     buildBody,
-    formDisplay = "block",
-    customSuccess = null,
-    displayApiError = false,
     method = "POST",
-    headers = { "Content-Type": "application/json" }
+    headers = { "Content-Type": "application/json" },
+    customSuccess = null,
+    formDisplay = "block",
+    displayApiError = false
   }
 ) => {
 
