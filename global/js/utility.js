@@ -199,24 +199,22 @@ const requestApi = async (
     }
 
     const response = await fetch(url, { method, headers, body });
+    const contentType = response.headers.get("Content-Type");
+    const data = await response.json();
 
     if (!response.ok) {
-      throw new Error("No response");
-    }
-
-    const contentType = response.headers.get("Content-Type");
-
-    if (response.status !== 204) {
       if (contentType === "application/json") {
-        return await response.json();
+        throw new Error(data.message || "Error occurred");
       }
 
-      if (contentType.includes("text/")) {
-        return await response.text();
-      }
+      throw new Error("Error occurred");
     }
 
-    return null;
+    if (response.status === 204) {
+      return null;
+    }
+
+    return contentType === "application/json" ? data : await response.text();
   } catch (error) {
     throw error;
   }
@@ -241,15 +239,23 @@ const initFormSubmit = (
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const { elements: inputs, parentNode, style } = this;
+      const setDisplay = (element, display = "block", callback = null) => {
+        if (element) {
+          if (callback) {
+            callback();
+          }
+
+          element.style.display = display;
+        }
+      };
+
+      const { elements: inputs, parentNode } = this;
       const loadingMessage = this.querySelector("[data-message='loading']");
       const successMessage = parentNode.querySelector(".w-form-done");
       const errorMessage = parentNode.querySelector(".w-form-fail");
 
       try {
-        if (loadingMessage) {
-          loadingMessage.style.display = "block";
-        }
+        setDisplay(loadingMessage, "block");
 
         const body = JSON.stringify(buildBody(inputs));
         const response = await fetch(url, { method, headers, body });
@@ -259,13 +265,10 @@ const initFormSubmit = (
           throw new Error(data.message || "Error occurred");
         }
 
-        style.display = "none";
+        setDisplay(this, "none");
+        setDisplay(loadingMessage, "none");
 
-        if (loadingMessage) {
-          loadingMessage.style.display = "none";
-        }
-
-        if (successMessage) {
+        setDisplay(successMessage, "block", () => {
           if (customSuccess) {
             const successMessageBlock = successMessage.querySelector("div");
 
@@ -281,25 +284,15 @@ const initFormSubmit = (
                   : customSuccess(data);
             }
           }
+        });
 
-          successMessage.style.display = "block";
-        }
-
-        if (errorMessage) {
-          errorMessage.style.display = "none";
-        }
+        setDisplay(errorMessage, "none");
       } catch (error) {
-        style.display = formDisplay;
+        setDisplay(this, formDisplay);
+        setDisplay(loadingMessage, "none");
+        setDisplay(successMessage, "none");
 
-        if (loadingMessage) {
-          loadingMessage.style.display = "none";
-        }
-
-        if (successMessage) {
-          successMessage.style.display = "none";
-        }
-
-        if (errorMessage) {
+        setDisplay(errorMessage, "block", () => {
           if (displayApiError) {
             const errorMessageBlock = errorMessage.querySelector("div");
 
@@ -309,9 +302,7 @@ const initFormSubmit = (
               errorMessage.innerHTML = error.message || "Error occurred";
             }
           }
-
-          errorMessage.style.display = "block";
-        }
+        });
 
         throw error;
       }
