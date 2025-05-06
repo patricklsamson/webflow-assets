@@ -242,8 +242,8 @@ const initFormSubmit = (
       e.preventDefault();
 
       const { elements: inputs, parentNode, style } = this;
-      const successMessage = parentNode.querySelector(".w-form-done");
       const loadingMessage = this.querySelector("[data-message='loading']");
+      const successMessage = parentNode.querySelector(".w-form-done");
       const errorMessage = parentNode.querySelector(".w-form-fail");
 
       try {
