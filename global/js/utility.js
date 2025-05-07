@@ -236,6 +236,10 @@ const initFormSubmit = (
   const form = document.getElementById(identifier);
 
   if (form) {
+    if (!form.getAttribute("action")) {
+      form.setattribute("action", "/");
+    }
+
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
