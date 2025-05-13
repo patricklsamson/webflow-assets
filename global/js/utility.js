@@ -471,12 +471,12 @@ const removeSliderTransform = (swiper, targetIdentifier) => {
       ? slide.querySelector(targetIdentifier)
       : slide;
 
-    if (!targetElement.classList.contains("transform-remover")) {
-      targetElement.classList.add("transform-remover");
+    if (!targetElement.classList.contains("transform-removed")) {
+      targetElement.classList.add("transform-removed");
 
       targetElement.addEventListener("click", () => {
-        slide.classList.toggle("no-transform");
-        swiper.wrapperEl.classList.toggle("no-transform");
+        slide.classList.toggle("transform-none");
+        swiper.wrapperEl.classList.toggle("transform-none");
       });
     }
   });
