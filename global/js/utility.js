@@ -176,7 +176,7 @@ const initSocialShare = () => {
 };
 
 const removeInvisibleElements = () => {
-  const invisibleElements = document.querySelectorAll(".w-content-invisible");
+  const invisibleElements = document.querySelectorAll(".w-condition-invisible");
 
   if (invisibleElements.length > 0) {
     invisibleElements.forEach((element) => {
