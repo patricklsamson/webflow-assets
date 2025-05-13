@@ -44,22 +44,24 @@ const resolveSpans = () => {
   }
 };
 
-const clickElement = (identifier) => {
-  const element = document.getElementById(identifier);
+const clickElements = (identifier) => {
+  const elements = document.querySelectorAll(identifier);
 
-  if (element) {
-    let isClicked = false;
+  if (elements.length > 0) {
+    elements.forEach((element) => {
+      let isClicked = false;
 
-    element.addEventListener("click", () => {
-      isClicked = true;
-    }, { once: true });
+      element.addEventListener("click", () => {
+        isClicked = true;
+      }, { once: true });
 
-    element.click();
+      element.click();
 
-    if (!isClicked) {
-      element.dispatchEvent(new Event("mousedown"));
-      element.dispatchEvent(new Event("mouseup"));
-    }
+      if (!isClicked) {
+        element.dispatchEvent(new Event("mousedown"));
+        element.dispatchEvent(new Event("mouseup"));
+      }
+    });
   }
 };
 
