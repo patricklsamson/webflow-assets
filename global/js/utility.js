@@ -234,7 +234,6 @@ const initFormSubmit = (
     displayApiError = false
   }
 ) => {
-
   const form = document.getElementById(identifier);
 
   if (form) {
