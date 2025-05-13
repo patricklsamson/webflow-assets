@@ -438,16 +438,18 @@ const initSlider = (identifier, config, breakpoint) => {
 
 const resolveSliderHeight = (swiper) => {
   const params = swiper.params;
+  const swiperEl = swiper.el;
 
   if (params.direction && params.direction === "vertical") {
+    const swiperSlides = swiper.slides;
     const slidesPerView = params.slidesPerView || 1;
-    const activeIndex = params.loop ? swiper.realIndex : swiper.activeIndex;
+    const activeIndex = swiper[params.loop ? "realIndex" : "activeIndex"];
     let height = 0;
     let index = activeIndex + (slidesPerView - 1);
 
     while (index >= activeIndex) {
-      if (index < swiper.slides.length) {
-        height += swiper.slides[index].firstChild.offsetHeight;
+      if (index < swiperSlides.length) {
+        height += swiperSlides[index].firstChild.offsetHeight;
       }
 
       index--;
@@ -459,9 +461,9 @@ const resolveSliderHeight = (swiper) => {
       height += (spaceBetween * slidesPerView);
     }
 
-    swiper.el.style.height = `${height}px`;
+    swiperEl.style.height = height > 0 ? `${height}px` : "auto";
   } else {
-    swiper.el.style.height = "auto";
+    swiperEl.style.height = "auto";
   }
 };
 
