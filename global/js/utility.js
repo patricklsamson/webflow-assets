@@ -471,8 +471,8 @@ const removeSliderTransform = (swiper, targetIdentifier) => {
       ? slide.querySelector(targetIdentifier)
       : slide;
 
-    if (!targetElement.classList.contains("transform-removed")) {
-      targetElement.classList.add("transform-removed");
+    if (!targetElement.classList.contains("init-transform-remover")) {
+      targetElement.classList.add("init-transform-remover");
 
       targetElement.addEventListener("click", () => {
         slide.classList.toggle("transform-none");
