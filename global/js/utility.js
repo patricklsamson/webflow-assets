@@ -255,7 +255,11 @@ const initFormSubmit = (
       };
 
       const { elements: inputs, parentNode } = this;
-      const loadingMessage = this.querySelector("[data-message='loading']");
+
+      const loadingMessage = parentNode.querySelector(
+        "[data-message='loading']"
+      );
+
       const successMessage = parentNode.querySelector(".w-form-done");
       const errorMessage = parentNode.querySelector(".w-form-fail");
 
