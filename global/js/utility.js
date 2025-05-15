@@ -279,19 +279,13 @@ const initFormSubmit = (
 
         setDisplay(successMessage, "block", () => {
           if (customSuccess) {
-            const successMessageBlock = successMessage.querySelector("div");
+            const successMessageBlock = successMessage.querySelector("div") ||
+              successMessage;
 
-            if (successMessageBlock) {
-              successMessageBlock.innerHTML =
-                typeof customSuccess === "string"
-                  ? customSuccess
-                  : customSuccess(data);
-            } else {
-              successMessage.innerHTML =
-                typeof customSuccess === "string"
-                  ? customSuccess
-                  : customSuccess(data);
-            }
+            successMessageBlock.innerHTML =
+              typeof customSuccess === "string"
+                ? customSuccess
+                : customSuccess(data);
           }
         });
 
@@ -303,13 +297,10 @@ const initFormSubmit = (
 
         setDisplay(errorMessage, "block", () => {
           if (displayApiError) {
-            const errorMessageBlock = errorMessage.querySelector("div");
+            const errorMessageBlock = errorMessage.querySelector("div") ||
+              errorMessage;
 
-            if (errorMessageBlock) {
-              errorMessageBlock.innerHTML = error.message || "Error occurred";
-            } else {
-              errorMessage.innerHTML = error.message || "Error occurred";
-            }
+            errorMessageBlock.innerHTML = error.message || "Error occurred";
           }
         });
 
