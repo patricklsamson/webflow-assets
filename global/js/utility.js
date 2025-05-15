@@ -260,7 +260,7 @@ const initFormSubmit = (
       const errorMessage = parentNode.querySelector(".w-form-fail");
 
       try {
-        setDisplay(loadingMessage, "block");
+        setDisplay(loadingMessage);
 
         const body = JSON.stringify(buildBody(inputs));
         const response = await fetch(url, { method, headers, body });
