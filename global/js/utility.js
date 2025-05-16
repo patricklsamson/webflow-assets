@@ -518,6 +518,11 @@ const runAfterFinsweet = (attributeModules, callback, onRenderCallback) => {
   }
 };
 
+const runAfterFinsweetV2 = (callback) => {
+  window.FinsweetAttributes ||= [];
+  callback(window.FinsweetAttributes);
+};
+
 const resetWebflowAfterWized = (onEndRequests, onceRequests) => {
   const resetWebflow = () => {
     const webflow = window.Webflow;
