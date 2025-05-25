@@ -389,6 +389,10 @@ th, td {
   }
 }
 
+.text-weight-setter_component * {
+  font-weight: inherit;
+}
+
 .initial_text::first-letter {
   font-size: initial;
 }
@@ -396,4 +400,8 @@ th, td {
 .vertical-tab_wrapper::before,
 .vertical-tab_wrapper::after {
   display: none;
+}
+
+.wf-design-mode .masonry_item {
+  position: static;
 }
