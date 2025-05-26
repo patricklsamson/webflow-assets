@@ -350,49 +350,106 @@ const runOnMediaMatch = (breakpoint, onMatch, onUnmatch) => {
   media.addEventListener("change", runOnMatch);
 };
 
-const initMasonry = (identifier, config, breakpoint) => {
-  let masonry = null;
-
-  const resolveConfig = (config) => {
+const initMasonry = (identifier, configSet, initBreakpoint) => {
+  const resolveConfig = (config, previousConfig) => {
     config.container = identifier;
     config.surroundingGutter = config.surroundingGutter ?? false;
     config.minify = config.minify ?? false;
     config.wedge = config.wedge ?? true;
 
-    return config;
+    return previousConfig ? { ...previousConfig, ...config } : config;
   };
 
-  if (breakpoint) {
-    const runOnMatch = (media) => {
-      if (media.matches && !masonry) {
-        const resolvedConfig = resolveConfig(config);
+  const handleInitMasonry = () => {
+    const masonries = [];
 
-        masonry = new MiniMasonry(resolvedConfig);
+    if (configSet.baseWidth) {
+      const resolvedConfig = resolveConfig(configSet);
+      let masonry = null;
+
+      masonry = new MiniMasonry(resolvedConfig);
+      masonries.push(masonry);
+    } else {
+      const breakpoints = Object.keys(configSet);
+
+      for (const [index, breakpoint] of breakpoints.entries()) {
+        let masonry = null;
+
+        const previousConfig = Object.values(configSet).reduce(
+          (init, item, i) => {
+            if (i <= index) {
+              return { ...init, ...item };
+            }
+
+            return init;
+          },
+          {}
+        );
+
+        const runOnMatch = (media) => {
+          if (media.matches && !masonry) {
+            const resolvedConfig = resolveConfig(
+              configSet[breakpoint],
+              previousConfig
+            );
+
+            masonry = new MiniMasonry(resolvedConfig);
+            masonries[index] = masonry;
+          }
+
+          if (!media.matches && masonry) {
+            masonry.destroy();
+            masonry = null;
+            masonries[index] = masonry;
+          }
+        };
+
+        const media = window.matchMedia(
+          `only screen and (min-width: ${breakpoint}px)`
+        );
+
+        runOnMatch(media);
+
+        window.addEventListener("resize", () => {
+          runOnMatch(media);
+        });
+
+        media.addEventListener("change", runOnMatch);
+      }
+    }
+
+    return masonries.filter((masonry) => masonry);
+  };
+
+  let mainMasonries = null;
+
+  if (initBreakpoint) {
+    const initOnMatch = (media) => {
+      if (media.matches && !mainMasonries) {
+        mainMasonries = handleInitMasonry();
       }
 
-      if (!media.matches && masonry) {
-        masonry.destroy();
-        masonry = null;
+      if (!media.matches && mainMasonries) {
+        mainMasonries.forEach((masonry) => masonry.destroy());
+        mainMasonries = null;
       }
     };
 
     const media = window.matchMedia(
-      `only screen and (${breakpoint >= 0 ? "min" : "max"}-width: ${
-        breakpoint >= 0 ? breakpoint : breakpoint * -1
+      `only screen and (${initBreakpoint >= 0 ? "min" : "max"}-width: ${
+        initBreakpoint >= 0 ? initBreakpoint : initBreakpoint * -1
       }px)`
     );
 
-    runOnMatch(media);
+    initOnMatch(media);
 
     window.addEventListener("resize", () => {
-      runOnMatch(media);
+      initOnMatch(media);
     });
 
-    media.addEventListener("change", runOnMatch);
+    media.addEventListener("change", initOnMatch);
   } else {
-    const resolvedConfig = resolveConfig(config);
-
-    masonry = new MiniMasonry(resolvedConfig);
+    mainMasonries = handleInitMasonry();
   }
 };
 
