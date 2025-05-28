@@ -7,6 +7,12 @@ th, td {
   text-align: initial;
 }
 
+[style*="background-image: url"] {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .text-style-1line p {
   overflow: hidden;
   white-space: nowrap;
