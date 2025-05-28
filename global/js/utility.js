@@ -164,7 +164,7 @@ const initSocialShare = () => {
 
       if (!defaultShare) {
         sharer.href = `${
-          slug ? `${socialMediaUrl ?? share_url}${origin}${slug}` : href
+          slug ? `${socialMediaUrl || share_url}${origin}${slug}` : href
         }`;
 
         if (!sharer.target) {
@@ -176,7 +176,9 @@ const initSocialShare = () => {
 };
 
 const removeInvisibleElements = () => {
-  const invisibleElements = document.querySelectorAll(".w-condition-invisible");
+  const invisibleElements = document.querySelectorAll(
+    ".w-condition-invisible"
+  );
 
   if (invisibleElements.length > 0) {
     invisibleElements.forEach((element) => {
@@ -202,10 +204,11 @@ const requestApi = async (
 
     const response = await fetch(url, { method, headers, body });
     const contentType = response.headers.get("Content-Type");
-    const data = await response.json();
 
     if (!response.ok) {
       if (contentType === "application/json") {
+        const data = await response.json();
+
         throw new Error(data.message || "Error occurred");
       }
 
@@ -216,7 +219,9 @@ const requestApi = async (
       return null;
     }
 
-    return contentType === "application/json" ? data : await response.text();
+    return contentType === "application/json"
+      ? await response.json()
+      : await response.text();
   } catch (error) {
     throw error;
   }
@@ -268,11 +273,14 @@ const initFormSubmit = (
 
         const body = JSON.stringify(buildBody(inputs));
         const response = await fetch(url, { method, headers, body });
-        const data = await response.json();
 
         if (!response.ok) {
+          const data = await response.json();
+
           throw new Error(data.message || "Error occurred");
         }
+
+        const data = response.status === 204 ? null : await response.json();
 
         setDisplay(this, "none");
         setDisplay(loadingMessage, "none");
@@ -353,9 +361,18 @@ const runOnMediaMatch = (breakpoint, onMatch, onUnmatch) => {
 const initMasonry = (identifier, configSet, initBreakpoint) => {
   const resolveConfig = (config, previousConfig) => {
     config.container = identifier;
-    config.surroundingGutter = config.surroundingGutter ?? false;
-    config.minify = config.minify ?? false;
-    config.wedge = config.wedge ?? true;
+
+    if (config.surroundingGutter === undefined) {
+      config.surroundingGutter = false;
+    }
+
+    if (config.minify === undefined) {
+      config.minify = false;
+    }
+
+    if (config.wedge === undefined) {
+      config.wedge = true;
+    }
 
     return previousConfig ? { ...previousConfig, ...config } : config;
   };
@@ -536,6 +553,10 @@ const removeSliderTransform = (swiper, targetIdentifier) => {
   });
 };
 
+const forceLastSlideActive = (swiper) => {
+  swiper.snapGrid = [...swiper.slidesGrid];
+};
+
 const runAfterFinsweet = (attributeModules, callback, onRenderCallback) => {
   window.fsAttributes = window.fsAttributes || [];
 
@@ -576,7 +597,7 @@ const runAfterFinsweet = (attributeModules, callback, onRenderCallback) => {
 };
 
 const runAfterFinsweetV2 = (callback) => {
-  window.FinsweetAttributes ||= [];
+  window.FinsweetAttributes = window.FinsweetAttributes || [];
   callback(window.FinsweetAttributes);
 };
 
