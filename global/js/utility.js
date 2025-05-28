@@ -198,14 +198,9 @@ const requestApi = async (
       headers["Content-Type"] = "application/json";
     }
 
-    const params = {
-      method,
-      headers
-    };
-
-    if (body && headers["Content-Type"] === "application/json") {
-      params.body = JSON.stringify(body);
-    }
+    const params = body && headers["Content-Type"] === "application/json"
+      ? { method, headers }
+      : { method, headers, body: JSON.stringify(body) };
 
     const response = await fetch(url, params);
     const contentType = response.headers.get("Content-Type");
