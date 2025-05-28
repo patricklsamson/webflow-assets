@@ -204,8 +204,7 @@ const requestApi = async (
     };
 
     if (body && headers["Content-Type"] === "application/json") {
-      body = JSON.stringify(body);
-      params.body = body;
+      params.body = JSON.stringify(body);
     }
 
     const response = await fetch(url, params);
