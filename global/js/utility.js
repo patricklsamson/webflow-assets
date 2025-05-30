@@ -318,23 +318,7 @@ const initFormSubmit = (
   }
 };
 
-const initMediaMatch = (breakpoint, callback) => {
-  const media = window.matchMedia(
-    `only screen and (${breakpoint >= 0 ? "min" : "max"}-width: ${
-      breakpoint >= 0 ? breakpoint : breakpoint * -1
-    }px)`
-  );
-
-  callback(media);
-
-  window.addEventListener("resize", () => {
-    callback(media);
-  });
-
-  media.addEventListener("change", callback);
-};
-
-const runOnMediaMatch = (breakpoint, onMatch, onUnmatch) => {
+const initMediaMatch = (breakpoint, onMatch, onUnmatch) => {
   const runOnMatch = (media) => {
     if (media.matches) {
       onMatch && onMatch();
