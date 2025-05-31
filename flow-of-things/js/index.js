@@ -44,7 +44,7 @@ runOnDomReady(() => {
 
   const buttons = document.querySelectorAll("[data-button]");
 
-  if (buttons.length > 0) {S
+  if (buttons.length > 0) {
     buttons.forEach((button) => {
       if (button.dataset.button === "check-default") {
         button.addEventListener("click", function () {
