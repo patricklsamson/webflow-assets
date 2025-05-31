@@ -69,21 +69,21 @@ runOnDomReady(() => {
           setScript(selectors);
         });
       }
-    });
-  }
 
-  const copy = document.querySelector("[data-button='copy']");
+      if (button.dataset.button === "copy") {
+        button.addEventListener("click", function () {
+          const script = document.getElementById("script").querySelector(
+            "code"
+          );
 
-  if (copy) {
-    copy.addEventListener("click", () => {
-      const script = document.getElementById("script").querySelector("code");
+          navigator.clipboard.writeText(script.innerText);
+          this.innerText = "Copied!";
 
-      navigator.clipboard.writeText(script.innerText);
-      copy.innerText = "Copied!";
-
-      setTimeout(() => {
-        copy.innerText = "Copy";
-      }, 500);
+          setTimeout(() => {
+            this.innerText = "Copy";
+          }, 500);
+        });
+      }
     });
   }
 });
