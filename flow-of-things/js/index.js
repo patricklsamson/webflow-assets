@@ -56,7 +56,7 @@ runOnDomReady(() => {
         });
 
         setTimeout(() => {
-          button.click();
+          this.click();
         }, 1000);
       }
 
