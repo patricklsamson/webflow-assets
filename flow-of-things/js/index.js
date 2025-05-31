@@ -54,6 +54,10 @@ runOnDomReady(() => {
 
           setScript(selectors);
         });
+
+        setTimeout(() => {
+          button.click();
+        }, 1000);
       }
 
       if (button.dataset.button.includes("all")) {
