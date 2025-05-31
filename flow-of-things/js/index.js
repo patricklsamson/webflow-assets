@@ -32,48 +32,54 @@ runOnDomReady(() => {
 
   const selectors = document.querySelectorAll('[data-input="selector"]');
 
-  setScript(selectors, true);
+  if (selectors.length > 0) {
+    setScript(selectors, true);
+
+    selectors.forEach((selector) => {
+      selector.addEventListener("change", function () {
+        setScript(selectors);
+      });
+    });
+  }
 
   const buttons = document.querySelectorAll("[data-button]");
 
-  buttons.forEach((button) => {
-    if (button.dataset.button === "check-default") {
-      button.addEventListener("click", function () {
-        selectors.forEach((selector) => {
-          selector.checked = selector.dataset.checked === "true";
+  if (buttons.length > 0) {S
+    buttons.forEach((button) => {
+      if (button.dataset.button === "check-default") {
+        button.addEventListener("click", function () {
+          selectors.forEach((selector) => {
+            selector.checked = selector.dataset.checked === "true";
+          });
+
+          setScript(selectors);
         });
+      }
 
-        setScript(selectors);
-      });
-    }
+      if (button.dataset.button.includes("all")) {
+        button.addEventListener("click", function () {
+          selectors.forEach((selector) => {
+            selector.checked = this.dataset.button === "check-all";
+          });
 
-    if (button.dataset.button.includes("all")) {
-      button.addEventListener("click", function () {
-        selectors.forEach((selector) => {
-          selector.checked = this.dataset.button === "check-all";
+          setScript(selectors);
         });
-
-        setScript(selectors);
-      });
-    }
-  });
-
-  selectors.forEach((selector) => {
-    selector.addEventListener("change", function () {
-      setScript(selectors);
+      }
     });
-  });
+  }
 
   const copy = document.querySelector("[data-button='copy']");
 
-  copy.addEventListener("click", () => {
-    const script = document.getElementById("script").querySelector("code");
+  if (copy) {
+    copy.addEventListener("click", () => {
+      const script = document.getElementById("script").querySelector("code");
 
-    navigator.clipboard.writeText(script.innerText);
-    copy.innerText = "Copied!";
+      navigator.clipboard.writeText(script.innerText);
+      copy.innerText = "Copied!";
 
-    setTimeout(() => {
-      copy.innerText = "Copy";
-    }, 500);
-  });
+      setTimeout(() => {
+        copy.innerText = "Copy";
+      }, 500);
+    });
+  }
 });
