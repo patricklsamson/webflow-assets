@@ -57,7 +57,7 @@ runOnDomReady(() => {
 
         setTimeout(() => {
           button.click();
-        }, 2000);
+        }, 1000);
       }
 
       if (button.dataset.button.includes("all")) {
