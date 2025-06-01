@@ -4,40 +4,43 @@ injectStylesheets([
 ]);
 
 runOnDomReady(() => {
-  const setScript = (selectors, initial) => {
+  const setScript = (initial) => {
+    const selectors = document.querySelectorAll('[data-input="selector"]');
     const script = document.getElementById("script").querySelector("code");
 
-    script.innerHTML = "";
+    if (script) {
+      script.innerHTML = "";
 
-    if (selectors) {
-      selectors.forEach((selector) => {
-        if (initial && selector.dataset.checked === "true") {
-          selector.checked = true;
-        }
+      if (selectors.length > 0) {
+        selectors.forEach((selector) => {
+          if (initial && selector.dataset.checked === "true") {
+            selector.checked = true;
+          }
 
-        const utilityFunction = document.querySelector(
-          `[data-script="${selector.id}"]`
-        );
+          const utilityFunction = document.querySelector(
+            `[data-script="${selector.id}"]`
+          );
 
-        script.innerHTML += selector.checked
-          ? `${utilityFunction.innerText.trim()},`
-          : "";
-      });
+          script.innerHTML += selector.checked
+            ? `${utilityFunction.innerText.trim()},`
+            : "";
+        });
+      }
+
+      script.innerHTML = script.innerText.length > 0
+        ? `const ${script.innerText.slice(0, -1)};`
+        : "None selected";
     }
-
-    script.innerHTML = script.innerText.length > 0
-      ? `const ${script.innerText.slice(0, -1)};`
-      : "None selected";
   };
+
+  setScript(true);
 
   const selectors = document.querySelectorAll('[data-input="selector"]');
 
   if (selectors.length > 0) {
-    setScript(selectors, true);
-
     selectors.forEach((selector) => {
       selector.addEventListener("change", function () {
-        setScript(selectors);
+        setScript();
       });
     });
   }
@@ -52,7 +55,7 @@ runOnDomReady(() => {
             selector.checked = selector.dataset.checked === "true";
           });
 
-          setScript(selectors);
+          setScript();
         });
 
         setTimeout(() => {
@@ -66,7 +69,7 @@ runOnDomReady(() => {
             selector.checked = this.dataset.button === "check-all";
           });
 
-          setScript(selectors);
+          setScript();
         });
       }
 
