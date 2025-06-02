@@ -413,11 +413,3 @@ th, td {
 html.wf-design-mode .masonry_item {
   position: static;
 }
-
-/*
-WEBFLOW DESIGNER EXCLUDED
-
-html:not(.wf-design-mode) body {
-
-}
-*/
