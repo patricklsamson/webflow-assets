@@ -67,6 +67,7 @@ runOnDomReady(() => {
 
           if (!script.innerText.includes("None")) {
             clearInterval(clickButton);
+            console.log("Cleared");
           }
         }, 500);
       }
