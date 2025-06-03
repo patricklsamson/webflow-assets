@@ -67,7 +67,10 @@ runOnDomReady(() => {
             "code"
           );
 
-          if (!script.innerText.includes("None")) {
+          if (
+            script.innerText.length > 0 &&
+            !script.innerText.includes("None")
+          ) {
             clearInterval(clickButton);
             console.log("Cleared");
           }
