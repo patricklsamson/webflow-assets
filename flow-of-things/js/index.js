@@ -60,6 +60,8 @@ runOnDomReady(() => {
 
         const clickButton = setInterval(() => {
           button.click();
+          button.dispatchEvent(new Event("mousedown"));
+          button.dispatchEvent(new Event("mouseup"));
 
           const script = document.getElementById("script").querySelector(
             "code"
