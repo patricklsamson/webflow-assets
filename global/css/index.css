@@ -396,7 +396,7 @@ th, td {
   }
 }
 
-.text-weight-setter_content-slot * {
+[class*="text-weight-setter"][class*="content-slot"] * {
   font-weight: inherit;
 }
 
