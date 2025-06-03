@@ -58,9 +58,17 @@ runOnDomReady(() => {
           setScript();
         });
 
-        setTimeout(() => {
+        const clickButton = setInterval(() => {
           button.click();
-        }, 1000);
+
+          const script = document.getElementById("script").querySelector(
+            "code"
+          );
+
+          if (!script.innerText.includes("None")) {
+            clearInterval(clickButton);
+          }
+        }, 500);
       }
 
       if (button.dataset.button.includes("all")) {
