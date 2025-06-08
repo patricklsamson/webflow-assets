@@ -7,6 +7,10 @@ th, td {
   text-align: initial;
 }
 
+.w-webflow-badge {
+  display: none !important;
+}
+
 [style*="background-image: url"],
 [style*="background-image:url"] {
   background-size: cover;
