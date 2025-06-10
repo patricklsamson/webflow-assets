@@ -400,16 +400,20 @@ th, td {
   }
 }
 
-[class*="font-setter"][class*="content-slot"] * {
+div:not([data-wf--font-setter--font="inherit"]) > [class*="font-setter"][
+  class*="content-slot"
+] * {
   font-family: inherit;
 }
 
-[class*="text-weight-setter"][class*="content-slot"] * {
+div:not([data-wf--text-weight-setter--weight="inherit"]) > [
+  class*="text-weight-setter"
+][class*="content-slot"] * {
   font-weight: inherit;
 }
 
 .initial_text::first-letter {
-  font-size: initial;
+  font-size: inherit;
 }
 
 .vertical-tab_wrapper::before,
