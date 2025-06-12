@@ -41,6 +41,11 @@ path[stroke^="#"] {
   display: none;
 }
 
+.video-fluid {
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
 .grid_wrapper[data-grid_gutter="xsmall"] {
   margin: calc(var(--_grid---gutter-xsmall) * -1);
 }
