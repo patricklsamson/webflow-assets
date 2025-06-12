@@ -7,6 +7,14 @@ th, td {
   text-align: initial;
 }
 
+path[fill^="#"] {
+  fill: currentColor;
+}
+
+path[stroke^="#"] {
+  stroke: currentColor;
+}
+
 .w-webflow-badge {
   display: none !important;
 }
