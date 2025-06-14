@@ -41,6 +41,10 @@ path[stroke^="#"] {
   display: none;
 }
 
+.background-overlay ~ * {
+  position: relative;
+}
+
 .video-fluid {
   background-size: cover;
   background-position: 50% 50%;
