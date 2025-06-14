@@ -318,6 +318,68 @@ const initFormSubmit = (
   }
 };
 
+const lazyLoadVideos = () => {
+  const videos = Array.from(
+    document.querySelectorAll('video[data-lazy="true"]')
+  );
+
+  if (videos.length > 0) {
+    if ("IntersectionObserver" in window) {
+      const videoObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            for (const source in entry.target.children) {
+              const videoSource = entry.target.children[source];
+
+              if (
+                typeof videoSource.tagName === "string" &&
+                videoSource.tagName === "SOURCE"
+              ) {
+                videoSource.src = videoSource.dataset.src;
+              }
+            }
+
+            entry.target.load();
+            entry.target.removeAttribute("data-lazy");
+            observer.unobserve(entry.target);
+          }
+        });
+      });
+
+      videos.forEach((video) => {
+        videoObserver.observe(video);
+      });
+    } else {
+      const watchVideosVisibility = () => {
+        videos.forEach((video) => {
+          const rect = video.getBoundingClientRect();
+
+          if (
+            rect.top < window.innerHeight && rect.bottom > 0 &&
+            rect.left < window.innerWith && rect.right > 0
+          ) {
+            for (const source of video.children) {
+              if (
+                typeof source.tagName === "string" && source.tagName === "SOURCE"
+              ) {
+                source.src = source.dataset.src;
+              }
+            }
+
+            video.load();
+            video.removeAttribute("data-lazy");
+          }
+        });
+      };
+
+      watchVideosVisibility();
+      window.addEventListener("scroll", watchVideosVisibility);
+      window.addEventListener("resize", watchVideosVisibility);
+      window.addEventListener("orientationchange", watchVideosVisibility);
+    }
+  }
+};
+
 const initMediaMatch = (breakpoint, onMatch, onUnmatch) => {
   const runOnMatch = (media) => {
     if (media.matches) {
