@@ -356,7 +356,7 @@ const lazyLoadVideos = () => {
 
           if (
             rect.top < window.innerHeight && rect.bottom > 0 &&
-            rect.left < window.innerWith && rect.right > 0
+            rect.left < window.innerWidth && rect.right > 0
           ) {
             for (const source of video.children) {
               if (
