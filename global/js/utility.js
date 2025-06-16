@@ -367,7 +367,7 @@ const lazyLoadAssets = () => {
         assetObserver.observe(asset);
       });
     } else {
-      const watchVisibility = () => {
+      const loadAssets = () => {
         assets.forEach((asset) => {
           const rect = asset.getBoundingClientRect();
 
@@ -403,10 +403,10 @@ const lazyLoadAssets = () => {
         });
       };
 
-      watchVisibility();
-      window.addEventListener("scroll", watchVisibility);
-      window.addEventListener("resize", watchVisibility);
-      window.addEventListener("orientationchange", watchVisibility);
+      loadAssets();
+      window.addEventListener("scroll", loadAssets);
+      window.addEventListener("resize", loadAssets);
+      window.addEventListener("orientationchange", loadAssets);
     }
   }
 };
