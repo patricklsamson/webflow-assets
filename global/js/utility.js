@@ -319,9 +319,7 @@ const initFormSubmit = (
 };
 
 const lazyLoadAssets = () => {
-  const assets = Array.from(
-    document.querySelectorAll('[data-lazy="true"]')
-  );
+  const assets = Array.from(document.querySelectorAll('[data-lazy="true"]'));
 
   if (assets.length > 0) {
     if ("IntersectionObserver" in window) {
