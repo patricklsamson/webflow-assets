@@ -443,7 +443,14 @@ div:not([data-wf--text-weight-setter--weight="inherit"]) > [
   display: none;
 }
 
+div[data-src] {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 /* WEBFLOW DESIGNER ONLY */
 html.wf-design-mode .masonry_item {
   position: static;
 }
+/* WEBFLOW DESIGNER ONLY */

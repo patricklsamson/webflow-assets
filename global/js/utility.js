@@ -318,64 +318,95 @@ const initFormSubmit = (
   }
 };
 
-const lazyLoadVideos = () => {
-  const videos = Array.from(
-    document.querySelectorAll('video[data-lazy="true"]')
+const lazyLoadAssets = () => {
+  const assets = Array.from(
+    document.querySelectorAll('[data-lazy="true"]')
   );
 
-  if (videos.length > 0) {
+  if (assets.length > 0) {
     if ("IntersectionObserver" in window) {
-      const videoObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            for (const source in entry.target.children) {
-              const videoSource = entry.target.children[source];
+      const assetObserver = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              if (
+                typeof entry.target.tagName === "string" &&
+                entry.target.tagName === "VIDEO"
+              ) {
+                for (const source of entry.target.children) {
+                  if (
+                    typeof source.tagName === "string" &&
+                    source.tagName === "SOURCE"
+                  ) {
+                    source.src = source.dataset.src;
+                  }
+                }
+
+                entry.target.load();
+                entry.target.removeAttribute("data-lazy");
+                observer.unobserve(entry.target);
+              }
 
               if (
-                typeof videoSource.tagName === "string" &&
-                videoSource.tagName === "SOURCE"
+                typeof entry.target.tagName === "string" &&
+                entry.target.tagName === "DIV"
               ) {
-                videoSource.src = videoSource.dataset.src;
+                entry.target.style.backgroundImage = `url(${
+                  entry.target.dataset.src
+                })`;
+
+                entry.target.removeAttribute("data-lazy");
+                observer.unobserve(entry.target);
               }
             }
+          });
+        }
+      );
 
-            entry.target.load();
-            entry.target.removeAttribute("data-lazy");
-            observer.unobserve(entry.target);
-          }
-        });
-      });
-
-      videos.forEach((video) => {
-        videoObserver.observe(video);
+      assets.forEach((asset) => {
+        assetObserver.observe(asset);
       });
     } else {
-      const watchVideosVisibility = () => {
-        videos.forEach((video) => {
-          const rect = video.getBoundingClientRect();
+      const watchVisibility = () => {
+        assets.forEach((asset) => {
+          const rect = asset.getBoundingClientRect();
 
           if (
             rect.top < window.innerHeight && rect.bottom > 0 &&
             rect.left < window.innerWidth && rect.right > 0
           ) {
-            for (const source of video.children) {
-              if (
-                typeof source.tagName === "string" && source.tagName === "SOURCE"
-              ) {
-                source.src = source.dataset.src;
+            if (
+              typeof asset.tagName === "string" &&
+              asset.tagName === "VIDEO"
+            ) {
+              for (const source of asset.children) {
+                if (
+                  typeof source.tagName === "string" &&
+                  source.tagName === "SOURCE"
+                ) {
+                  source.src = source.dataset.src;
+                }
               }
+
+              asset.load();
+              asset.removeAttribute("data-lazy");
             }
 
-            video.load();
-            video.removeAttribute("data-lazy");
+            if (
+              typeof asset.tagName === "string" &&
+              asset.tagName === "DIV"
+            ) {
+              asset.style.backgroundImage = `url(${asset.dataset.src})`;
+              asset.removeAttribute("data-lazy");
+            }
           }
         });
       };
 
-      watchVideosVisibility();
-      window.addEventListener("scroll", watchVideosVisibility);
-      window.addEventListener("resize", watchVideosVisibility);
-      window.addEventListener("orientationchange", watchVideosVisibility);
+      watchVisibility();
+      window.addEventListener("scroll", watchVisibility);
+      window.addEventListener("resize", watchVisibility);
+      window.addEventListener("orientationchange", watchVisibility);
     }
   }
 };
