@@ -7,16 +7,16 @@ th, td {
   text-align: initial;
 }
 
-svg {
+[class*="icon"] svg {
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
-path[fill^="#"] {
+[class*="icon"] path[fill^="#"] {
   fill: currentColor;
 }
 
-path[stroke^="#"] {
+[class*="icon"] path[stroke^="#"] {
   stroke: currentColor;
 }
 
