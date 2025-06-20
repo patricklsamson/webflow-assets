@@ -341,8 +341,6 @@ const lazyLoadAssets = () => {
                 }
 
                 entry.target.load();
-                entry.target.removeAttribute("data-lazy");
-                observer.unobserve(entry.target);
               }
 
               if (
@@ -352,10 +350,10 @@ const lazyLoadAssets = () => {
                 entry.target.style.backgroundImage = `url(${
                   entry.target.dataset.src
                 })`;
-
-                entry.target.removeAttribute("data-lazy");
-                observer.unobserve(entry.target);
               }
+
+              entry.target.removeAttribute("data-lazy");
+              observer.unobserve(entry.target);
             }
           });
         }
@@ -387,7 +385,6 @@ const lazyLoadAssets = () => {
               }
 
               asset.load();
-              asset.removeAttribute("data-lazy");
             }
 
             if (
@@ -395,8 +392,9 @@ const lazyLoadAssets = () => {
               asset.tagName === "DIV"
             ) {
               asset.style.backgroundImage = `url(${asset.dataset.src})`;
-              asset.removeAttribute("data-lazy");
             }
+
+            asset.removeAttribute("data-lazy");
           }
         });
       };
