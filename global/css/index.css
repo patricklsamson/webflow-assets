@@ -1,3 +1,11 @@
+video {
+  display: inline-block;
+  vertical-align: middle;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
 table {
   table-layout: fixed;
 }
