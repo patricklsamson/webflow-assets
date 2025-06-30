@@ -1,3 +1,7 @@
+.w-webflow-badge {
+  display: none !important;
+}
+
 video {
   display: inline-block;
   vertical-align: middle;
@@ -26,10 +30,6 @@ th, td {
 
 [class*="icon"] path[stroke^="#"] {
   stroke: currentColor;
-}
-
-.w-webflow-badge {
-  display: none !important;
 }
 
 [style*="background-image: url"],
