@@ -98,12 +98,14 @@ const initBottomAnchors = () => {
           `[data-scroll_id="${this.dataset.scroll_href}"]`
         );
 
-        window.scrollTo({
-          top: (
-            target.getBoundingClientRect().top + window.scrollY
-          ) - window.innerHeight,
-          behavior: "smooth",
-        });
+        if (target) {
+          window.scrollTo({
+            top: (
+              target.getBoundingClientRect().top + window.scrollY
+            ) - window.innerHeight,
+            behavior: "smooth",
+          });
+        }
       });
     });
   }
