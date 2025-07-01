@@ -88,6 +88,28 @@ const openActiveAccordions = () => {
   }
 };
 
+const initBottomAnchors = () => {
+  const triggers = document.querySelectorAll("[data-scroll_href]");
+
+  if (triggers.length > 0) {
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", function () {
+        const target = document.querySelector(
+          `[data-scroll_id="${this.dataset.scroll_href}"]`
+        );
+
+        const scrollPosition = target.getBoundingClientRect().top +
+          window.scrollY;
+
+        window.scrollTo({
+          top: scrollPosition - window.innerHeight,
+          behavior: "smooth",
+        });
+      });
+    });
+  }
+};
+
 const initTimeToRead = (
   wordsBefore,
   wordsAfter = "read",
