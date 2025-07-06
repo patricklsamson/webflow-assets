@@ -93,7 +93,9 @@ const initBottomAnchors = () => {
 
   if (triggers.length > 0) {
     triggers.forEach((trigger) => {
-      trigger.addEventListener("click", function () {
+      trigger.addEventListener("click", function (e) {
+        e.preventDefault();
+
         const target = document.querySelector(
           `[data-scroll_id="${this.dataset.scroll_href}"]`
         );
