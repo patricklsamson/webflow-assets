@@ -58,6 +58,10 @@ th, td {
   background-position: 50% 50%;
 }
 
+.form_recaptcha {
+  max-width: 100%;
+}
+
 .grid_wrapper[data-grid_gutter="xsmall"] {
   margin: calc(var(--_grid---gutter-xsmall) * -1);
 }
