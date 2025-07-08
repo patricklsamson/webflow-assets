@@ -214,10 +214,13 @@ const removeInvisibleElements = () => {
 
 const requestApi = async (
   url,
-  loaderIdentifier,
-  body = null,
-  method = "POST",
-  headers = { "Content-Type": "application/json" }
+  {
+    loaderIdentifier,
+    callback = null,
+    body = null,
+    method = "POST",
+    headers = { "Content-Type": "application/json" }
+  }
 ) => {
   const setLoaderDisplay = (show) => {
     if (loaderIdentifier) {
@@ -257,17 +260,17 @@ const requestApi = async (
       throw new Error("Error occurred");
     }
 
-    if (response.status === 204) {
-      return null;
+    const data = response.status === 204
+      ? null
+      : contentType === "application/json"
+        ? await response.json()
+        : await response.text();
+
+    if (callback) {
+      callback(data);
     }
 
-    const data = contentType === "application/json"
-      ? await response.json()
-      : await response.text();
-
     setLoaderDisplay();
-
-    return data;
   } catch (error) {
     setLoaderDisplay();
 
@@ -322,11 +325,18 @@ const initFormSubmit = (
         setDisplay(loadingMessage);
 
         const response = await fetch(url, { method, headers, body });
-        const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message || "Error occurred");
+          if (response.headers.get("Content-Type") === "application/json") {
+            const data = await response.json();
+
+            throw new Error(data.message || "Error occurred");
+          }
+
+          throw new Error("Error occurred");
         }
+
+        const data = response.status === 204 ? null : await response.json();
 
         setDisplay(this, "none");
         setDisplay(loadingMessage, "none");
