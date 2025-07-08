@@ -214,10 +214,25 @@ const removeInvisibleElements = () => {
 
 const requestApi = async (
   url,
+  loaderIdentifier,
   body = null,
   method = "POST",
   headers = { "Content-Type": "application/json" }
 ) => {
+  const setLoaderDisplay = (show) => {
+    if (loaderIdentifier) {
+      const loader = document.getElementById(loaderIdentifier);
+
+      if (loader) {
+        if (show) {
+          loader.classList.remove("hide");
+        } else {
+          loader.classList.add("hide");
+        }
+      }
+    }
+  };
+
   try {
     if (!headers["Content-Type"]) {
       headers["Content-Type"] = "application/json";
@@ -226,6 +241,8 @@ const requestApi = async (
     const params = body && headers["Content-Type"] === "application/json"
       ? { method, headers, body: JSON.stringify(body) }
       : { method, headers };
+
+    setLoaderDisplay(true);
 
     const response = await fetch(url, params);
     const contentType = response.headers.get("Content-Type");
@@ -244,10 +261,16 @@ const requestApi = async (
       return null;
     }
 
-    return contentType === "application/json"
+    const data = contentType === "application/json"
       ? await response.json()
       : await response.text();
+
+    setLoaderDisplay();
+
+    return data;
   } catch (error) {
+    setLoaderDisplay();
+
     throw error;
   }
 };
@@ -294,18 +317,16 @@ const initFormSubmit = (
       const errorMessage = parentNode.querySelector(".w-form-fail");
 
       try {
+        const body = JSON.stringify(buildBody(inputs));
+
         setDisplay(loadingMessage);
 
-        const body = JSON.stringify(buildBody(inputs));
         const response = await fetch(url, { method, headers, body });
+        const data = await response.json();
 
         if (!response.ok) {
-          const data = await response.json();
-
           throw new Error(data.message || "Error occurred");
         }
-
-        const data = response.status === 204 ? null : await response.json();
 
         setDisplay(this, "none");
         setDisplay(loadingMessage, "none");
