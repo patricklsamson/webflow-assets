@@ -6,10 +6,12 @@ injectStylesheets([
 runOnDomReady(() => {
   const setScript = (initial) => {
     const selectors = document.querySelectorAll('[data-input="selector"]');
-    const script = document.getElementById("script").querySelector("code");
+    const script = document.getElementById("script");
 
     if (script) {
-      script.innerHTML = "";
+      const code = script.querySelector("code");
+
+      code.innerHTML = "";
 
       if (selectors.length > 0) {
         selectors.forEach((selector) => {
@@ -21,14 +23,14 @@ runOnDomReady(() => {
             `[data-script="${selector.id}"]`
           );
 
-          script.innerHTML += selector.checked
+          code.innerHTML += selector.checked
             ? `${utilityFunction.innerText.trim()},`
             : "";
         });
       }
 
-      script.innerHTML = script.innerText.length > 0
-        ? `const ${script.innerText.slice(0, -1)};`
+      code.innerHTML = code.innerText.length > 0
+        ? `const ${code.innerText.slice(0, -1)};`
         : "None selected";
     }
   };
