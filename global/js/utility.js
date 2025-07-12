@@ -2,14 +2,24 @@ const runOnDomReady = (callback) => {
   return document.addEventListener("DOMContentLoaded", callback);
 };
 
-const injectStylesheets = (stylesheets) => {
-  if (stylesheets.length > 0) {
-    stylesheets.forEach((stylesheet) => {
-      const link = document.createElement("link");
+const injectSourceCodes = (sourceCodes) => {
+  if (sourceCodes.length > 0) {
+    sourceCodes.forEach((sourceCode) => {
+      const { type, url, location } = sourceCode;
+      const domTarget = document[location ? location : "head"];
 
-      link.setAttribute("rel", "stylesheet");
-      link.setAttribute("href", stylesheet);
-      document.head.appendChild(link);
+      if (type === "css") {
+        const link = document.createElement("link");
+
+        link.setAttribute("rel", "stylesheet");
+        link.setAttribute("href", url);
+        domTarget.appendChild(link);
+      } else {
+        const script = document.createElement("script");
+
+        script.setAttribute("src", url);
+        domTarget.appendChild(script);
+      }
     });
   }
 };
