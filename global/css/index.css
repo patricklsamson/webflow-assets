@@ -2,6 +2,10 @@
   display: none !important;
 }
 
+address {
+  font-style: normal;
+}
+
 video {
   display: inline-block;
   vertical-align: middle;
