@@ -446,6 +446,12 @@ div:not(
   font-weight: inherit;
 }
 
+div:not(
+  [data-wf--line-height-setter--height="inherit"]
+) > [class*="line-height-setter"][class*="content-slot"] * {
+  line-height: inherit;
+}
+
 .initial_text::first-letter {
   font-size: inherit;
 }
