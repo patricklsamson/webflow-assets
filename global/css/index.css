@@ -447,6 +447,12 @@ div:not(
 }
 
 div:not(
+  [data-wf--text-resizer--size="inherit"]
+) > [class*="text-resizer"][class*="content-slot"] * {
+  font-size: inherit;
+}
+
+div:not(
   [data-wf--line-height-setter--height="inherit"]
 ) > [class*="line-height-setter"][class*="content-slot"] * {
   line-height: inherit;
