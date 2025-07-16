@@ -434,27 +434,27 @@ th, td {
   }
 }
 
-div:not(
+.component_font-setter:not(
   [data-wf--font-setter--font="inherit"]
-) > [class*="font-setter"][class*="content-slot"] * {
+) > .font-setter_content-slot * {
   font-family: inherit;
 }
 
-div:not(
+.component_text-weight-setter:not(
   [data-wf--text-weight-setter--weight="inherit"]
-) > [class*="text-weight-setter"][class*="content-slot"] * {
+) > .text-weight-setter_content-slot * {
   font-weight: inherit;
 }
 
-div:not(
+.component_text-resizer:not(
   [data-wf--text-resizer--size="inherit"]
-) > [class*="text-resizer"][class*="content-slot"] * {
+) > .text-resizer_content-slot * {
   font-size: inherit;
 }
 
-div:not(
+.component_line-height-setter:not(
   [data-wf--line-height-setter--height="inherit"]
-) > [class*="line-height-setter"][class*="content-slot"] * {
+) > .line-height-setter_content-slot * {
   line-height: inherit;
 }
 
