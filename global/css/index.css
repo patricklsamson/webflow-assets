@@ -41,7 +41,10 @@ th, td {
 }
 
 [class*="icon"] svg {
+  display: inline-block;
+  vertical-align: middle;
   width: auto;
+  max-width: 100%;
   height: auto;
 }
 
