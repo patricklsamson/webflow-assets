@@ -13,9 +13,14 @@ video {
   max-width: 100%;
 }
 
+svg {
+  object-fit: contain;
+}
+
 video {
   width: auto;
   height: auto;
+  object-fit: fill;
 }
 
 table {
