@@ -6,12 +6,16 @@ address {
   font-style: normal;
 }
 
+svg,
 video {
   display: inline-block;
   vertical-align: middle;
+  max-width: 100%;
+}
+
+video {
   width: auto;
   height: auto;
-  max-width: 100%;
 }
 
 table {
@@ -41,10 +45,7 @@ th, td {
 }
 
 [class*="icon"] svg {
-  display: inline-block;
-  vertical-align: middle;
   width: auto;
-  max-width: 100%;
   height: auto;
 }
 
