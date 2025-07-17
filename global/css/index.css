@@ -23,19 +23,6 @@ th, td {
   text-align: initial;
 }
 
-[class*="icon"] svg {
-  width: 100%;
-  height: auto;
-}
-
-[class*="icon"] path[fill^="#"] {
-  fill: currentColor;
-}
-
-[class*="icon"] path[stroke^="#"] {
-  stroke: currentColor;
-}
-
 [style*="background-image: url"],
 [style*="background-image:url"] {
   background-size: cover;
@@ -51,6 +38,19 @@ th, td {
 
 .text-style-1line *:not(div):not(p) {
   display: none;
+}
+
+[class*="icon"] svg {
+  width: 100%;
+  height: auto;
+}
+
+[class*="icon"] path[fill^="#"] {
+  fill: currentColor;
+}
+
+[class*="icon"] path[stroke^="#"] {
+  stroke: currentColor;
 }
 
 .background-overlay ~ * {
