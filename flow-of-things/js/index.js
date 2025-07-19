@@ -31,7 +31,7 @@ const setStructuredData = (pages) => {
           ).getAttribute("content"),
           mainEntity: {
             ...author,
-            url,
+            url: window.location.href,
             logo: {
               "@type": "ImageObject",
               url: "https://cdn.prod.website-files.com/66944bbc65c60d35578879e7/66944bbc65c60d3557887a55_client-first-logo-white.svg",
