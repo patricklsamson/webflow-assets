@@ -20,7 +20,7 @@ svg {
 video {
   width: auto;
   height: auto;
-  object-fit: fill;
+  object-fit: cover;
 }
 
 table {
