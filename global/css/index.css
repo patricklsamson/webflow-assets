@@ -54,8 +54,11 @@ th, td {
   height: auto;
 }
 
-a [class*="icon"] path {
+a [class*="icon"] path[fill] {
   fill: currentColor;
+}
+
+a [class*="icon"] path[stroke] {
   stroke: currentColor;
 }
 
