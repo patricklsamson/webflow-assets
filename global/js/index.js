@@ -393,26 +393,15 @@ const lazyLoadAssets = () => {
         (entries, observer) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              if (
-                typeof entry.target.tagName === "string" &&
-                entry.target.tagName === "VIDEO"
-              ) {
+              if (entry.target.tagName === "VIDEO") {
                 for (const source of entry.target.children) {
-                  if (
-                    typeof source.tagName === "string" &&
-                    source.tagName === "SOURCE"
-                  ) {
-                    source.src = source.dataset.src;
-                  }
+                  source.src = source.dataset.src;
                 }
 
                 entry.target.load();
               }
 
-              if (
-                typeof entry.target.tagName === "string" &&
-                entry.target.tagName === "DIV"
-              ) {
+              if (entry.target.tagName === "DIV") {
                 entry.target.style.backgroundImage = `url(${
                   entry.target.dataset.src
                 })`;
@@ -437,26 +426,15 @@ const lazyLoadAssets = () => {
             rect.top < window.innerHeight && rect.bottom > 0 &&
             rect.left < window.innerWidth && rect.right > 0
           ) {
-            if (
-              typeof asset.tagName === "string" &&
-              asset.tagName === "VIDEO"
-            ) {
+            if (asset.tagName === "VIDEO") {
               for (const source of asset.children) {
-                if (
-                  typeof source.tagName === "string" &&
-                  source.tagName === "SOURCE"
-                ) {
-                  source.src = source.dataset.src;
-                }
+                source.src = source.dataset.src;
               }
 
               asset.load();
             }
 
-            if (
-              typeof asset.tagName === "string" &&
-              asset.tagName === "DIV"
-            ) {
+            if (asset.tagName === "DIV") {
               asset.style.backgroundImage = `url(${asset.dataset.src})`;
             }
 
