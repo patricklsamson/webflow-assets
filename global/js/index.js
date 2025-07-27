@@ -288,6 +288,42 @@ const requestApi = async (
   }
 };
 
+const validateFields = (form, schema) => {
+  const { elements } = form;
+  let hasError = false;
+
+  for (const input of elements) {
+    const validations = schema[input.id];
+
+    if (validations) {
+      for (const { validate, message } of validations) {
+        hasError = validate();
+
+        const errorMessage = document.querySelector(
+          `[data-field_error="${input.id}"]`
+        );
+
+        if (errorMessage) {
+          if (hasError) {
+            const messageBlock = errorMessage.querySelector(
+              "div"
+            ) || errorMessage;
+
+            messageBlock.innerHTML = message;
+            errorMessage.classList.remove("hide");
+
+            break;
+          } else {
+            errorMessage.classList.add("hide");
+          }
+        }
+      }
+    }
+  }
+
+  return hasError;
+};
+
 const initFormSubmit = (
   identifier,
   {
@@ -297,7 +333,8 @@ const initFormSubmit = (
     headers = { "Content-Type": "application/json" },
     customSuccess = null,
     formDisplay = "block",
-    displayApiError = false
+    displayApiError = false,
+    schema = null
   }
 ) => {
   const element = document.getElementById(identifier);
@@ -359,7 +396,7 @@ const initFormSubmit = (
 
         setDisplay(errorMessage, "none");
 
-        if (isForm) {
+        if (!isForm) {
           form.submit();
         }
       } catch (error) {
@@ -391,6 +428,14 @@ const initFormSubmit = (
         e.preventDefault();
 
         const form = element.closest("form");
+
+        if (schema) {
+          const hasError = validateFields(form, schema);
+
+          if (hasError) {
+            return false;
+          }
+        }
 
         requestApi(form, false);
       });
