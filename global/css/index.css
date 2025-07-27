@@ -71,6 +71,11 @@ a [class*="icon"] path[stroke] {
   background-position: 50% 50%;
 }
 
+html.wf-design-mode [data-message="loading"].hide,
+html.wf-design-mode [data-field_error].hide {
+  display: block !important;
+}
+
 [class*="font-setter"] > [class*="font-setter"][class*="w-variant"] * {
   font-family: inherit;
 }
