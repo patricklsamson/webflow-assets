@@ -300,27 +300,11 @@ const initFormSubmit = (
     displayApiError = false
   }
 ) => {
-  const form = document.getElementById(identifier);
+  const element = document.getElementById(identifier);
 
-  if (form) {
-    if (!form.getAttribute("action")) {
-      form.setattribute("action", "/");
-    }
-
-    form.addEventListener("submit", async function (e) {
-      e.preventDefault();
-
-      const setDisplay = (element, display = "block", callback = null) => {
-        if (element) {
-          if (callback) {
-            callback();
-          }
-
-          element.style.display = display;
-        }
-      };
-
-      const { elements: inputs, parentNode } = this;
+  if (element) {
+    const requestApi = async (form, isForm) => {
+      const { elements: inputs, parentNode } = form;
 
       const loadingMessage = parentNode.querySelector(
         "[data-message='loading']"
@@ -329,10 +313,24 @@ const initFormSubmit = (
       const successMessage = parentNode.querySelector(".w-form-done");
       const errorMessage = parentNode.querySelector(".w-form-fail");
 
+      const setDisplay = (element, display = "block", callback = null) => {
+        if (element) {
+          if (callback) {
+            const message = element.querySelector("div") || element;
+
+            callback(message);
+          }
+
+          if (isForm) {
+            element.style.display = display;
+          }
+        }
+      };
+
       try {
         const body = JSON.stringify(buildBody(inputs));
 
-        setDisplay(loadingMessage);
+        loadingMessage.classList.remove("hide");
 
         const response = await fetch(url, { method, headers, body });
 
@@ -348,39 +346,55 @@ const initFormSubmit = (
 
         const data = response.status === 204 ? null : await response.json();
 
-        setDisplay(this, "none");
-        setDisplay(loadingMessage, "none");
+        setDisplay(form, "none");
+        loadingMessage.classList.add("hide");
 
-        setDisplay(successMessage, "block", () => {
+        setDisplay(successMessage, "block", (message) => {
           if (customSuccess) {
-            const successMessageBlock = successMessage.querySelector("div") ||
-              successMessage;
-
-            successMessageBlock.innerHTML =
-              typeof customSuccess === "string"
-                ? customSuccess
-                : customSuccess(data);
+            message.innerHTML = typeof customSuccess === "string"
+              ? customSuccess
+              : customSuccess(data);
           }
         });
 
         setDisplay(errorMessage, "none");
+
+        if (isForm) {
+          form.submit();
+        }
       } catch (error) {
-        setDisplay(this, formDisplay);
-        setDisplay(loadingMessage, "none");
+        setDisplay(form, formDisplay);
+        loadingMessage.classList.add("hide");
         setDisplay(successMessage, "none");
 
-        setDisplay(errorMessage, "block", () => {
+        setDisplay(errorMessage, "block", (message) => {
           if (displayApiError) {
-            const errorMessageBlock = errorMessage.querySelector("div") ||
-              errorMessage;
-
-            errorMessageBlock.innerHTML = error.message || "Error occurred";
+            message.innerHTML = error.message || "Error occurred";
           }
         });
 
         throw error;
       }
-    });
+    };
+
+    if (element.tagName === "FORM") {
+      if (!element.getAttribute("action")) {
+        element.setattribute("action", "/");
+      }
+
+      element.addEventListener("submit", function (e) {
+        e.preventDefault();
+        requestApi(this, true);
+      });
+    } else {
+      element.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const form = element.closest("form");
+
+        requestApi(form, false);
+      });
+    }
   }
 };
 
