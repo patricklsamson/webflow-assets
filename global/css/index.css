@@ -71,6 +71,12 @@ a [class*="icon"] path[stroke] {
   background-position: 50% 50%;
 }
 
+.hint-required:after {
+  content: "*";
+  padding-left: 0.25em;
+  color: var(--text-color--text-error);
+}
+
 html.wf-design-mode [data-message="loading"].hide,
 html.wf-design-mode [data-field_error].hide {
   display: block !important;
