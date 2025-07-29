@@ -41,11 +41,9 @@ const resolveSpans = () => {
             index++;
           }
 
-          if (spanClass) {
-            return `<span class="${spanClass}">${content}</span>`;
-          }
-
-          return content;
+          return spanClass
+            ? `<span class="${spanClass}">${content}</span>`
+            : content;
         }
       );
 
