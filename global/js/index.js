@@ -1,7 +1,3 @@
-const runOnDomReady = (callback) => {
-  return document.addEventListener("DOMContentLoaded", callback);
-};
-
 const injectSourceCodes = (sourceCodes) => {
   if (sourceCodes.length > 0) {
     sourceCodes.forEach((sourceCode) => {
