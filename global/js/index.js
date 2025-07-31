@@ -690,46 +690,39 @@ const initSlider = (identifier, config, breakpoint) => {
 };
 
 const resolveSliderHeight = (swiper) => {
-  const params = swiper.params;
-  const swiperEl = swiper.el;
+  const { params, slides, el } = swiper;
+  const { direction, slidesPerView, loop, spaceBetween } = params;
 
-  if (params.direction && params.direction === "vertical") {
-    const swiperSlides = swiper.slides;
-    const slidesPerView = params.slidesPerView || 1;
-    const activeIndex = swiper[params.loop ? "realIndex" : "activeIndex"];
+  if (direction && direction === "vertical") {
+    const activeIndex = swiper[loop ? "realIndex" : "activeIndex"];
+    const resolvedSlidesPerView = parseInt(slidesPerView) || 1;
     let height = 0;
-    let index = activeIndex + (slidesPerView - 1);
+    let index = activeIndex + (resolvedSlidesPerView - 1);
 
     while (index >= activeIndex) {
-      if (index < swiperSlides.length) {
-        height += swiperSlides[index].firstChild.offsetHeight;
+      if (index < slides.length) {
+        height += slides[index].firstChild.offsetHeight;
       }
 
       index--;
     }
 
-    const spaceBetween = params.spaceBetween;
-
-    if (spaceBetween && slidesPerView && (slidesPerView > 1)) {
+    if (spaceBetween && resolvedSlidesPerView > 1) {
       height += (spaceBetween * slidesPerView);
     }
 
-    swiperEl.style.height = height > 0 ? `${height}px` : "auto";
+    el.style.height = height > 0 ? `${height}px` : "auto";
   } else {
-    swiperEl.style.height = "auto";
+    el.style.height = "auto";
   }
 };
 
-const removeSliderTransform = (swiper, targetIdentifier) => {
+const removeSliderTransform = (swiper) => {
   swiper.slides.forEach((slide) => {
-    const targetElement = targetIdentifier
-      ? slide.querySelector(targetIdentifier)
-      : slide;
+    if (!slide.classList.contains("init-transform-remover")) {
+      slide.classList.add("init-transform-remover");
 
-    if (!targetElement.classList.contains("init-transform-remover")) {
-      targetElement.classList.add("init-transform-remover");
-
-      targetElement.addEventListener("click", () => {
+      slide.addEventListener("click", () => {
         slide.classList.toggle("transform-none");
         swiper.wrapperEl.classList.toggle("transform-none");
       });
@@ -739,6 +732,14 @@ const removeSliderTransform = (swiper, targetIdentifier) => {
 
 const forceLastSlideActive = (swiper) => {
   swiper.snapGrid = [...swiper.slidesGrid];
+};
+
+const toggleSlideOverlays = (swiper) => {
+  const overlays = swiper.el.querySelectorAll(".slide-overlay");
+
+  overlays.forEach((overlay) => {
+    overlay.classList.toggle("hide");
+  });
 };
 
 const runAfterFinsweet = (attributeModules, callback, onRenderCallback) => {
