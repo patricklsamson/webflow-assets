@@ -2,6 +2,10 @@
   display: none !important;
 }
 
+.w-lightbox-backdrop {
+  z-index: var(--_z-index---index-lightbox-backdrop);
+}
+
 address {
   font-style: normal;
 }
