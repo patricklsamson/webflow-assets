@@ -504,6 +504,20 @@ const lazyLoadAssets = () => {
   }
 };
 
+const injectSvgs = () => {
+  const svgWrappers = document.querySelectorAll("[data-svg]");
+
+  if (svgWrappers.length > 0) {
+    svgWrappers.forEach((wrapper) => {
+      const { svg } = wrapper.dataset;
+
+      if (svg_src.includes("svg") && !svg_src.includes("script")) {
+        wrapper.innerHTML = svg;
+      }
+    });
+  }
+};
+
 const initMediaMatch = (breakpoint, onMatch, onUnmatch) => {
   const runOnMatch = (media) => {
     if (media.matches) {
