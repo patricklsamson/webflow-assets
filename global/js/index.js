@@ -697,14 +697,13 @@ const resolveSliderHeight = (swiper) => {
     const activeIndex = swiper[loop ? "realIndex" : "activeIndex"];
     const resolvedSlidesPerView = parseInt(slidesPerView) || 1;
     let height = 0;
-    let index = activeIndex + (resolvedSlidesPerView - 1);
 
-    while (index >= activeIndex) {
-      if (index < slides.length) {
-        height += slides[index].firstChild.offsetHeight;
+    for (
+      let i = activeIndex; i < (activeIndex + resolvedSlidesPerView); i++
+    ) {
+      if (slides[i]) {
+        height += slides[i].offsetHeight;
       }
-
-      index--;
     }
 
     if (spaceBetween && resolvedSlidesPerView > 1) {
