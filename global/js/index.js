@@ -509,7 +509,7 @@ const injectSvgs = () => {
 
   if (svgWrappers.length > 0) {
     svgWrappers.forEach((wrapper) => {
-      wrapper.innerHTML = wrapper.innerText;
+      wrapper.parentNode.innerHTML = wrapper.innerText;
     });
   }
 };
