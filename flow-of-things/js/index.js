@@ -170,7 +170,7 @@ setStructuredData([
   }
 ]);
 
-runOnDomReady(() => {
+document.addEventListener("DOMContentLoaded", () => {
   const setScript = (initial) => {
     const selectors = document.querySelectorAll('[data-input="selector"]');
     const script = document.getElementById("script");
