@@ -78,7 +78,7 @@ a [class*="icon"] path[stroke] {
 .hint-required:after {
   content: "*";
   padding-left: 0.25em;
-  color: var(--text-color--text-error);
+  color: var(--text-color--text-error-light);
 }
 
 html.wf-design-mode [data-message="loading"].hide,

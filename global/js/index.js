@@ -284,38 +284,50 @@ const requestApi = async (
 
 const validateFields = (form, schema) => {
   const { elements } = form;
-  let hasError = false;
+  const validations = [true];
 
-  for (const input of elements) {
-    const validations = schema[input.id];
+  for (const field of elements) {
+    const fieldRules = schema[field.name];
 
-    if (validations) {
-      for (const { validate, message } of validations) {
-        hasError = validate();
+    if (fieldRules) {
+      const fields = Array.from(
+        document.querySelectorAll(`[name="${field.name}"]`)
+      );
+
+      for (const { validate, message } of fieldRules) {
+        const isValid = validate(field, fields);
+
+        validations.push(isValid);
 
         const errorMessage = document.querySelector(
-          `[data-field_error="${input.id}"]`
+          `[data-field_error="${field.name}"]`
         );
 
         if (errorMessage) {
-          if (hasError) {
+          if (isValid) {
+            field.classList.remove("field-error");
+            errorMessage.classList.add("hide");
+          } else {
             const messageBlock = errorMessage.querySelector(
               "div"
             ) || errorMessage;
 
-            messageBlock.innerHTML = message;
+            field.classList.add("field-error");
+
+            messageBlock.innerHTML = typeof message === "string"
+              ? message
+              : message(field, fields);
+
             errorMessage.classList.remove("hide");
 
             break;
-          } else {
-            errorMessage.classList.add("hide");
           }
         }
       }
     }
   }
 
-  return hasError;
+  return validations.every((validation) => validation);
 };
 
 const initFormSubmit = (
