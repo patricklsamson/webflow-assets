@@ -308,13 +308,13 @@ const validateFields = (form, schema) => {
             field.classList.remove("field-error");
             errorMessage.classList.add("hide");
           } else {
-            const messageBlock = errorMessage.querySelector(
+            const textBox = errorMessage.querySelector(
               "div"
             ) || errorMessage;
 
             field.classList.add("field-error");
 
-            messageBlock.innerHTML = typeof message === "string"
+            textBox.innerHTML = typeof message === "string"
               ? message
               : message(field, fields);
 
@@ -359,9 +359,9 @@ const initFormSubmit = (
       const setDisplay = (element, display = "block", callback = null) => {
         if (element) {
           if (callback) {
-            const message = element.querySelector("div") || element;
+            const textBox = element.querySelector("div") || element;
 
-            callback(message);
+            callback(textBox);
           }
 
           if (isForm) {
@@ -392,9 +392,9 @@ const initFormSubmit = (
         setDisplay(form, "none");
         loadingMessage.classList.add("hide");
 
-        setDisplay(successMessage, "block", (message) => {
+        setDisplay(successMessage, "block", (textBox) => {
           if (customSuccess) {
-            message.innerHTML = typeof customSuccess === "string"
+            textBox.innerHTML = typeof customSuccess === "string"
               ? customSuccess
               : customSuccess(data);
           }
@@ -410,9 +410,9 @@ const initFormSubmit = (
         loadingMessage.classList.add("hide");
         setDisplay(successMessage, "none");
 
-        setDisplay(errorMessage, "block", (message) => {
+        setDisplay(errorMessage, "block", (textBox) => {
           if (displayApiError) {
-            message.innerHTML = error.message || "Error occurred";
+            textBox.innerHTML = error.message || "Error occurred";
           }
         });
 
