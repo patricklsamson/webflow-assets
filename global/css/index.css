@@ -81,6 +81,12 @@ a [class*="icon"] path[stroke] {
   color: var(--text-color--text-error-light);
 }
 
+[type="checkbox"]:checked + .form_checkbox-icon .form_checkbox-icon-check,
+[type="radio"]:checked + .form_radio-icon .form_radio-icon-check {
+  color: var(--text-color--text-alternate);
+  background-color: var(--background-color--background-primary);
+}
+
 html.wf-design-mode [data-message="loading"].hide,
 html.wf-design-mode [data-field_error].hide {
   display: block !important;
