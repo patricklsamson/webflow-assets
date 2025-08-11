@@ -130,11 +130,12 @@ const initTimeToRead = (
       const words = source.innerText.split(" ").length;
       const images = source.querySelectorAll("img").length;
       const videos = source.querySelectorAll("iframe").length;
+      const videoTime = source.dataset.time_video;
 
       const minutes = Math.floor(
         (words / wordsPerMinute) +
         ((images * 10) / 60) +
-        (videos * 3)
+        (videoTime ? parseInt(videoTime) : videos * 4)
       );
 
       const timeToRead = minutes > 1 ? `${minutes} ${unit}s` : `1 ${unit}`;
@@ -777,7 +778,7 @@ const runAfterFinsweet = (attributeModules, callback, onRenderCallback) => {
             for (const instance of instances) {
               if (instance.listInstance) {
                 instance.listInstance.on("renderitems", (renderedItems) => {
-                  onRenderCallback();
+                  onRenderCallback(renderedItems);
                 });
               }
             }
