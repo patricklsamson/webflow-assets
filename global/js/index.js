@@ -750,6 +750,58 @@ const toggleSlideOverlays = (swiper) => {
   });
 };
 
+const initAutoplayTabs = () => {
+  const setActiveTab = (tabLinks, index) => {
+    tabLinks.forEach((tabLink, i) => {
+      const tabPaneId = tabLink.href.split("#")[1];
+      const tabPane = document.getElementById(tabPaneId);
+
+      if (index === i) {
+        tabLink.classList.add("w--current");
+        tabLink.setAttribute("aria-selected", "true");
+        tabLink.removeAttribute("tabindex");
+        tabPane.classList.add("w--tab-active");
+      } else {
+        tabLink.classList.remove("w--current");
+        tabLink.setAttribute("aria-selected", "false");
+        tabLink.setAttribute("tabindex", "-1");
+        tabPane.classList.remove("w--tab-active");
+      }
+    });
+  };
+
+  const resolveIndex = (index, array) => {
+    return index < array.length - 1 ? index + 1 : 0;
+  };
+
+  const tabs = document.querySelectorAll("[data-autoplay_tab='true']");
+
+  tabs.forEach((tab) => {
+    const tabLinks = tab.querySelectorAll(".w-tab-link");
+    const timeInterval = tab.dataset.time_interval || 5000;
+    let currentIndex = 0;
+
+    let tabInterval = setInterval(() => {
+      setActiveTab(tabLinks, currentIndex);
+      currentIndex = resolveIndex(currentIndex, tabLinks);
+    }, timeInterval);
+
+    tabLinks.forEach((tabLink, i) => {
+      tabLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        clearInterval(tabInterval);
+        setActiveTab(tabLinks, i);
+        currentIndex = resolveIndex(i, tabLinks);
+
+        tabInterval = setInterval(() => {
+          setActiveTab(tabLinks, currentIndex);
+          currentIndex = resolveIndex(currentIndex, tabLinks);
+        }, timeInterval)
+      });
+    });
+  });
+};
+
 const runAfterFinsweet = (attributeModules, callback, onRenderCallback) => {
   window.fsAttributes = window.fsAttributes || [];
 
