@@ -774,11 +774,11 @@ const initAutoplayTabs = () => {
     return index < array.length - 1 ? index + 1 : 0;
   };
 
-  const tabs = document.querySelectorAll("[data-autoplay_tab='true']");
+  const tabs = document.querySelectorAll("[data-autoplay_tab]");
 
   tabs.forEach((tab) => {
     const tabLinks = tab.querySelectorAll(".w-tab-link");
-    const timeInterval = tab.dataset.time_interval || 5000;
+    const { autoplay_tab: timeInterval } = tab.dataset;
     let currentIndex = 0;
 
     let tabInterval = setInterval(() => {
