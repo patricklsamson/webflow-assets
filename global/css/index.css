@@ -110,6 +110,14 @@ html.wf-design-mode [data-field_error].hide {
   line-height: inherit;
 }
 
+[class*="heading-styler"] >
+[class*="heading-styler"][class*="w-variant"] * {
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .initial_text::first-letter {
   font-size: inherit;
 }
