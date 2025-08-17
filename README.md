@@ -13,8 +13,8 @@ cdn.jsdelivr.net/gh/USERNAME/REPOSITORY@latest/PATH-TO-FILE?v=VERSION
 
 ## To Purge Caching
 
-```shell
 Access in browser
 
+```shell
 purge.jsdelivr.net/gh/USERNAME/REPOSITORY@BRANCH/PATH-TO-FILE
 ```
