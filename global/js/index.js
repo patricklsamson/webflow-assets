@@ -570,7 +570,7 @@ const initMasonry = (identifier, configSet, initBreakpoint) => {
     return previousConfig ? { ...previousConfig, ...config } : config;
   };
 
-  const handleInitMasonry = () => {
+  const handleInitMasonries = () => {
     const masonries = [];
 
     if (configSet.baseWidth) {
@@ -604,13 +604,12 @@ const initMasonry = (identifier, configSet, initBreakpoint) => {
             );
 
             masonry = new MiniMasonry(resolvedConfig);
-            masonries[index] = masonry;
+            masonries.push(masonry);
           }
 
           if (!media.matches && masonry) {
             masonry.destroy();
             masonry = null;
-            masonries[index] = masonry;
           }
         };
 
@@ -628,20 +627,20 @@ const initMasonry = (identifier, configSet, initBreakpoint) => {
       }
     }
 
-    return masonries.filter((masonry) => masonry);
+    return masonries;
   };
 
-  let mainMasonries = null;
+  let masonries = null;
 
   if (initBreakpoint) {
     const initOnMatch = (media) => {
-      if (media.matches && !mainMasonries) {
-        mainMasonries = handleInitMasonry();
+      if (media.matches && !masonries) {
+        masonries = handleInitMasonries();
       }
 
-      if (!media.matches && mainMasonries) {
-        mainMasonries.forEach((masonry) => masonry.destroy());
-        mainMasonries = null;
+      if (!media.matches && masonries) {
+        masonries.forEach((masonry) => masonry.destroy());
+        masonries = null;
       }
     };
 
@@ -659,7 +658,7 @@ const initMasonry = (identifier, configSet, initBreakpoint) => {
 
     media.addEventListener("change", initOnMatch);
   } else {
-    mainMasonries = handleInitMasonry();
+    masonries = handleInitMasonries();
   }
 };
 
