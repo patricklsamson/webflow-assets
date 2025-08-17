@@ -705,23 +705,20 @@ const resolveSliderHeight = (swiper) => {
   if (direction && direction === "vertical") {
     const activeIndex = swiper[loop ? "realIndex" : "activeIndex"];
     const resolvedSlidesPerView = parseInt(slidesPerView) || 1;
+    const currentSlideLimit = activeIndex + resolvedSlidesPerView;
     let height = 0;
 
-    for (
-      let i = activeIndex; i < (activeIndex + resolvedSlidesPerView); i++
-    ) {
+    for (let i = activeIndex; i < currentSlideLimit; i++) {
       if (slides[i]) {
         height += slides[i].offsetHeight;
       }
     }
 
     if (spaceBetween && resolvedSlidesPerView > 1) {
-      height += (spaceBetween * slidesPerView);
+      height += (spaceBetween * resolvedSlidesPerView);
     }
 
     el.style.height = height > 0 ? `${height}px` : "auto";
-  } else {
-    el.style.height = "auto";
   }
 };
 
