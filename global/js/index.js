@@ -775,7 +775,7 @@ const initAutoplayTabs = () => {
 
   tabs.forEach((tab) => {
     const tabLinks = tab.querySelectorAll(".w-tab-link");
-    const { autoplay_tab: timeInterval } = tab.dataset;
+    const timeInterval = parseInt(tab.dataset.autoplay_tab) || 2000;
     let currentIndex = 0;
 
     let tabInterval = setInterval(() => {
