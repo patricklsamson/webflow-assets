@@ -721,10 +721,10 @@ const resolveSliderHeight = (swiper) => {
   }
 };
 
-const removeSliderTransform = (swiper) => {
+const initSliderTransformRemover = (swiper) => {
   swiper.slides.forEach((slide) => {
-    if (!slide.classList.contains("init-transform-remover")) {
-      slide.classList.add("init-transform-remover");
+    if (!slide.classList.contains("init-slider-transform-remover")) {
+      slide.classList.add("init-slider-transform-remover");
 
       slide.addEventListener("click", () => {
         slide.classList.toggle("transform-none");
