@@ -112,10 +112,10 @@ html.wf-design-mode [data-field_error].hide {
 
 [class*="heading-styler"] >
 [class*="heading-styler"][class*="w-variant"] * {
-  font-family: inherit;
-  font-weight: inherit;
-  font-size: inherit;
-  line-height: inherit;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
 }
 
 .initial_text::first-letter {
