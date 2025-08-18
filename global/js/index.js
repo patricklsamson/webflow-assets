@@ -721,17 +721,32 @@ const resolveSliderHeight = (swiper) => {
   }
 };
 
-const initSliderTransformRemover = (swiper) => {
-  swiper.slides.forEach((slide) => {
-    if (!slide.classList.contains("init-slider-transform-remover")) {
-      slide.classList.add("init-slider-transform-remover");
+const initSliderTransformSwitchers = (swiper) => {
+  const { el, slides } = swiper;
 
-      slide.addEventListener("click", () => {
-        slide.classList.toggle("transform-none");
-        swiper.wrapperEl.classList.toggle("transform-none");
-      });
-    }
-  });
+  if (!el.classList.contains("init-slider-transform-switchers")) {
+    el.classList.add("init-slider-transform-switchers");
+
+    slides.forEach((slide) => {
+      const switchers = slide.querySelectorAll("[data-slider_transform]");
+
+      if (switchers.length > 0) {
+        switchers.forEach((switcher) => {
+          switcher.addEventListener("click", () => {
+            const { slider_transform } = switcher.dataset;
+
+            if (slider_transform === "off") {
+              slide.classList.add("transform-none");
+              swiper.wrapperEl.classList.add("transform-none");
+            } else {
+              slide.classList.remove("transform-none");
+              swiper.wrapperEl.classList.remove("transform-none");
+            }
+          });
+        });
+      }
+    });
+  }
 };
 
 const forceLastSlideActive = (swiper) => {
