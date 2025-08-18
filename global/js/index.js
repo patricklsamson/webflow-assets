@@ -722,7 +722,7 @@ const resolveSliderHeight = (swiper) => {
 };
 
 const initSliderTransformSwitchers = (swiper) => {
-  const { el, slides } = swiper;
+  const { el, slides, wrapperEl } = swiper;
 
   if (!el.classList.contains("init-slider-transform-switchers")) {
     el.classList.add("init-slider-transform-switchers");
@@ -737,10 +737,10 @@ const initSliderTransformSwitchers = (swiper) => {
 
             if (slider_transform === "off") {
               slide.classList.add("transform-none");
-              swiper.wrapperEl.classList.add("transform-none");
+              wrapperEl.classList.add("transform-none");
             } else {
               slide.classList.remove("transform-none");
-              swiper.wrapperEl.classList.remove("transform-none");
+              wrapperEl.classList.remove("transform-none");
             }
           });
         });
