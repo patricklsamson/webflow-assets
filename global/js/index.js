@@ -338,6 +338,7 @@ const initFormSubmit = (
     buildBody,
     method = "POST",
     headers = { "Content-Type": "application/json" },
+    disableWebflowFormSubmission = false,
     customSuccess = null,
     formDisplay = "block",
     displayApiError = false,
@@ -347,8 +348,8 @@ const initFormSubmit = (
   const element = document.getElementById(identifier);
 
   if (element) {
-    const requestApi = async (form, isForm) => {
-      const { elements: inputs, parentNode } = form;
+    const requestApi = async (form, manualSubmission) => {
+      const { elements: fields, parentNode } = form;
 
       const loadingMessage = parentNode.querySelector(
         "[data-message='loading']"
@@ -372,7 +373,7 @@ const initFormSubmit = (
       };
 
       try {
-        const body = JSON.stringify(buildBody(inputs));
+        const body = JSON.stringify(buildBody(fields));
 
         loadingMessage.classList.remove("hide");
 
@@ -403,7 +404,7 @@ const initFormSubmit = (
 
         setDisplay(errorMessage, "none");
 
-        if (!isForm) {
+        if (manualSubmission) {
           form.submit();
         }
       } catch (error) {
@@ -422,29 +423,33 @@ const initFormSubmit = (
     };
 
     if (element.tagName === "FORM") {
-      if (!element.getAttribute("action")) {
-        element.setattribute("action", "/");
+      if (disableWebflowFormSubmission) {
+        element.action = "/";
       }
 
       element.addEventListener("submit", function (e) {
         e.preventDefault();
-        requestApi(this, true);
+        requestApi(this);
       });
     } else {
+      const form = element.closest("form");
+
+      if (disableWebflowFormSubmission) {
+        form.action = "/";
+      }
+
       element.addEventListener("click", (e) => {
         e.preventDefault();
 
-        const form = element.closest("form");
-
         if (schema) {
-          const hasError = validateFields(form, schema);
+          const isValid = validateFields(form, schema);
 
-          if (hasError) {
+          if (!isValid) {
             return false;
           }
         }
 
-        requestApi(form, false);
+        requestApi(form, true);
       });
     }
   }
