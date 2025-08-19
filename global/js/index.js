@@ -551,7 +551,53 @@ const initMediaMatch = (breakpoint, onMatch, onUnmatch) => {
   media.addEventListener("change", runOnMatch);
 };
 
-const initMasonry = (identifier, configSet, initBreakpoint) => {
+const initResponsiveGsapAnimations = () => {
+  const animationElements = Array.from(document.querySelectorAll(
+    "[data-animation][data-breakpoint]"
+  ));
+
+  if (animationElements.length > 0) {
+    const animationMap = animationElements.reduce((init, element) => {
+      const { breakpoint, animation } = element.dataset;
+
+      if (init[breakpoint]) {
+        init[breakpoint].push(element);
+      } else {
+        init[breakpoint] = [element];
+      }
+
+      return init;
+    }, {});
+
+    Object.entries(animationMap).forEach(([breakpoint, elements]) => {
+      const resolvedBreakpoint = parseInt(breakpoint);
+
+      const media = window.matchMedia(`only screen and (${
+        resolvedBreakpoint >= 0 ? "min" : "max"
+      }-width: ${
+        resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
+      }px)`);
+
+      const runOnMatch = (media) => {
+        if (!media.matches) {
+          elements.forEach((element) => {
+            element.setAttribute("data-animation", "none");
+          });
+        }
+      };
+
+      runOnMatch(media);
+
+      window.addEventListener("resize", () => {
+        runOnMatch(media);
+      });
+
+      media.addEventListener("change", runOnMatch);
+    });
+  }
+};
+
+const initMasonry = (identifier, configSet) => {
   const resolveConfig = (config, previousConfig) => {
     config.container = identifier;
 
@@ -630,9 +676,13 @@ const initMasonry = (identifier, configSet, initBreakpoint) => {
     return masonries;
   };
 
+  const masonryElement = document.querySelector(identifier);
+  const { breakpoint } = masonryElement.dataset;
   let masonries = null;
 
-  if (initBreakpoint) {
+  if (breakpoint) {
+    const resolvedBreakpoint = parseInt(breakpoint);
+
     const initOnMatch = (media) => {
       if (media.matches && !masonries) {
         masonries = handleInitMasonries();
@@ -645,8 +695,8 @@ const initMasonry = (identifier, configSet, initBreakpoint) => {
     };
 
     const media = window.matchMedia(
-      `only screen and (${initBreakpoint >= 0 ? "min" : "max"}-width: ${
-        initBreakpoint >= 0 ? initBreakpoint : initBreakpoint * -1
+      `only screen and (${resolvedBreakpoint >= 0 ? "min" : "max"}-width: ${
+        resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
       }px)`
     );
 
@@ -662,10 +712,58 @@ const initMasonry = (identifier, configSet, initBreakpoint) => {
   }
 };
 
-const initSlider = (identifier, config, breakpoint) => {
+const initSlider = (identifier, config) => {
+  const sliderElement = document.querySelector(identifier);
+
+  if (config.pagination) {
+    const pagination = sliderElement.querySelector(".swiper-pagination");
+
+    config.pagination.el = pagination.id;
+
+    if (
+      config.pagination.type === "bullets" ||
+      config.pagination.type === undefined
+    ) {
+      const paginationBullet = sliderElement.querySelector(
+        ".swiper-pagination-bullet"
+      );
+
+      config.pagination.bulletClass = paginationBullet.className.replace(
+        "swiper-pagination-bullet-active",
+        ""
+      );
+    }
+
+    if (config.pagination.type === "progressbar") {
+      const paginationProgressbarFill = sliderElement.querySelector(
+        ".swiper-pagination-progressbar-fill"
+      );
+
+      config.pagination.progressbarFillClass =
+        paginationProgressbarFill.className;
+    }
+  }
+
+  if (config.navigation) {
+    const previousButton = sliderElement.querySelector(".swiper-button-prev");
+    const nextButton = sliderElement.querySelector(".swiper-button-next");
+
+    config.navigation.prevEl = previousButton.id;
+    config.navigation.nextEl = nextButton.id;
+  }
+
+  if (config.scrollbar) {
+    const scrollbar = sliderElement.querySelector(".swiper-scrollbar");
+
+    config.scrollbar.el = scrollbar.id;
+  }
+
+  const { breakpoint } = sliderElement.dataset;
   let slider = null;
 
   if (breakpoint) {
+    const resolvedBreakpoint = parseInt(breakpoint);
+
     const runOnMatch = (media) => {
       if (media.matches && !slider) {
         config.init = false;
@@ -680,8 +778,8 @@ const initSlider = (identifier, config, breakpoint) => {
     };
 
     const media = window.matchMedia(
-      `only screen and (${breakpoint >= 0 ? "min" : "max"}-width: ${
-        breakpoint >= 0 ? breakpoint : breakpoint * -1
+      `only screen and (${resolvedBreakpoint >= 0 ? "min" : "max"}-width: ${
+        resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
       }px)`
     );
 
