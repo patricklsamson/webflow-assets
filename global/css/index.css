@@ -10,6 +10,23 @@ address {
   font-style: normal;
 }
 
+table {
+  table-layout: fixed;
+}
+
+th, td {
+  height: 1px;
+  text-align: initial;
+}
+
+a [class*="icon"] path[fill] {
+  fill: currentColor;
+}
+
+a [class*="icon"] path[stroke] {
+  stroke: currentColor;
+}
+
 svg,
 video {
   display: inline-block;
@@ -25,15 +42,6 @@ video {
   width: auto;
   height: auto;
   object-fit: cover;
-}
-
-table {
-  table-layout: fixed;
-}
-
-th, td {
-  height: 1px;
-  text-align: initial;
 }
 
 [style*="background-image: url"],
@@ -56,14 +64,6 @@ th, td {
 [class*="icon"] svg {
   width: auto;
   height: auto;
-}
-
-a [class*="icon"] path[fill] {
-  fill: currentColor;
-}
-
-a [class*="icon"] path[stroke] {
-  stroke: currentColor;
 }
 
 .background-overlay ~ * {
@@ -118,8 +118,8 @@ html.wf-design-mode [data-field_error].hide {
   line-height: inherit;
 }
 
-.initial_text::first-letter {
-  font-size: inherit;
+.component_initial div::first-letter {
+  font-size: initial;
 }
 
 .vertical-tab_wrapper::before,
