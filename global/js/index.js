@@ -724,23 +724,15 @@ const initSlider = (identifier, config) => {
       config.pagination.type === "bullets" ||
       config.pagination.type === undefined
     ) {
-      const paginationBullet = sliderElement.querySelector(
-        ".swiper-pagination-bullet"
-      );
-
-      config.pagination.bulletClass = paginationBullet.className.replace(
+      config.pagination.bulletClass = pagination.firstChild.className.replace(
         "swiper-pagination-bullet-active",
         ""
       );
     }
 
     if (config.pagination.type === "progressbar") {
-      const paginationProgressbarFill = sliderElement.querySelector(
-        ".swiper-pagination-progressbar-fill"
-      );
-
       config.pagination.progressbarFillClass =
-        paginationProgressbarFill.className;
+        pagination.firstChild.className;
     }
   }
 
