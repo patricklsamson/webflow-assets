@@ -719,9 +719,11 @@ const initMasonry = (identifier, configSet) => {
 
 const initSlider = (identifier, config) => {
   const sliderElement = document.querySelector(identifier);
+  const { parentNode } = sliderElement;
 
   if (config.pagination) {
-    const pagination = sliderElement.querySelector(".swiper-pagination");
+    const pagination = parentNode.querySelector(".swiper-pagination");
+    const { firstChild } = pagination;
 
     config.pagination.el = pagination.id;
 
@@ -729,28 +731,27 @@ const initSlider = (identifier, config) => {
       config.pagination.type === "bullets" ||
       config.pagination.type === undefined
     ) {
-      config.pagination.bulletClass = pagination.firstChild.className.replace(
+      config.pagination.bulletClass = firstChild.className.replace(
         "swiper-pagination-bullet-active",
         ""
       );
     }
 
     if (config.pagination.type === "progressbar") {
-      config.pagination.progressbarFillClass =
-        pagination.firstChild.className;
+      config.pagination.progressbarFillClass = firstChild.className;
     }
   }
 
   if (config.navigation) {
-    const previousButton = sliderElement.querySelector(".swiper-button-prev");
-    const nextButton = sliderElement.querySelector(".swiper-button-next");
+    const previousButton = parentNode.querySelector(".swiper-button-prev");
+    const nextButton = parentNode.querySelector(".swiper-button-next");
 
     config.navigation.prevEl = previousButton.id;
     config.navigation.nextEl = nextButton.id;
   }
 
   if (config.scrollbar) {
-    const scrollbar = sliderElement.querySelector(".swiper-scrollbar");
+    const scrollbar = parentNode.querySelector(".swiper-scrollbar");
 
     config.scrollbar.el = scrollbar.id;
   }
