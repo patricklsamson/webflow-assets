@@ -1,56 +1,13 @@
 injectSourceCodes([
   {
-    type: "css",
+    type: "stylesheet",
     url: "https://cdn.jsdelivr.net/gh/patricklsamson/webflow-assets@main/global/css/index.min.css"
   },
   {
-    type: "css",
+    type: "stylesheet",
     url:"https://cdn.jsdelivr.net/gh/patricklsamson/webflow-assets@main/flow-of-things/css/index.min.css"
   }
 ]);
-
-const setStructuredData = (pages) => {
-  pages.forEach((page) => {
-    if (window.location.pathname === page.path) {
-      const structuredData = document.createElement("script");
-
-      structuredData.type = "application/ld+json";
-
-      const author = {
-        "@type": "Person",
-        name: "Patrick Samson"
-      };
-
-      structuredData.innerHTML = JSON.stringify({
-        "@content": "https://schema.org",
-        ...page.resolveData({
-          url: window.location.href,
-          metaTitle: document.title,
-          metaDescription: document.querySelector(
-            "meta[name='description']"
-          ).getAttribute("content"),
-          mainEntity: {
-            ...author,
-            url: window.location.href,
-            logo: {
-              "@type": "ImageObject",
-              url: "https://cdn.prod.website-files.com/66944bbc65c60d35578879e7/66944bbc65c60d3557887a55_client-first-logo-white.svg",
-              width: 229,
-              height: 49
-            }
-          },
-          author,
-          mainEntityOfPage: {
-            "@type": "WebPage",
-            "@id": window.location.href
-          }
-        })
-      });
-
-      document.head.appendChild(structuredData);
-    }
-  });
-};
 
 setStructuredData([
   {

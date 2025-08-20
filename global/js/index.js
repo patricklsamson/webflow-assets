@@ -4,7 +4,7 @@ const injectSourceCodes = (sourceCodes) => {
       const { type, url, location } = sourceCode;
       const domTarget = document[location ? location : "head"];
 
-      if (type === "css") {
+      if (type === "stylesheet") {
         const link = document.createElement("link");
 
         link.setAttribute("rel", "stylesheet");
@@ -130,18 +130,18 @@ const initTimeToRead = (
       const words = source.innerText.split(" ").length;
       const images = source.querySelectorAll("img").length;
       const videos = source.querySelectorAll("iframe").length;
-      const videoTime = source.dataset.time_video;
+      const { time_video, time_source } = source.dataset;
 
       const minutes = Math.floor(
         (words / wordsPerMinute) +
         ((images * 10) / 60) +
-        (videoTime ? parseInt(videoTime) : videos * 4)
+        (time_video ? parseInt(time_video) : videos * 4)
       );
 
       const timeToRead = minutes > 1 ? `${minutes} ${unit}s` : `1 ${unit}`;
 
       const timeTarget = document.querySelector(
-        `[data-time_target="${source.dataset.time_source}"]`
+        `[data-time_target="${time_source}"]`
       );
 
       timeTarget.innerHTML = `${wordsBefore ? `${wordsBefore} ` : ""}${
@@ -460,30 +460,28 @@ const lazyLoadAssets = () => {
 
   if (assets.length > 0) {
     if ("IntersectionObserver" in window) {
-      const assetObserver = new IntersectionObserver(
-        (entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              if (entry.target.tagName === "VIDEO") {
-                for (const source of entry.target.children) {
-                  source.src = source.dataset.src;
-                }
-
-                entry.target.load();
+      const assetObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(({ isIntersecting, target }) => {
+          if (isIntersecting) {
+            if (target.tagName === "VIDEO") {
+              for (const { dataset: { src } } of target.children) {
+                source.src = src;
               }
 
-              if (entry.target.tagName === "DIV") {
-                entry.target.style.backgroundImage = `url(${
-                  entry.target.dataset.src
-                })`;
-              }
-
-              entry.target.removeAttribute("data-lazy");
-              observer.unobserve(entry.target);
+              target.load();
             }
-          });
-        }
-      );
+
+            if (target.tagName === "DIV") {
+              target.style.backgroundImage = `url(${
+                target.dataset.src
+              })`;
+            }
+
+            target.removeAttribute("data-lazy");
+            observer.unobserve(target);
+          }
+        });
+      });
 
       assets.forEach((asset) => {
         assetObserver.observe(asset);
@@ -491,15 +489,15 @@ const lazyLoadAssets = () => {
     } else {
       const loadAssets = () => {
         assets.forEach((asset) => {
-          const rect = asset.getBoundingClientRect();
+          const { top, bottom, left, right } = asset.getBoundingClientRect();
+          const { innerHeight, innerWidth } = window;
 
           if (
-            rect.top < window.innerHeight && rect.bottom > 0 &&
-            rect.left < window.innerWidth && rect.right > 0
+            top < innerHeight && bottom > 0 && left < innerWidth && right > 0
           ) {
             if (asset.tagName === "VIDEO") {
-              for (const source of asset.children) {
-                source.src = source.dataset.src;
+              for (const { dataset: { src } } of asset.children) {
+                source.src = src;
               }
 
               asset.load();
@@ -719,20 +717,19 @@ const initMasonry = (identifier, configSet) => {
 
 const initSlider = (identifier, config) => {
   const sliderElement = document.querySelector(identifier);
-  const { parentNode } = sliderElement;
+  const { parentNode, dataset: { breakpoint } } = sliderElement;
 
   if (config.pagination) {
-    const pagination = parentNode.querySelector(".swiper-pagination");
-    const { firstChild } = pagination;
+    const {
+      id,
+      firstChild: { className }
+    } = parentNode.querySelector(".swiper-pagination");
 
-    config.pagination = {
-      el: pagination.id,
-      type: config.pagination
-    };
+    config.pagination = { el: id, type: config.pagination };
 
     if (config.pagination.type === "bullets") {
       config.pagination = {
-        bulletClass: firstChild.className.replace(
+        bulletClass: className.replace(
           "swiper-pagination-bullet-active",
           ""
         ),
@@ -741,32 +738,23 @@ const initSlider = (identifier, config) => {
     }
 
     if (config.pagination.type === "progressbar") {
-      config.pagination = {
-        progressbarFillClass: firstChild.className
-      };
+      config.pagination = { progressbarFillClass: className };
     }
   }
 
   if (config.navigation) {
-    const previousButton = parentNode.querySelector(".swiper-button-prev");
-    const nextButton = parentNode.querySelector(".swiper-button-next");
+    const { id: prevId } = parentNode.querySelector(".swiper-button-prev");
+    const { id: nextId } = parentNode.querySelector(".swiper-button-next");
 
-    config.navigation = {
-      prevEl: previousButton.id,
-      nextEl: nextButton.id
-    };
+    config.navigation = { prevEl: prevId, nextEl: nextId };
   }
 
   if (config.scrollbar) {
-    const scrollbar = parentNode.querySelector(".swiper-scrollbar");
+    const { id } = parentNode.querySelector(".swiper-scrollbar");
 
-    config.scrollbar = {
-      el: scrollbar.id,
-      draggable: true
-    };
+    config.scrollbar = { el: id, draggable: true };
   }
 
-  const { breakpoint } = sliderElement.dataset;
   let slider = null;
 
   if (breakpoint) {
