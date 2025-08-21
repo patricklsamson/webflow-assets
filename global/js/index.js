@@ -48,23 +48,33 @@ const resolveSpans = () => {
   }
 };
 
-const clickElements = (identifier) => {
-  const elements = document.querySelectorAll(identifier);
+const initMirrorClick = () => {
+  const triggers = document.querySelectorAll("[data-mirror_trigger]");
 
-  if (elements.length > 0) {
-    elements.forEach((element) => {
-      let isClicked = false;
+  if (triggers.length > 0) {
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", function (e) {
+        e.preventDefault();
 
-      element.addEventListener("click", () => {
-        isClicked = true;
-      }, { once: true });
+        const { mirror_trigger, mirror_delay, mirror_click } = this.dataset;
 
-      element.click();
+        const targets = document.querySelectorAll(
+          `[data-mirror_target="${mirror_trigger}"]`
+        );
 
-      if (!isClicked) {
-        element.dispatchEvent(new Event("mousedown"));
-        element.dispatchEvent(new Event("mouseup"));
-      }
+        if (targets.length > 0) {
+          setTimeout(() => {
+            targets.forEach((target) => {
+              if (mirror_click === "1") {
+                target.click();
+              } else {
+                target.dispatchEvent(new Event("mousedown"));
+                target.dispatchEvent(new Event("mouseup"));
+              }
+            });
+          }, mirror_delay);
+        }
+      });
     });
   }
 };
@@ -76,18 +86,8 @@ const openActiveAccordions = () => {
 
   if (accordionHeaders.length > 0) {
     accordionHeaders.forEach((header) => {
-      let isClicked = false;
-
-      header.addEventListener("click", () => {
-        isClicked = true;
-      }, { once: true });
-
-      header.click();
-
-      if (!isClicked) {
-        header.dispatchEvent(new Event("mousedown"));
-        header.dispatchEvent(new Event("mouseup"));
-      }
+      header.dispatchEvent(new Event("mousedown"));
+      header.dispatchEvent(new Event("mouseup"));
     });
   }
 };
