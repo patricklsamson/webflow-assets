@@ -65,6 +65,14 @@ const initMirrorClick = () => {
         if (targets.length > 0) {
           setTimeout(() => {
             targets.forEach((target) => {
+              const { force_open } = target.dataset;
+
+              if (
+                force_open === "true" && target.classList.contains("w--open")
+              ) {
+                return false;
+              }
+
               if (mirror_click === "1") {
                 target.click();
               } else {
