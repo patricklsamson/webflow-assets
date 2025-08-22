@@ -80,7 +80,7 @@ const initMirrorClick = () => {
                 target.dispatchEvent(new Event("mouseup"));
               }
             });
-          }, mirror_delay);
+          }, mirror_delay || 0);
         }
       });
     });
