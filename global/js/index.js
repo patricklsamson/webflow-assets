@@ -529,10 +529,10 @@ const lazyLoadAssets = () => {
 };
 
 const injectSvgs = () => {
-  const svgWrappers = document.querySelectorAll("[data-wrapper='svg']");
+  const svgTargets = document.querySelectorAll("[data-svg='target']");
 
-  if (svgWrappers.length > 0) {
-    svgWrappers.forEach((wrapper) => {
+  if (svgTargets.length > 0) {
+    svgTargets.forEach((wrapper) => {
       wrapper.parentNode.innerHTML = wrapper.innerText;
     });
   }
