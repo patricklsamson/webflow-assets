@@ -231,7 +231,7 @@ const requestApi = async (
     loaderIdentifier,
     callback = null,
     body = null,
-    method = "POST",
+    method = "GET",
     headers = { "Content-Type": "application/json" }
   }
 ) => {
@@ -381,6 +381,10 @@ const initFormSubmit = (
       };
 
       try {
+        if (!headers["Content-Type"]) {
+          headers["Content-Type"] = "application/json";
+        }
+
         const body = JSON.stringify(buildBody(fields));
 
         loadingMessage.classList.remove("hide");
@@ -687,8 +691,7 @@ const initMasonry = (identifier, configSet) => {
     return masonries;
   };
 
-  const masonryElement = document.querySelector(identifier);
-  const { breakpoint } = masonryElement.dataset;
+  const { dataset: { breakpoint } } = document.querySelector(identifier);
   let masonries = null;
 
   if (breakpoint) {
@@ -856,7 +859,7 @@ const forceLastSlideActive = (swiper) => {
 };
 
 const toggleSlideOverlays = (swiper) => {
-  const overlays = swiper.el.querySelectorAll(".slide-overlay");
+  const overlays = swiper.el.querySelectorAll("[data-slide='overlay']");
 
   overlays.forEach((overlay) => {
     overlay.classList.toggle("hide");
