@@ -56,7 +56,7 @@ const initMirrorClick = () => {
       trigger.addEventListener("click", function (e) {
         e.preventDefault();
 
-        const { mirror_trigger, mirror_delay, mirror_click } = this.dataset;
+        const { mirror_trigger, mirror_delay } = this.dataset;
 
         const targets = document.querySelectorAll(
           `[data-mirror_target="${mirror_trigger}"]`
@@ -65,20 +65,24 @@ const initMirrorClick = () => {
         if (targets.length > 0) {
           setTimeout(() => {
             targets.forEach((target) => {
-              const { force_open } = target.dataset;
+              if (target.classList.contains("w-dropdown-toggle")) {
+                if (target.classList.contains("w--open")) {
+                  return false;
+                }
 
-              if (
-                force_open === "true" && target.classList.contains("w--open")
-              ) {
+                if (
+                  "ontouchstart" in window || navigator.maxTouchPoints > 0
+                ) {
+                  target.click();
+                } else {
+                  target.dispatchEvent(new Event("mousedown"));
+                  target.dispatchEvent(new Event("mouseup"));
+                }
+
                 return false;
               }
 
-              if (mirror_click === "1") {
-                target.click();
-              } else {
-                target.dispatchEvent(new Event("mousedown"));
-                target.dispatchEvent(new Event("mouseup"));
-              }
+              target.click();
             });
           }, parseInt(mirror_delay) || 0);
         }
