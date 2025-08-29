@@ -65,23 +65,15 @@ const initMirrorClick = () => {
         if (targets.length > 0) {
           setTimeout(() => {
             targets.forEach((target) => {
-              if (target.classList.contains("w-dropdown-toggle")) {
-                if (target.classList.contains("w--open")) {
-                  return false;
-                }
-
-                if (
-                  "ontouchstart" in window || navigator.maxTouchPoints > 0
-                ) {
-                  target.click();
-                } else {
-                  target.dispatchEvent(new Event("mousedown"));
-                  target.dispatchEvent(new Event("mouseup"));
-                }
-
+              if (
+                target.classList.contains("w-dropdown-toggle") &&
+                target.classList.contains("w--open")
+              ) {
                 return false;
               }
 
+              target.dispatchEvent(new Event("mousedown"));
+              target.dispatchEvent(new Event("mouseup"));
               target.click();
             });
           }, parseInt(mirror_delay) || 0);
@@ -100,6 +92,7 @@ const openActiveAccordions = () => {
     accordionHeaders.forEach((header) => {
       header.dispatchEvent(new Event("mousedown"));
       header.dispatchEvent(new Event("mouseup"));
+      header.click();
     });
   }
 };

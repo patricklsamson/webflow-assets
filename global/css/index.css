@@ -1,5 +1,5 @@
 *[tabindex]:focus-visible,
-  input[type="file"]:focus-visible {
+input[type="file"]:focus-visible {
   outline: 0.125rem solid var(--border-color--border-focus, #4d65ff);
   outline-offset: 0.125rem;
 }
@@ -9,7 +9,7 @@
 }
 
 .w-lightbox-backdrop {
-  z-index: var(--_z-index---index-lightbox-backdrop);
+  z-index: var(--_index---index-lightbox-backdrop);
 }
 
 address {
@@ -122,6 +122,11 @@ html.wf-design-mode [data-field_error].hide {
   font-weight: inherit;
   font-size: inherit;
   line-height: inherit;
+}
+
+.dropdown_list:not(.w--open) {
+  display: none !important;
+  opacity: 0 !important;
 }
 
 .component_initial div::first-letter {
