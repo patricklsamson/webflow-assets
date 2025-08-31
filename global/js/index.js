@@ -98,7 +98,9 @@ const openActiveAccordions = () => {
 };
 
 const initBottomAnchors = (breakpoint = 992) => {
-  const triggers = document.querySelectorAll("[data-bottom_href]");
+  const triggers = Array.from(
+    document.querySelectorAll("[data-bottom_href]")
+  ).filter((trigger) => trigger.dataset.bottom_href);
 
   if (triggers.length > 0) {
     const runOnMatch = (media) => {
