@@ -146,43 +146,43 @@ html.wf-design-mode .masonry_item {
 }
 
 .grid_wrapper[data-grid_gutter="xsmall"] {
-  margin: calc(var(--_base---grid-gutter--gutter-xsmall) * -1);
+  margin: calc(var(--_base---gutter--gutter-xsmall) * -1);
 }
 
 .grid_wrapper[data-grid_gutter="xsmall"] .component_grid-column {
-  padding: var(--_base---grid-gutter--gutter-xsmall);
+  padding: var(--_base---gutter--gutter-xsmall);
 }
 
 .grid_wrapper[data-grid_gutter="small"] {
-  margin: calc(var(--_base---grid-gutter--gutter-small) * -1);
+  margin: calc(var(--_base---gutter--gutter-small) * -1);
 }
 
 .grid_wrapper[data-grid_gutter="small"] .component_grid-column {
-  padding: var(--_base---grid-gutter--gutter-small);
+  padding: var(--_base---gutter--gutter-small);
 }
 
 .grid_wrapper[data-grid_gutter="medium"] {
-  margin: calc(var(--_base---grid-gutter--gutter-medium) * -1);
+  margin: calc(var(--_base---gutter--gutter-medium) * -1);
 }
 
 .grid_wrapper[data-grid_gutter="medium"] .component_grid-column {
-  padding: var(--_base---grid-gutter--gutter-medium);
+  padding: var(--_base---gutter--gutter-medium);
 }
 
 .grid_wrapper[data-grid_gutter="large"] {
-  margin: calc(var(--_base---grid-gutter--gutter-large) * -1);
+  margin: calc(var(--_base---gutter--gutter-large) * -1);
 }
 
 .grid_wrapper[data-grid_gutter="large"] .component_grid-column {
-  padding: var(--_base---grid-gutter--gutter-large);
+  padding: var(--_base---gutter--gutter-large);
 }
 
 .grid_wrapper[data-grid_gutter="xlarge"] {
-  margin: calc(var(--_base---grid-gutter--gutter-xlarge) * -1);
+  margin: calc(var(--_base---gutter--gutter-xlarge) * -1);
 }
 
 .grid_wrapper[data-grid_gutter="xlarge"] .component_grid-column {
-  padding: var(--_base---grid-gutter--gutter-xlarge);
+  padding: var(--_base---gutter--gutter-xlarge);
 }
 
 .component_grid-column[data-column="1"] {
