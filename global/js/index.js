@@ -97,28 +97,46 @@ const openActiveAccordions = () => {
   }
 };
 
-const initBottomAnchors = () => {
+const initBottomAnchors = (breakpoint = 992) => {
   const triggers = document.querySelectorAll("[data-scroll_href]");
 
   if (triggers.length > 0) {
-    triggers.forEach((trigger) => {
-      trigger.addEventListener("click", function (e) {
-        e.preventDefault();
+    const runOnMatch = (media) => {
+      if (media.matches) {
+        triggers.forEach((trigger) => {
+          trigger.addEventListener("click", function (e) {
+            e.preventDefault();
 
-        const target = document.querySelector(
-          `[data-scroll_id="${this.dataset.scroll_href}"]`
-        );
+            const target = document.querySelector(
+              `[data-scroll_id="${this.dataset.scroll_href}"]`
+            );
 
-        if (target) {
-          window.scrollTo({
-            top: (
-              target.getBoundingClientRect().top + window.scrollY
-            ) - window.innerHeight,
-            behavior: "smooth",
+            if (target) {
+              window.scrollTo({
+                top: (
+                  target.getBoundingClientRect().top + window.scrollY
+                ) - window.innerHeight,
+                behavior: "smooth",
+              });
+            }
           });
-        }
-      });
+        });
+      }
+    };
+
+    const media = window.matchMedia(
+      `only screen and (${breakpoint >= 0 ? "min" : "max"}-width: ${
+        breakpoint >= 0 ? breakpoint : breakpoint * -1
+      }px)`
+    );
+
+    runOnMatch(media);
+
+    window.addEventListener("resize", () => {
+      runOnMatch(media);
     });
+
+    media.addEventListener("change", runOnMatch);
   }
 };
 
