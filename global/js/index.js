@@ -98,7 +98,7 @@ const openActiveAccordions = () => {
 };
 
 const initBottomAnchors = (breakpoint = 992) => {
-  const triggers = document.querySelectorAll("[data-scroll_href]");
+  const triggers = document.querySelectorAll("[data-bottom_href]");
 
   if (triggers.length > 0) {
     const runOnMatch = (media) => {
@@ -107,17 +107,21 @@ const initBottomAnchors = (breakpoint = 992) => {
           trigger.addEventListener("click", function (e) {
             e.preventDefault();
 
+            const { bottom_href, bottom_delay } = this.dataset;
+
             const target = document.querySelector(
-              `[data-scroll_id="${this.dataset.scroll_href}"]`
+              `[data-bottom_id="${bottom_href}"]`
             );
 
             if (target) {
-              window.scrollTo({
-                top: (
-                  target.getBoundingClientRect().top + window.scrollY
-                ) - window.innerHeight,
-                behavior: "smooth",
-              });
+              setTimeout(() => {
+                window.scrollTo({
+                  top: (
+                    target.getBoundingClientRect().top + window.scrollY
+                  ) - window.innerHeight,
+                  behavior: "smooth",
+                });
+              }, parseInt(bottom_delay) || 0);
             }
           });
         });
