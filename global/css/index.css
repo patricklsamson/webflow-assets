@@ -11,6 +11,10 @@ input[type="file"]:focus-visible {
   display: none !important;
 }
 
+.w-dropdown {
+  z-index: auto;
+}
+
 .w-lightbox-backdrop {
   z-index: var(--_index---index-lightbox-backdrop);
 }
