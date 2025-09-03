@@ -105,20 +105,18 @@ html.wf-design-mode [data-field_error].hide {
   display: block !important;
 }
 
-[class*="font-setter"] > [class*="font-setter"][class*="w-variant"] * {
+[class*="font-setter"][class*="w-variant"] * {
   font-family: inherit;
 }
 
-[class*="text-weight-setter"] >
 [class*="text-weight-setter"][class*="w-variant"] * {
   font-weight: inherit;
 }
 
-[class*="text-resizer"] > [class*="text-resizer"][class*="w-variant"] * {
+[class*="text-resizer"][class*="w-variant"] * {
   font-size: inherit;
 }
 
-[class*="line-height-setter"] >
 [class*="line-height-setter"][class*="w-variant"] * {
   line-height: inherit;
 }
