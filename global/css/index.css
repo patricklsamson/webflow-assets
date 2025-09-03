@@ -109,6 +109,11 @@ html.wf-design-mode [data-field_error].hide {
   display: block !important;
 }
 
+.component_image[class*="w-variant"] * {
+  width: inherit;
+  height: inherit;
+}
+
 [class*="font-setter"][class*="w-variant"] * {
   font-family: inherit;
 }
