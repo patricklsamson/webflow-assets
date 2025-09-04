@@ -11,6 +11,10 @@ input[type="file"]:focus-visible {
   display: none !important;
 }
 
+.w-nav-button {
+  background-color: transparent !important;
+}
+
 .w-dropdown {
   z-index: auto;
 }
