@@ -61,8 +61,7 @@ video {
   object-fit: cover;
 }
 
-[style*="background-image: url"],
-[style*="background-image:url"] {
+[style*="background-image"][style*="url"] {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
