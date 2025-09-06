@@ -16,8 +16,12 @@ input[type="file"]:focus-visible {
   display: none !important;
 }
 
-.w-nav-button {
-  background-color: transparent !important;
+html.wf-design-mode .wf-slot {
+  display: block;
+}
+
+.w-nav-button.w--open {
+  background-color: transparent;
 }
 
 .w-dropdown {
