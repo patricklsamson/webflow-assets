@@ -754,7 +754,7 @@ const initSlider = (identifier, config) => {
   if (config.pagination) {
     const {
       id,
-      firstChild: { className }
+      firstElementChild: { className }
     } = parentNode.querySelector(".swiper-pagination");
 
     config.pagination = { el: id, type: config.pagination };
@@ -937,6 +937,79 @@ const initAutoplayTabs = () => {
       });
     });
   });
+};
+
+const initToc = () => {
+  const tocSources = document.querySelectorAll("[data-toc_source]");
+
+  if (tocSources.length > 0) {
+    tocSources.forEach((tocSource) => {
+      const tocTarget = document.querySelector(
+        `[data-toc_target="${tocSource.dataset.toc_source}"]`
+      );
+
+      const tocClone = tocTarget.firstElementChild.cloneNode(true);
+      let nextLevel = tocClone;
+      let depth = 2;
+
+      while (nextLevel.querySelector("[data-toc='sub-level']")) {
+        depth++;
+        nextLevel = nextLevel.lastElementChild;
+      }
+
+      tocTarget.innerHTML = "";
+
+      const headings = tocSource.querySelectorAll("h2, h3, h4, h5, h6");
+
+      headings.forEach((heading, i) => {
+        const level = parseInt(heading.tagName.replace("H", ""));
+
+        if (level <= depth) {
+          heading.id = `${
+            heading.textContent.toLowerCase().split(" ").join("-")
+          }-${i}`;
+
+          let levelTarget = tocClone;
+
+          for (let l = 2; l < level; l++) {
+            if (levelTarget.querySelector("[data-toc='sub-level']")) {
+              levelTarget = levelTarget.querySelector("[data-toc='sub-level']");
+            }
+          }
+
+          const levelTargetClone = levelTarget.cloneNode(true);
+
+          if (levelTargetClone.lastElementChild.dataset.toc === "sub-level") {
+            levelTargetClone.lastElementChild.remove();
+          }
+
+          const label = levelTargetClone.querySelector(
+            "[data-toc='label']"
+          );
+
+          if (label) {
+            label.innerHTML = heading.innerHTML;
+          }
+
+          const link = levelTargetClone.querySelector("a");
+
+          if (link) {
+            link.href = `#${heading.id}`;
+          }
+
+          let parentTarget = tocTarget;
+
+          for (let l = 2; l < level - 1; l++) {
+            if (parentTarget.querySelector("[data-toc='sub-level']")) {
+              parentTarget = parentTarget.lastElementChild;
+            }
+          }
+
+          parentTarget.appendChild(levelTargetClone);
+        }
+      });
+    });
+  }
 };
 
 const runAfterFinsweet = (attributeModules, callback, onRenderCallback) => {
