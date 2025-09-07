@@ -205,30 +205,22 @@ const initSocialShare = () => {
 
           break;
         default:
-          if (!socialMediaUrl && !share_url.includes("https")) {
-            defaultShare = true;
-
-            sharer.addEventListener("click", function (e) {
-              e.preventDefault();
-
-              const { slug } = this.dataset;
-              const { origin, href } = window.location;
-
-              navigator.clipboard.writeText(`${
-                slug ? `${origin}${slug}` : href
-              }`);
-            });
-          }
+          socialMediaUrl = share_url;
       }
 
-      if (!defaultShare) {
-        sharer.href = `${
-          slug ? `${socialMediaUrl || share_url}${origin}${slug}` : href
-        }`;
+      if (share_url === "clipboard") {
+        sharer.addEventListener("click", function (e) {
+          e.preventDefault();
 
-        if (!sharer.target) {
-          sharer.target = "_blank";
-        }
+          const { slug } = this.dataset;
+          const { origin, href } = window.location;
+
+          navigator.clipboard.writeText(`${slug ? `${origin}${slug}` : href}`);
+        });
+      } else {
+        sharer.href = `${slug ? `${socialMediaUrl}${origin}${slug}` : href}`;
+        sharer.target = "_blank";
+        sharer.rel = "noopener noreferrer";
       }
     });
   }
