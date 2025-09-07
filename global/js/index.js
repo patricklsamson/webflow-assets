@@ -950,11 +950,11 @@ const initToc = () => {
 
       const tocClone = tocTarget.firstElementChild.cloneNode(true);
       let nextLevel = tocClone;
-      let depth = 2;
+      let depth = 1;
 
-      while (nextLevel.querySelector("[data-toc='sub-level']")) {
-        depth++;
+      while (nextLevel.lastElementChild.querySelector("[data-toc='label']")) {
         nextLevel = nextLevel.lastElementChild;
+        depth++;
       }
 
       tocTarget.innerHTML = "";
@@ -972,14 +972,19 @@ const initToc = () => {
           let levelTarget = tocClone;
 
           for (let l = 2; l < level; l++) {
-            if (levelTarget.querySelector("[data-toc='sub-level']")) {
-              levelTarget = levelTarget.querySelector("[data-toc='sub-level']");
+            if (levelTarget.querySelector("[data-toc='label']")) {
+              levelTarget = levelTarget.lastElementChild;
             }
           }
 
           const levelTargetClone = levelTarget.cloneNode(true);
 
-          if (levelTargetClone.lastElementChild.dataset.toc === "sub-level") {
+          if (
+            level < depth &&
+            levelTargetClone.lastElementChild.querySelector(
+              "[data-toc='label']"
+            )
+          ) {
             levelTargetClone.lastElementChild.remove();
           }
 
@@ -1000,7 +1005,7 @@ const initToc = () => {
           let parentTarget = tocTarget;
 
           for (let l = 2; l < level - 1; l++) {
-            if (parentTarget.querySelector("[data-toc='sub-level']")) {
+            if (parentTarget.querySelector("[data-toc='label']")) {
               parentTarget = parentTarget.lastElementChild;
             }
           }
@@ -1056,14 +1061,25 @@ const runAfterFinsweetV2 = (callback) => {
   callback(window.FinsweetAttributes);
 };
 
+const resetWebflowAnimations = (version = "ix2") => {
+  const webflow = window.Webflow;
+
+  if (webflow) {
+    webflow.destroy();
+    webflow.ready();
+    webflow.require(version).init();
+    document.dispatchEvent(new Event("readystatechange"));
+  }
+};
+
 const resetWebflowAfterWized = (onEndRequests, onceRequests) => {
-  const resetWebflow = () => {
+  const resetWebflowAnimations = (version = "ix2") => {
     const webflow = window.Webflow;
 
     if (webflow) {
       webflow.destroy();
       webflow.ready();
-      webflow.require("ix2").init();
+      webflow.require(version).init();
       document.dispatchEvent(new Event("readystatechange"));
     }
   };
@@ -1074,7 +1090,7 @@ const resetWebflowAfterWized = (onEndRequests, onceRequests) => {
     if (onEndRequests && onEndRequests.length > 0) {
       Wized.on("requestend", ({ name }) => {
         if (onEndRequests.some((request) => request === name)) {
-          resetWebflow();
+          resetWebflowAnimations();
         }
       });
     }
@@ -1084,7 +1100,7 @@ const resetWebflowAfterWized = (onEndRequests, onceRequests) => {
         await Wized.requests.waitFor(request);
       }
 
-      resetWebflow();
+      resetWebflowAnimations();
     }
   });
 };
