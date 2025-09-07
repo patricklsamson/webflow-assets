@@ -142,24 +142,6 @@ html.wf-design-mode [data-field_error].hide {
   line-height: inherit;
 }
 
-.dropdown_list:not(.w--open) {
-  display: none !important;
-  opacity: 0 !important;
-}
-
-.component_initial div::first-letter {
-  font-size: initial;
-}
-
-.vertical-tab_wrapper:before,
-.vertical-tab_wrapper:after {
-  display: none;
-}
-
-html.wf-design-mode .masonry_item {
-  position: static;
-}
-
 .component_grid[data-wf--grid--gutter-size="large"] .component_grid-column {
   padding: var(--_base---grid-gutter--gutter-large);
 }

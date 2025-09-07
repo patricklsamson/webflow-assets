@@ -1,3 +1,21 @@
+.dropdown_list:not(.w--open) {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+.component_initial div::first-letter {
+  font-size: initial;
+}
+
+.vertical-tab_wrapper:before,
+.vertical-tab_wrapper:after {
+  display: none;
+}
+
+html.wf-design-mode .masonry_item {
+  position: static;
+}
+
 ::-webkit-scrollbar {
   width: 0.75rem;
   height: 0.75rem;
