@@ -262,16 +262,6 @@ const initFormSubmit = (
   }
 };
 
-const injectSvgs = () => {
-  const svgTargets = document.querySelectorAll("[data-svg='target']");
-
-  if (svgTargets.length > 0) {
-    svgTargets.forEach((wrapper) => {
-      wrapper.parentNode.innerHTML = wrapper.innerText;
-    });
-  }
-};
-
 const lazyLoadAssets = () => {
   const assets = Array.from(document.querySelectorAll('[data-lazy="true"]'));
 
@@ -334,6 +324,16 @@ const lazyLoadAssets = () => {
       window.addEventListener("resize", loadAssets);
       window.addEventListener("orientationchange", loadAssets);
     }
+  }
+};
+
+const injectSvgs = () => {
+  const svgTargets = document.querySelectorAll("[data-svg='target']");
+
+  if (svgTargets.length > 0) {
+    svgTargets.forEach((wrapper) => {
+      wrapper.parentNode.innerHTML = wrapper.innerText;
+    });
   }
 };
 
