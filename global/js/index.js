@@ -1061,7 +1061,7 @@ const runAfterFinsweetV2 = (callback) => {
   callback(window.FinsweetAttributes);
 };
 
-const resetWebflowAnimations = (version = "ix2") => {
+const resetWebflow = (version = "ix2") => {
   const webflow = window.Webflow;
 
   if (webflow) {
@@ -1073,7 +1073,7 @@ const resetWebflowAnimations = (version = "ix2") => {
 };
 
 const resetWebflowAfterWized = (onEndRequests, onceRequests) => {
-  const resetWebflowAnimations = (version = "ix2") => {
+  const resetWebflow = (version = "ix2") => {
     const webflow = window.Webflow;
 
     if (webflow) {
@@ -1090,7 +1090,7 @@ const resetWebflowAfterWized = (onEndRequests, onceRequests) => {
     if (onEndRequests && onEndRequests.length > 0) {
       Wized.on("requestend", ({ name }) => {
         if (onEndRequests.some((request) => request === name)) {
-          resetWebflowAnimations();
+          resetWebflow();
         }
       });
     }
@@ -1100,7 +1100,7 @@ const resetWebflowAfterWized = (onEndRequests, onceRequests) => {
         await Wized.requests.waitFor(request);
       }
 
-      resetWebflowAnimations();
+      resetWebflow();
     }
   });
 };
