@@ -1,8 +1,3 @@
-.dropdown_list:not(.w--open) {
-  display: none !important;
-  opacity: 0 !important;
-}
-
 .component_initial div::first-letter {
   font-size: initial;
 }
