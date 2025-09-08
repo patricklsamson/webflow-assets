@@ -12,21 +12,19 @@ injectSourceCodes([
 setStructuredData([
   {
     path: "/",
-    resolveData: ({ url,  publisher }) =>({
+    resolveData: ({ url }) =>({
       "@type": "WebSite",
       url,
-      name: "Patrick Samson",
-      publisher
+      name: "Patrick Samson"
     })
   },
   {
     path: "/style-guide",
-    resolveData: ({ url, metaTitle, metaDescription, mainEntity }) => ({
+    resolveData: ({ url, metaTitle, metaDescription }) => ({
       "@type": "WebPage",
       url,
       name: metaTitle,
-      description: metaDescription,
-      mainEntity
+      description: metaDescription
     })
   },
   {

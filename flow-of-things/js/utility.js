@@ -1,6 +1,6 @@
 const setStructuredData = (pages) => {
   pages.forEach((page) => {
-    const { pathname, href, origin } = window.location;
+    const { pathname, href } = window.location;
 
     if (pathname === page.path) {
       const structuredData = document.createElement("script");
@@ -20,15 +20,6 @@ const setStructuredData = (pages) => {
           metaDescription: document.querySelector(
             "meta[name='description']"
           ).getAttribute("content"),
-          publisher: {
-            ...author,
-            "@id": `${origin}/#organization`,
-            url: origin,
-            logo: "https://cdn.prod.website-files.com/66944bbc65c60d35578879e7/66944bbc65c60d3557887a55_client-first-logo-white.svg"
-          },
-          mainEntity: {
-            "@id": `${origin}/#organization`
-          },
           author
         })
       });
