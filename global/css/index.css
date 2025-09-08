@@ -5,9 +5,26 @@ input[type="file"]:focus-visible {
   outline-offset: 0.125rem;
 }
 
+.w-richtext > *:first-child {
+  margin-top: 0rem !important;
+}
+
+.w-richtext > *:last-child,
+.w-richtext li:last-child {
+  margin-bottom: 0rem !important;
+}
+
 [class^="container-"] {
   margin-left: auto !important;
   margin-right: auto !important;
+}
+
+.text-style-2lines {
+  line-clamp: 2;
+}
+
+.text-style-3lines {
+  line-clamp: 3;
 }
 /* FINSWEET GLOBAL STYLES OVERRIDE */
 
