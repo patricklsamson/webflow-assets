@@ -1,6 +1,6 @@
 const setStructuredData = (pages) => {
   pages.forEach((page) => {
-    const { pathname, href } = window.location;
+    const { pathname, href, origin } = window.location;
 
     if (pathname === page.path) {
       const structuredData = document.createElement("script");
@@ -20,21 +20,16 @@ const setStructuredData = (pages) => {
           metaDescription: document.querySelector(
             "meta[name='description']"
           ).getAttribute("content"),
-          mainEntity: {
+          publisher: {
             ...author,
-            url: href,
-            logo: {
-              "@type": "ImageObject",
-              url: "https://cdn.prod.website-files.com/66944bbc65c60d35578879e7/66944bbc65c60d3557887a55_client-first-logo-white.svg",
-              width: 229,
-              height: 49
-            }
+            "@id": `${origin}/#organization`,
+            url: origin,
+            logo: "https://cdn.prod.website-files.com/66944bbc65c60d35578879e7/66944bbc65c60d3557887a55_client-first-logo-white.svg"
           },
-          author,
-          mainEntityOfPage: {
-            "@type": "WebPage",
-            "@id": href
-          }
+          mainEntity: {
+            "@id": `${origin}/#organization`
+          },
+          author
         })
       });
 
