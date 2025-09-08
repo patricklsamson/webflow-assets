@@ -142,6 +142,10 @@ html.wf-design-mode [data-field_error].hide {
   display: block !important;
 }
 
+html:not(.wf-design-mode) .g-recaptcha-error {
+  display: none;
+}
+
 [class*="generic-image"][class*="w-variant"] * {
   width: inherit;
   height: inherit;
