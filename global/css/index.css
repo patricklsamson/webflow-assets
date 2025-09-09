@@ -53,6 +53,11 @@ html.wf-design-mode .wf-slot {
   z-index: var(--_index---index-lightbox-backdrop);
 }
 
+.w-pagination-previous,
+.w-pagination-next {
+  font-size: inherit;
+}
+
 address {
   font-style: normal;
 }
