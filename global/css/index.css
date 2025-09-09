@@ -101,13 +101,14 @@ video {
   background-position: center;
 }
 
-.text-style-1line p {
+.text-style-1line * {
+  margin-bottom: 0rem !important;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.text-style-1line *:not(div):not(p) {
+.text-style-1line *:not(div):not(p):not(*:first-child) {
   display: none;
 }
 
