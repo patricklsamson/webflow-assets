@@ -169,20 +169,24 @@ html.wf-design-mode [data-field_error].hide {
   line-height: inherit;
 }
 
-.component_grid[data-wf--grid--gutter-size="large"] .component_grid-column {
-  padding: var(--_base---grid-gutter--gutter-large);
-}
-
-.component_grid[data-wf--grid--gutter-size="medium"] .component_grid-column {
-  padding: var(--_base---grid-gutter--gutter-medium);
+.component_grid[data-wf--grid--gutter-size="xsmall"] .component_grid-column {
+  padding: var(--_base---grid-gutter--gutter-xsmall);
 }
 
 .component_grid[data-wf--grid--gutter-size="small"] .component_grid-column {
   padding: var(--_base---grid-gutter--gutter-small);
 }
 
-.component_grid[data-wf--grid--gutter-size="xsmall"] .component_grid-column {
-  padding: var(--_base---grid-gutter--gutter-xsmall);
+.component_grid[data-wf--grid--gutter-size="medium"] .component_grid-column {
+  padding: var(--_base---grid-gutter--gutter-medium);
+}
+
+.component_grid[data-wf--grid--gutter-size="large"] .component_grid-column {
+  padding: var(--_base---grid-gutter--gutter-large);
+}
+
+.component_grid[data-wf--grid--gutter-size="xlarge"] .component_grid-column {
+  padding: var(--_base---grid-gutter--gutter-large);
 }
 
 @media only screen and (max-width: 991px) {
