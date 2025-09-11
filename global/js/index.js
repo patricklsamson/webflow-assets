@@ -650,38 +650,40 @@ const openActiveAccordions = () => {
 const initSlider = (identifier, config) => {
   const sliderElement = document.querySelector(identifier);
   const { parentNode, dataset: { breakpoint } } = sliderElement;
+  const paginationTypes = ["bullets", "progressbar", "fraction"];
 
-  if (config.pagination) {
+  if (paginationTypes.some((type) => type === config.pagination)) {
     const {
       id,
       firstElementChild: { className }
     } = parentNode.querySelector(".swiper-pagination");
 
-    config.pagination = { el: id, type: config.pagination };
+    const paginationConfig = { el: id, type: config.pagination };
 
-    if (config.pagination.type === "bullets") {
-      config.pagination = {
-        bulletClass: className.replace(
-          "swiper-pagination-bullet-active",
-          ""
-        ),
-        clickable: true
-      };
+    if (config.pagination === "bullets") {
+      paginationConfig.bulletClass = className.replace(
+        "swiper-pagination-bullet-active",
+        ""
+      );
+
+      paginationConfig.clickable = true;
     }
 
-    if (config.pagination.type === "progressbar") {
-      config.pagination = { progressbarFillClass: className };
+    if (config.pagination === "progressbar") {
+      paginationConfig.progressbarFillClass = className;
     }
+
+    config.pagination = paginationConfig;
   }
 
-  if (config.navigation) {
+  if (config.navigation === true) {
     const { id: prevId } = parentNode.querySelector(".swiper-button-prev");
     const { id: nextId } = parentNode.querySelector(".swiper-button-next");
 
     config.navigation = { prevEl: prevId, nextEl: nextId };
   }
 
-  if (config.scrollbar) {
+  if (config.scrollbar === true) {
     const { id } = parentNode.querySelector(".swiper-scrollbar");
 
     config.scrollbar = { el: id, draggable: true };
