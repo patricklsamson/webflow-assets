@@ -686,14 +686,14 @@ const initSlider = (identifier, config) => {
   const paginationTypes = ["bullets", "progressbar", "fraction"];
 
   if (paginationTypes.some((type) => type === config.pagination)) {
-    const {
-      id,
-      firstElementChild: { className }
-    } = parentNode.querySelector(".swiper-pagination");
-
+    const { id } = parentNode.querySelector(".swiper-pagination");
     const paginationConfig = { el: id, type: config.pagination };
 
     if (config.pagination === "bullets") {
+      const { className } = parentNode.querySelector(
+        ".swiper-pagination-bullet"
+      );
+
       paginationConfig.bulletClass = className.replace(
         "swiper-pagination-bullet-active",
         ""
@@ -703,6 +703,10 @@ const initSlider = (identifier, config) => {
     }
 
     if (config.pagination === "progressbar") {
+      const { className } = parentNode.querySelector(
+        ".swiper-pagination-progressbar-fill"
+      );
+
       paginationConfig.progressbarFillClass = className;
     }
 
