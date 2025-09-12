@@ -1035,7 +1035,7 @@ const initSocialShare = () => {
   }
 };
 
-const initInterval = (callback, timeInterval = 500) => {
+const initInterval = (callback, timeInterval = 250) => {
   const interval = setInterval(() => {
     callback(() => clearInterval(interval));
   }, timeInterval);
