@@ -647,6 +647,39 @@ const openActiveAccordions = () => {
   }
 };
 
+const initCookie = (
+  modalIdentifier,
+  acceptIdentifier,
+  denyIdentifier,
+  expiry = 1
+) => {
+  if (document.cookie.includes("cookie_consent_accepted")) {
+    const modal = document.getElementById(modalIdentifier);
+
+    if (modal) {
+      modal.classList.add("hide");
+    }
+  } else {
+    const cookieButtons = document.querySelectorAll(
+      `#${acceptIdentifier}, #${denyIdentifier}`
+    );
+
+    if (cookieButtons.length > 0) {
+      cookieButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const date = new Date();
+
+          date.setDate(date.getDate() + expiry);
+
+          document.cookie = `cookie_consent_accepted=${
+            this.id === acceptIdentifier
+          }; expires=${date}`;
+        });
+      });
+    }
+  }
+};
+
 const initSlider = (identifier, config) => {
   const sliderElement = document.querySelector(identifier);
   const { parentNode, dataset: { breakpoint } } = sliderElement;
@@ -995,39 +1028,6 @@ const initSocialShare = () => {
         sharer.rel = "noopener noreferrer";
       }
     });
-  }
-};
-
-const initCookie = (
-  modalIdentifier,
-  acceptIdentifier,
-  denyIdentifier,
-  expiry = 1
-) => {
-  if (document.cookie.includes("cookie_consent_accepted")) {
-    const modal = document.getElementById(modalIdentifier);
-
-    if (modal) {
-      modal.classList.add("hide");
-    }
-  } else {
-    const cookieButtons = document.querySelectorAll(
-      `#${acceptIdentifier}, #${denyIdentifier}`
-    );
-
-    if (cookieButtons.length > 0) {
-      cookieButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-          const date = new Date();
-
-          date.setDate(date.getDate() + expiry);
-
-          document.cookie = `cookie_consent_accepted=${
-            this.id === acceptIdentifier
-          }; expires=${date}`;
-        });
-      });
-    }
   }
 };
 
