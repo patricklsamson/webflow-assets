@@ -58,6 +58,10 @@ html.wf-design-mode .wf-slot {
   font-size: inherit;
 }
 
+html.wf-design-mode .w-embed.w-script {
+  margin: 0rem;
+}
+
 address {
   font-style: normal;
 }
