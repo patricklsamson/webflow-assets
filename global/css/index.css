@@ -117,7 +117,7 @@ video {
   text-overflow: ellipsis;
 }
 
-.text-style-1line *:not(div):not(p):not(*:first-child) {
+.text-style-1line *:not(*:first-child) {
   display: none;
 }
 
