@@ -577,7 +577,7 @@ const initSlider = (identifier, config) => {
 
   if (paginationTypes.some((type) => type === config.pagination)) {
     const { id } = parentNode.querySelector(".swiper-pagination");
-    const paginationConfig = { el: id, type: config.pagination };
+    const paginationConfig = { el: `#${id}`, type: config.pagination };
 
     if (config.pagination === "bullets") {
       const { className } = parentNode.querySelector(
@@ -607,13 +607,13 @@ const initSlider = (identifier, config) => {
     const { id: prevId } = parentNode.querySelector(".swiper-button-prev");
     const { id: nextId } = parentNode.querySelector(".swiper-button-next");
 
-    config.navigation = { prevEl: prevId, nextEl: nextId };
+    config.navigation = { prevEl: `#${prevId}`, nextEl: `#${nextId}` };
   }
 
   if (config.scrollbar === true) {
     const { id } = parentNode.querySelector(".swiper-scrollbar");
 
-    config.scrollbar = { el: id, draggable: true };
+    config.scrollbar = { el: `#${id}`, draggable: true };
   }
 
   let slider = null;
