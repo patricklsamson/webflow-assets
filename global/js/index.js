@@ -673,7 +673,7 @@ const initCookie = (
 
           document.cookie = `cookie_consent_accepted=${
             this.id === acceptIdentifier
-          }; expires=${date}`;
+          }; expires=${date.toUTCString()}`;
         });
       });
     }
