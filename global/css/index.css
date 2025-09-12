@@ -169,10 +169,6 @@ html.wf-design-mode [data-field_error].hide {
   font-size: inherit;
 }
 
-[class*="line-height-setter"][class*="w-variant"] * {
-  line-height: inherit;
-}
-
 .component_grid[data-wf--grid--gutter-size="xsmall"] .component_grid-column {
   padding: var(--_base---grid-gutter--gutter-xsmall);
 }
