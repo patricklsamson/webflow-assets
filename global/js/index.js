@@ -570,116 +570,6 @@ const initBottomAnchors = (breakpoint = 992) => {
   }
 };
 
-const resolveSpans = () => {
-  const texts = document.querySelectorAll("[data-span_style]");
-
-  if (texts.length > 0) {
-    texts.forEach((text) => {
-      const spanClasses = text.dataset.span_style.split("|");
-      let index = 0;
-
-      const resolvedText = text.innerHTML.replace(
-        /\|([^|]+?)\|/g,
-        (_, content) => {
-          const spanClass = spanClasses[index];
-
-          if (spanClasses.length > 1) {
-            index++;
-          }
-
-          return spanClass
-            ? `<span class="${spanClass}">${content}</span>`
-            : content;
-        }
-      );
-
-      text.innerHTML = resolvedText;
-    });
-  }
-};
-
-const initMirrorClick = () => {
-  const triggers = document.querySelectorAll("[data-mirror_trigger]");
-
-  if (triggers.length > 0) {
-    triggers.forEach((trigger) => {
-      trigger.addEventListener("click", function (e) {
-        e.preventDefault();
-
-        const { mirror_trigger, mirror_delay } = this.dataset;
-
-        const targets = document.querySelectorAll(
-          `[data-mirror_target="${mirror_trigger}"]`
-        );
-
-        if (targets.length > 0) {
-          setTimeout(() => {
-            targets.forEach((target) => {
-              if (
-                target.classList.contains("w-dropdown-toggle") &&
-                target.classList.contains("w--open")
-              ) {
-                return false;
-              }
-
-              target.dispatchEvent(new Event("mousedown"));
-              target.dispatchEvent(new Event("mouseup"));
-              target.click();
-            });
-          }, parseInt(mirror_delay) || 0);
-        }
-      });
-    });
-  }
-};
-
-const openActiveAccordions = () => {
-  const accordionHeaders = document.querySelectorAll(
-    "[data-active_accordion='true']"
-  );
-
-  if (accordionHeaders.length > 0) {
-    accordionHeaders.forEach((header) => {
-      header.dispatchEvent(new Event("mousedown"));
-      header.dispatchEvent(new Event("mouseup"));
-      header.click();
-    });
-  }
-};
-
-const initCookie = (
-  modalIdentifier,
-  acceptIdentifier,
-  denyIdentifier,
-  expiry = 1
-) => {
-  if (document.cookie.includes("cookie_consent_accepted")) {
-    const modal = document.getElementById(modalIdentifier);
-
-    if (modal) {
-      modal.classList.add("hide");
-    }
-  } else {
-    const cookieButtons = document.querySelectorAll(
-      `#${acceptIdentifier}, #${denyIdentifier}`
-    );
-
-    if (cookieButtons.length > 0) {
-      cookieButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-          const date = new Date();
-
-          date.setDate(date.getDate() + expiry);
-
-          document.cookie = `cookie_consent_accepted=${
-            this.id === acceptIdentifier
-          }; expires=${date.toUTCString()}`;
-        });
-      });
-    }
-  }
-};
-
 const initSlider = (identifier, config) => {
   const sliderElement = document.querySelector(identifier);
   const { parentNode, dataset: { breakpoint } } = sliderElement;
@@ -824,6 +714,116 @@ const toggleSlideOverlays = (swiper) => {
   overlays.forEach((overlay) => {
     overlay.classList.toggle("hide");
   });
+};
+
+const resolveSpans = () => {
+  const texts = document.querySelectorAll("[data-span_style]");
+
+  if (texts.length > 0) {
+    texts.forEach((text) => {
+      const spanClasses = text.dataset.span_style.split("|");
+      let index = 0;
+
+      const resolvedText = text.innerHTML.replace(
+        /\|([^|]+?)\|/g,
+        (_, content) => {
+          const spanClass = spanClasses[index];
+
+          if (spanClasses.length > 1) {
+            index++;
+          }
+
+          return spanClass
+            ? `<span class="${spanClass}">${content}</span>`
+            : content;
+        }
+      );
+
+      text.innerHTML = resolvedText;
+    });
+  }
+};
+
+const initMirrorClick = () => {
+  const triggers = document.querySelectorAll("[data-mirror_trigger]");
+
+  if (triggers.length > 0) {
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const { mirror_trigger, mirror_delay } = this.dataset;
+
+        const targets = document.querySelectorAll(
+          `[data-mirror_target="${mirror_trigger}"]`
+        );
+
+        if (targets.length > 0) {
+          setTimeout(() => {
+            targets.forEach((target) => {
+              if (
+                target.classList.contains("w-dropdown-toggle") &&
+                target.classList.contains("w--open")
+              ) {
+                return false;
+              }
+
+              target.dispatchEvent(new Event("mousedown"));
+              target.dispatchEvent(new Event("mouseup"));
+              target.click();
+            });
+          }, parseInt(mirror_delay) || 0);
+        }
+      });
+    });
+  }
+};
+
+const openActiveAccordions = () => {
+  const accordionHeaders = document.querySelectorAll(
+    "[data-active_accordion='true']"
+  );
+
+  if (accordionHeaders.length > 0) {
+    accordionHeaders.forEach((header) => {
+      header.dispatchEvent(new Event("mousedown"));
+      header.dispatchEvent(new Event("mouseup"));
+      header.click();
+    });
+  }
+};
+
+const initCookie = (
+  modalIdentifier,
+  acceptIdentifier,
+  denyIdentifier,
+  expiry = 1
+) => {
+  if (document.cookie.includes("cookie_consent_accepted")) {
+    const modal = document.getElementById(modalIdentifier);
+
+    if (modal) {
+      modal.classList.add("hide");
+    }
+  } else {
+    const cookieButtons = document.querySelectorAll(
+      `#${acceptIdentifier}, #${denyIdentifier}`
+    );
+
+    if (cookieButtons.length > 0) {
+      cookieButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const date = new Date();
+
+          date.setDate(date.getDate() + expiry);
+
+          document.cookie = `cookie_consent_accepted=${
+            this.id === acceptIdentifier
+          }; expires=${date.toUTCString()}`;
+        });
+      });
+    }
+  }
 };
 
 const initToc = () => {
@@ -1033,6 +1033,12 @@ const initSocialShare = () => {
       }
     });
   }
+};
+
+const initInterval = (callback, timeInterval = 500) => {
+  const interval = setInterval(() => {
+    callback(() => clearInterval(interval));
+  }, timeInterval);
 };
 
 const removeInvisibleElements = () => {
