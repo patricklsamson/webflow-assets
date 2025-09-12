@@ -83,3 +83,7 @@ setStructuredData([
     })
   }
 ]);
+
+document.addEventListener("DOMContentLoaded", () => {
+  initCookie("cookie-modal", "cookie-accept", "cookie-deny");
+});
