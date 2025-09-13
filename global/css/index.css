@@ -37,10 +37,6 @@ html.wf-design-mode .wf-slot {
   display: block;
 }
 
-.w-nav-button.w--open {
-  background-color: transparent;
-}
-
 .w-dropdown {
   z-index: auto;
 }
@@ -49,17 +45,12 @@ html.wf-design-mode .wf-slot {
   display: none !important;
 }
 
+.w-dropdown-toggle {
+  white-space: normal;
+}
+
 .w-lightbox-backdrop {
   z-index: var(--_index---index-lightbox-backdrop);
-}
-
-.w-pagination-previous,
-.w-pagination-next {
-  font-size: inherit;
-}
-
-html.wf-design-mode .w-embed.w-script {
-  margin: 0rem;
 }
 
 address {
