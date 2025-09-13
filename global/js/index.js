@@ -262,6 +262,15 @@ const initFormSubmit = (
   }
 };
 
+const checkVisibility = (element, mode = "partial") => {
+  const { top, bottom, left, right } = element.getBoundingClientRect();
+  const { innerWidth, innerHeight } = window;
+
+  return mode === "partial"
+    ? top < innerHeight && bottom > 0 && left < innerWidth && right > 0
+    : top >= 0 && bottom <= innerHeight && left >= 0 && right <= innerWidth;
+};
+
 const lazyLoadAssets = () => {
   const assets = Array.from(document.querySelectorAll('[data-lazy="true"]'));
 
