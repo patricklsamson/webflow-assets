@@ -70,11 +70,13 @@ a.w-inline-block {
   display: inline-flex;
 }
 
-a path[fill] {
+a path[fill],
+button path[fill] {
   fill: currentColor;
 }
 
-a path[stroke] {
+a path[stroke],
+button path[stroke] {
   stroke: currentColor;
 }
 
