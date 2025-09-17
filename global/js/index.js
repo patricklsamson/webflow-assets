@@ -871,9 +871,30 @@ const initToc = () => {
         const level = parseInt(heading.tagName.replace("H", ""));
 
         if (level <= depth) {
-          heading.id = `${
+          const headingSlug = `${
             heading.textContent.toLowerCase().split(" ").join("-")
           }-${i}`;
+
+          const offsets = document.querySelectorAll("[data-toc='offset']");
+          let anchorOffset = parseInt(tocTarget.dataset.toc_offset) || 16;
+
+          if (offsets.length > 0) {
+            offsets.forEach((offset) => {
+              anchorOffset += offset.offsetHeight;
+            });
+          }
+
+          const headingAnchor = document.createElement("div");
+
+          headingAnchor.style.position = "relative";
+
+          headingAnchor.innerHTML = `<div id="${
+            headingSlug
+          }" style="position: absolute; margin-top: -${
+            anchorOffset
+          }px;"></div>`;
+
+          tocSource.insertBefore(headingAnchor, heading);
 
           let levelTarget = tocClone;
 
@@ -905,7 +926,7 @@ const initToc = () => {
           const link = levelTargetClone.querySelector("a");
 
           if (link) {
-            link.href = `#${heading.id}`;
+            link.href = `#${headingSlug}`;
           }
 
           let parentTarget = tocTarget;
