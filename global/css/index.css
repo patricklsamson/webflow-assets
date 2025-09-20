@@ -37,6 +37,19 @@ html.wf-design-mode .wf-slot {
   display: block;
 }
 
+.w-nav:before,
+.w-nav:after {
+  display: none;
+}
+
+.w-nav-brand {
+  padding: 0rem;
+}
+
+.w-nav-button.w--open {
+  background-color: transparent;
+}
+
 .w-dropdown {
   z-index: auto;
 }
@@ -164,13 +177,6 @@ html.wf-design-mode [data-field_error].hide {
 
 [class*="text-resizer"][class*="w-variant"] * {
   font-size: inherit;
-}
-
-.component_nav:before,
-.component_nav:after,
-.nav_container:before,
-.nav_container:after {
-  display: none;
 }
 
 .component_grid[data-wf--grid--gutter-size="xsmall"] .component_grid-column {
