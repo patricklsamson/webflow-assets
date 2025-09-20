@@ -38,7 +38,9 @@ html.wf-design-mode .wf-slot {
 }
 
 .w-nav:before,
-.w-nav:after {
+.w-nav:after,
+.w-container:before,
+.w-container:after {
   display: none;
 }
 
