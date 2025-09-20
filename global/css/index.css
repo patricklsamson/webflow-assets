@@ -114,6 +114,10 @@ video {
   display: none;
 }
 
+[class*="icon"] {
+  flex: 0 0 auto;
+}
+
 [class*="icon"] svg {
   width: auto;
   height: auto;
