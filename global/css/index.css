@@ -166,6 +166,13 @@ html.wf-design-mode [data-field_error].hide {
   font-size: inherit;
 }
 
+.component_nav:before,
+.component_nav:after,
+.nav_container:before,
+.nav_container:after {
+  display: none;
+}
+
 .component_grid[data-wf--grid--gutter-size="xsmall"] .component_grid-column {
   padding: var(--_base---grid-gutter--gutter-xsmall);
 }
