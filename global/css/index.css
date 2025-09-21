@@ -44,7 +44,8 @@ html.wf-design-mode .wf-slot {
   display: none;
 }
 
-.w-nav-brand {
+.w-nav-brand,
+.w-nav-link {
   padding: 0rem;
 }
 
