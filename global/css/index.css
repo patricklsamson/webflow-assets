@@ -139,15 +139,6 @@ video {
   height: auto;
 }
 
-.background-overlay ~ * {
-  position: relative;
-}
-
-.video-fluid {
-  background-size: cover;
-  background-position: 50% 50%;
-}
-
 [data-marker]:after {
   content: attr(data-marker);
   padding-left: 0.25em;
