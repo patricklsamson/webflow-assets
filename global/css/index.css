@@ -115,8 +115,8 @@ video {
 
 [style*="background-image"][style*="url"] {
   background-size: cover;
-  background-repeat: no-repeat;
   background-position: center;
+  background-repeat: no-repeat;
 }
 
 .text-style-1line * {
