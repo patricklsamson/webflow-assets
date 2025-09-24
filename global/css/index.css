@@ -200,9 +200,10 @@ video {
 }
 
 [type="checkbox"]:checked + .form_checkbox-icon,
-[type="radio"]:checked + .form_radio-icon .form_radio-icon-check {
+[type="radio"]:checked + .form_radio-icon {
   color: var(--text-color--text-alternate);
   background-color: var(--background-color--background-secondary);
+  border-color: var(--border-color--border-secondary);
 }
 
 html.wf-design-mode [data-message="loading"].hide,
