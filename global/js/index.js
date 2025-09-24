@@ -86,54 +86,6 @@ const requestApi = async (
   }
 };
 
-const validateFields = (form, schema) => {
-  const { elements } = form;
-  const validations = [true];
-
-  for (const field of elements) {
-    const fieldRules = schema[field.name];
-
-    if (fieldRules) {
-      const fields = Array.from(
-        document.querySelectorAll(`[name="${field.name}"]`)
-      );
-
-      for (const { validate, message } of fieldRules) {
-        const isValid = validate(field, fields);
-
-        validations.push(isValid);
-
-        const errorMessage = document.querySelector(
-          `[data-field_error="${field.name}"]`
-        );
-
-        if (errorMessage) {
-          if (isValid) {
-            field.classList.remove("field-error");
-            errorMessage.classList.add("hide");
-          } else {
-            const textBox = errorMessage.querySelector(
-              "div"
-            ) || errorMessage;
-
-            field.classList.add("field-error");
-
-            textBox.innerHTML = typeof message === "string"
-              ? message
-              : message(field, fields);
-
-            errorMessage.classList.remove("hide");
-
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  return validations.every((validation) => validation);
-};
-
 const initFormSubmit = (
   identifier,
   {
@@ -157,9 +109,51 @@ const initFormSubmit = (
       e.preventDefault();
 
       if (schema) {
-        const isValid = validateFields(form, schema);
+        const { elements: fields, parentNode } = form;
+        const validations = [];
 
-        if (!isValid) {
+        for (const field of fields) {
+          const fieldRules = schema[field.name];
+
+          if (fieldRules) {
+            const fields = Array.from(
+              document.querySelectorAll(`[name="${field.name}"]`)
+            );
+
+            for (const { validate, message } of fieldRules) {
+              const isValid = validate(field, fields);
+
+              validations.push(isValid);
+
+              const errorMessage = document.querySelector(
+                `[data-field_error="${field.name}"]`
+              );
+
+              if (errorMessage) {
+                if (isValid) {
+                  field.classList.remove("field-error");
+                  errorMessage.classList.add("hide");
+                } else {
+                  const textBox = errorMessage.querySelector(
+                    "div"
+                  ) || errorMessage;
+
+                  field.classList.add("field-error");
+
+                  textBox.innerHTML = typeof message === "string"
+                    ? message
+                    : message(field, fields);
+
+                  errorMessage.classList.remove("hide");
+
+                  break;
+                }
+              }
+            }
+          }
+        }
+
+        if (validations.some((validation) => !validation)) {
           return false;
         }
       }
