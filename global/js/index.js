@@ -173,6 +173,7 @@ const initFormSubmit = (
 
         const successMessage = parentNode.querySelector(".w-form-done");
         const errorMessage = parentNode.querySelector(".w-form-fail");
+        const errorText = "Oops! Something went wrong while submitting the form.";
 
         const setDisplay = (element, display = "block", callback = null) => {
           if (element) {
@@ -187,24 +188,24 @@ const initFormSubmit = (
         };
 
         try {
-          if (!headers["Content-Type"]) {
-            headers["Content-Type"] = "application/json";
-          }
+          loadingMessage.classList.remove("hide");
 
           const body = JSON.stringify(buildBody(fields));
 
-          loadingMessage.classList.remove("hide");
-
-          const response = await fetch(url, { method, headers, body });
+          const response = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json", ...headers },
+            body
+          });
 
           if (!response.ok) {
             if (response.headers.get("Content-Type") === "application/json") {
               const data = await response.json();
 
-              throw new Error(data.message || "Error occurred");
+              throw new Error(data.message || errorText);
             }
 
-            throw new Error("Error occurred");
+            throw new Error(errorText);
           }
 
           const data = response.status === 204 ? null : await response.json();
@@ -229,7 +230,7 @@ const initFormSubmit = (
 
           setDisplay(errorMessage, "block", (textBox) => {
             if (displayApiError) {
-              textBox.innerHTML = error.message || "Error occurred";
+              textBox.innerHTML = error.message || errorText;
             }
           });
 
