@@ -141,122 +141,104 @@ const initFormSubmit = (
     buildBody,
     method = "POST",
     headers = { "Content-Type": "application/json" },
-    disableWebflowFormSubmission = false,
     customSuccess = null,
     formDisplay = "block",
     displayApiError = false,
     schema = null
   }
 ) => {
-  const element = document.getElementById(identifier);
+  const form = document.getElementById(identifier);
 
-  if (element) {
-    const requestApi = async (form, manualSubmission) => {
-      const { elements: fields, parentNode } = form;
+  if (form) {
+    const mainSubmitButton = form.querySelector("[type='submit']");
+    const submitButton = form.querySelector("[data-button='submit']");
 
-      const loadingMessage = parentNode.querySelector(
-        "[data-message='loading']"
-      );
+    submitButton.addEventListener("click", async (e) => {
+      e.preventDefault();
 
-      const successMessage = parentNode.querySelector(".w-form-done");
-      const errorMessage = parentNode.querySelector(".w-form-fail");
+      if (schema) {
+        const isValid = validateFields(form, schema);
 
-      const setDisplay = (element, display = "block", callback = null) => {
-        if (element) {
-          if (callback) {
-            const textBox = element.querySelector("div") || element;
-
-            callback(textBox);
-          }
-
-          element.style.display = display;
+        if (!isValid) {
+          return false;
         }
-      };
-
-      try {
-        if (!headers["Content-Type"]) {
-          headers["Content-Type"] = "application/json";
-        }
-
-        const body = JSON.stringify(buildBody(fields));
-
-        loadingMessage.classList.remove("hide");
-
-        const response = await fetch(url, { method, headers, body });
-
-        if (!response.ok) {
-          if (response.headers.get("Content-Type") === "application/json") {
-            const data = await response.json();
-
-            throw new Error(data.message || "Error occurred");
-          }
-
-          throw new Error("Error occurred");
-        }
-
-        const data = response.status === 204 ? null : await response.json();
-
-        setDisplay(form, "none");
-        loadingMessage.classList.add("hide");
-
-        setDisplay(successMessage, "block", (textBox) => {
-          if (customSuccess) {
-            textBox.innerHTML = typeof customSuccess === "string"
-              ? customSuccess
-              : customSuccess(data);
-          }
-        });
-
-        setDisplay(errorMessage, "none");
-
-        if (manualSubmission) {
-          form.querySelector("[type='submit']").click();
-        }
-      } catch (error) {
-        setDisplay(form, formDisplay);
-        loadingMessage.classList.add("hide");
-        setDisplay(successMessage, "none");
-
-        setDisplay(errorMessage, "block", (textBox) => {
-          if (displayApiError) {
-            textBox.innerHTML = error.message || "Error occurred";
-          }
-        });
-
-        throw error;
-      }
-    };
-
-    if (element.tagName === "FORM") {
-      if (disableWebflowFormSubmission) {
-        element.action = "/";
       }
 
-      element.addEventListener("submit", function (e) {
-        e.preventDefault();
-        requestApi(this);
-      });
-    } else {
-      const form = element.closest("form");
+      if (url) {
+        const { elements: fields, parentNode } = form;
 
-      if (disableWebflowFormSubmission) {
-        form.action = "/";
-      }
+        const loadingMessage = parentNode.querySelector(
+          "[data-message='loading']"
+        );
 
-      element.addEventListener("click", (e) => {
-        e.preventDefault();
+        const successMessage = parentNode.querySelector(".w-form-done");
+        const errorMessage = parentNode.querySelector(".w-form-fail");
 
-        if (schema) {
-          const isValid = validateFields(form, schema);
+        const setDisplay = (element, display = "block", callback = null) => {
+          if (element) {
+            if (callback) {
+              const textBox = element.querySelector("div") || element;
 
-          if (!isValid) {
-            return false;
+              callback(textBox);
+            }
+
+            element.style.display = display;
           }
-        }
+        };
 
-        requestApi(form, true);
-      });
-    }
+        try {
+          if (!headers["Content-Type"]) {
+            headers["Content-Type"] = "application/json";
+          }
+
+          const body = JSON.stringify(buildBody(fields));
+
+          loadingMessage.classList.remove("hide");
+
+          const response = await fetch(url, { method, headers, body });
+
+          if (!response.ok) {
+            if (response.headers.get("Content-Type") === "application/json") {
+              const data = await response.json();
+
+              throw new Error(data.message || "Error occurred");
+            }
+
+            throw new Error("Error occurred");
+          }
+
+          const data = response.status === 204 ? null : await response.json();
+
+          setDisplay(form, "none");
+          loadingMessage.classList.add("hide");
+
+          setDisplay(successMessage, "block", (textBox) => {
+            if (customSuccess) {
+              textBox.innerHTML = typeof customSuccess === "string"
+                ? customSuccess
+                : customSuccess(data);
+            }
+          });
+
+          setDisplay(errorMessage, "none");
+          mainSubmitButton.click();
+        } catch (error) {
+          setDisplay(form, formDisplay);
+          loadingMessage.classList.add("hide");
+          setDisplay(successMessage, "none");
+
+          setDisplay(errorMessage, "block", (textBox) => {
+            if (displayApiError) {
+              textBox.innerHTML = error.message || "Error occurred";
+            }
+          });
+
+          throw error;
+        }
+      } else {
+        mainSubmitButton.click();
+      }
+    });
   }
 };
 
