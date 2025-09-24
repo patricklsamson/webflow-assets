@@ -169,9 +169,7 @@ const initFormSubmit = (
             callback(textBox);
           }
 
-          if (isForm) {
-            element.style.display = display;
-          }
+          element.style.display = display;
         }
       };
 
@@ -212,7 +210,7 @@ const initFormSubmit = (
         setDisplay(errorMessage, "none");
 
         if (manualSubmission) {
-          form.submit();
+          form.querySelector("[type='submit']").click();
         }
       } catch (error) {
         setDisplay(form, formDisplay);
