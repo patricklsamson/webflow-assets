@@ -105,8 +105,28 @@ const initFormSubmit = (
     const mainSubmitButton = form.querySelector("[type='submit']");
     const submitButton = form.querySelector("[data-button='submit']");
 
-    submitButton.addEventListener("click", async (e) => {
+    submitButton.addEventListener("click", async function (e) {
       e.preventDefault();
+
+      const innerLabel = this.querySelector("[data-loading]");
+
+      const initialLabelText = innerLabel
+        ? innerLabel.innerHTML
+        : this.innerHTML;
+
+      const setLabel = (loading) => {
+        if (innerLabel) {
+          innerLabel.innerHTML = loading
+            ? innerLabel.dataset.loading
+            : initialLabelText;
+        }
+
+        if (this.dataset.loading) {
+          this.innerHTML = loading ? this.dataset.loading : initialLabelText;
+        }
+      };
+
+      setLabel(true);
 
       if (schema) {
         const { elements: fields, parentNode } = form;
@@ -233,6 +253,8 @@ const initFormSubmit = (
       } else {
         mainSubmitButton.click();
       }
+
+      setLabel();
     });
   }
 };
