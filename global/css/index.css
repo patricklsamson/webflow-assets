@@ -81,19 +81,19 @@ html.wf-design-mode .wf-slot {
 }
 
 @media only screen and (min-width: 1280px) {
-  .w-nav[data-collapse="all"][data-uncollapse="large"] .w-nav-menu {
+  .w-nav.nav-expand-large[data-collapse="all"] .w-nav-menu {
     display: block;
   }
 }
 
 @media only screen and (min-width: 1440px) {
-  .w-nav[data-collapse="all"][data-uncollapse="xlarge"] .w-nav-menu {
+  .w-nav.nav-expand-xlarge[data-collapse="all"] .w-nav-menu {
     display: block;
   }
 }
 
 @media only screen and (min-width: 1920px) {
-  .w-nav[data-collapse="all"][data-uncollapse="xxlarge"] .w-nav-menu {
+  .w-nav.nav-expand-xxlarge[data-collapse="all"] .w-nav-menu {
     display: block;
   }
 }
