@@ -111,10 +111,6 @@ html.wf-design-mode .wf-slot {
   z-index: auto;
 }
 
-.w-dropdown-list:not(.w--open) {
-  display: none !important;
-}
-
 .w-dropdown-toggle {
   white-space: normal;
 }

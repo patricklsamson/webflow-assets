@@ -11,6 +11,10 @@ html.wf-design-mode .masonry_item {
   display: none;
 }
 
+.state-dropdown_toggle.w--open .state-dropdown_icon {
+  transform: rotate(180deg);
+}
+
 ::-webkit-scrollbar {
   width: 0.75rem;
   height: 0.75rem;
