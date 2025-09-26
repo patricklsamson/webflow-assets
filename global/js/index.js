@@ -754,25 +754,23 @@ const openActiveAccordions = () => {
 };
 
 const initForceOpenDropdowns = () => {
-  const dropdowns = document.querySelectorAll("[data-force_open]");
+  const dropdowns = document.querySelectorAll("[data-force_class]");
 
   if (dropdowns.length > 0) {
     dropdowns.forEach((dropdown) => {
-      const { force_open, force_open_delay } = dropdown.dataset;
-      const dropdownContent = dropdown.querySelector("w-dropdown-list");
-      let timeout = null;
+      const { force_class } = dropdown.dataset;
+      const triggers = dropdown.querySelectorAll("[data-force_trigger]");
 
-      dropdownContent.addEventListener("click", () => {
-        if (dropdown.classList.contains(force_open)) {
-          clearTimeout(timeout);
-          dropdown.classList.remove(force_open);
-        } else {
-          clearTimeout(timeout);
+      triggers.forEach((trigger) => {
+        trigger.addEventListener("click", function (e) {
+          e.preventDefault();
 
-          timeout = setTimeout(() => {
-            dropdown.classList.add(force_open);
-          }, parseInt(force_open_delay) || 0);
-        }
+          if (this.dataset.force_trigger === "open") {
+            dropdown.classList.add(force_class);
+          } else {
+            dropdown.classList.remove(force_class);
+          }
+        });
       });
     });
   }

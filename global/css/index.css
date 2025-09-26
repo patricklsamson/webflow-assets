@@ -115,6 +115,10 @@ html.wf-design-mode .wf-slot {
   white-space: normal;
 }
 
+.w-dropdown-list:not(.w--open) {
+  display: none !important;
+}
+
 .w-lightbox-backdrop {
   z-index: var(--_index---index-lightbox-backdrop);
 }
