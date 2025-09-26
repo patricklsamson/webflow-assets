@@ -739,6 +739,45 @@ const resolveSpans = () => {
   }
 };
 
+const openActiveAccordions = () => {
+  const accordionHeaders = document.querySelectorAll(
+    "[data-active_accordion='true']"
+  );
+
+  if (accordionHeaders.length > 0) {
+    accordionHeaders.forEach((header) => {
+      header.dispatchEvent(new Event("mousedown"));
+      header.dispatchEvent(new Event("mouseup"));
+      header.click();
+    });
+  }
+};
+
+const initForceOpenDropdowns = () => {
+  const dropdowns = document.querySelectorAll("[data-force_open]");
+
+  if (dropdowns.length > 0) {
+    dropdowns.forEach((dropdown) => {
+      const { force_open, force_open_delay } = dropdown.dataset;
+      const dropdownContent = dropdown.querySelector("w-dropdown-list");
+      let timeout = null;
+
+      dropdownContent.addEventListener("click", () => {
+        if (dropdown.classList.contains(force_open)) {
+          clearTimeout(timeout);
+          dropdown.classList.remove(force_open);
+        } else {
+          clearTimeout(timeout);
+
+          timeout = setTimeout(() => {
+            dropdown.classList.add(force_open);
+          }, parseInt(force_open_delay) || 0);
+        }
+      });
+    });
+  }
+};
+
 const initMirrorClick = () => {
   const triggers = document.querySelectorAll("[data-mirror_trigger]");
 
@@ -768,50 +807,6 @@ const initMirrorClick = () => {
               target.click();
             });
           }, parseInt(mirror_delay) || 0);
-        }
-      });
-    });
-  }
-};
-
-const openActiveAccordions = () => {
-  const accordionHeaders = document.querySelectorAll(
-    "[data-active_accordion='true']"
-  );
-
-  if (accordionHeaders.length > 0) {
-    accordionHeaders.forEach((header) => {
-      header.dispatchEvent(new Event("mousedown"));
-      header.dispatchEvent(new Event("mouseup"));
-      header.click();
-    });
-  }
-};
-
-const initForceOpenDropdowns = () => {
-  const triggers = document.querySelectorAll("[data-force_open_trigger]");
-
-  if (triggers.length > 0) {
-    triggers.forEach((trigger) => {
-      trigger.addEventListener("click", function () {
-        const {
-          force_open_trigger,
-          force_open_delay,
-          force_close
-        } = this.dataset;
-
-        const target = document.querySelector(
-          `[data-force_open_target="${force_open_trigger}"]`
-        );
-
-        if (target) {
-          if (force_close === "true") {
-            target.classList.remove(force_open_trigger);
-          } else {
-            setTimeout(() => {
-              target.classList.add(force_open_trigger);
-            }, parseInt(force_open_delay) || 0);
-          }
         }
       });
     });
