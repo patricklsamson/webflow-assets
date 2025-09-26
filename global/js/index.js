@@ -24,8 +24,8 @@ const requestApi = async (
   url,
   {
     loaderIdentifier,
-    callback = null,
-    body = null,
+    callback,
+    body,
     method = "GET",
     headers = { "Content-Type": "application/json" }
   }
@@ -91,12 +91,13 @@ const initFormSubmit = (
   {
     url,
     buildBody,
+    loaderIdentifier,
+    customSuccess,
+    displayApiError,
+    schema,
     method = "POST",
     headers = { "Content-Type": "application/json" },
-    customSuccess = null,
-    formDisplay = "block",
-    displayApiError = false,
-    schema = null
+    formDisplay = "block"
   }
 ) => {
   const form = document.getElementById(identifier);
@@ -107,26 +108,6 @@ const initFormSubmit = (
 
     submitButton.addEventListener("click", async function (e) {
       e.preventDefault();
-
-      const innerLabel = this.querySelector("[data-loading]");
-
-      const initialLabelText = innerLabel
-        ? innerLabel.innerHTML
-        : this.innerHTML;
-
-      const setLabel = (loading) => {
-        if (innerLabel) {
-          innerLabel.innerHTML = loading
-            ? innerLabel.dataset.loading
-            : initialLabelText;
-        }
-
-        if (this.dataset.loading) {
-          this.innerHTML = loading ? this.dataset.loading : initialLabelText;
-        }
-      };
-
-      setLabel(true);
 
       if (schema) {
         const { elements: fields, parentNode } = form;
@@ -181,9 +162,9 @@ const initFormSubmit = (
       if (url) {
         const { elements: fields, parentNode } = form;
 
-        const loadingMessage = parentNode.querySelector(
-          "[data-message='loading']"
-        );
+        const loadingMessage = loaderIdentifier
+          ? document.getElementById(loaderIdentifier)
+          : parentNode.querySelector("[data-message='loading']");
 
         const successMessage = parentNode.querySelector(".w-form-done");
         const errorMessage = parentNode.querySelector(".w-form-fail");
@@ -253,8 +234,6 @@ const initFormSubmit = (
       } else {
         mainSubmitButton.click();
       }
-
-      setLabel();
     });
   }
 };
@@ -805,6 +784,36 @@ const openActiveAccordions = () => {
       header.dispatchEvent(new Event("mousedown"));
       header.dispatchEvent(new Event("mouseup"));
       header.click();
+    });
+  }
+};
+
+const initForceOpenDropdown = () => {
+  const triggers = document.querySelectorAll("[data-force_open_trigger]");
+
+  if (triggers.length > 0) {
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", function () {
+        const {
+          force_open_trigger,
+          force_open_delay,
+          force_close
+        } = this.dataset;
+
+        const target = document.querySelector(
+          `[data-force_open_target="${force_open_trigger}"]`
+        );
+
+        if (target) {
+          if (force_close === "true") {
+            target.classList.remove(force_open_trigger);
+          } else {
+            setTimeout(() => {
+              target.classList.add(force_open_trigger);
+            }, parseInt(force_open_delay) || 0);
+          }
+        }
+      });
     });
   }
 };
