@@ -788,7 +788,7 @@ const openActiveAccordions = () => {
   }
 };
 
-const initForceOpenDropdown = () => {
+const initForceOpenDropdowns = () => {
   const triggers = document.querySelectorAll("[data-force_open_trigger]");
 
   if (triggers.length > 0) {
