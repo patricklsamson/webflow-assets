@@ -29,6 +29,7 @@ const initStructuredData = () => {
     script.type = "application/ld+json";
 
     const structuredData = {
+      "@context": "https://schema.org",
       "@type": data_type
     };
 
