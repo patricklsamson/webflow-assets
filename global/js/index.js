@@ -20,6 +20,68 @@ const injectSourceCodes = (sourceCodes) => {
   }
 };
 
+const initStructuredData = () => {
+  const { data_type } = document.body.dataset;
+  const script = document.createElement("script");
+
+  script.type = "application/ld+json";
+
+  const structuredData = {
+    "@type": data_type
+  };
+
+  switch (data_type) {
+    case "WebSite":
+      structuredData.url = window.location.href;
+      structuredData.name = "Patrick Samson";
+
+      break;
+    case "WebPage":
+      structuredData.url = window.location.href;
+      structuredData.name = document.title;
+
+      structuredData.description = document.querySelector(
+        "meta[name='description']"
+      ).content;
+
+      break;
+    case "BlogPosting":
+    case "NewsArticle":
+      structuredData.headline = document.querySelector(
+        "[data-article='headline']"
+      ).innerText;
+
+      structuredData.image = document.querySelector(
+        "[data-article='image']"
+      ).src;
+
+      const date = new Date(
+        document.querySelector("[data-article='date']").innerText
+      );
+
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+
+      const resolvedDate = `${year}-${
+        month >= 10 ? month : `0${month}`
+      }-${day >= 10 ? day : `0${day}`}`
+
+      structuredData.datePublished = resolvedDate;
+      structuredData.dateModified = resolvedDate;
+
+      structuredData.author = {
+        "@type": "Person",
+        name: document.querySelector("[data-article='author']").innerText
+      };
+
+      break;
+  }
+
+  script.innerHTML = JSON.stringify(structuredData);
+  document.head.appendChild(script);
+};
+
 const requestApi = async (
   url,
   {
