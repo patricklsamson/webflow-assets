@@ -136,6 +136,11 @@ th, td {
   text-align: initial;
 }
 
+nav a,
+footer a {
+  text-decoration: none;
+}
+
 a.w-inline-block {
   display: inline-flex;
 }
