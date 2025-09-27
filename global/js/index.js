@@ -47,6 +47,7 @@ const initStructuredData = () => {
         ).content;
 
         break;
+      case "Article":
       case "BlogPosting":
       case "NewsArticle":
         structuredData.headline = document.querySelector(
