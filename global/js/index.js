@@ -35,7 +35,7 @@ const initStructuredData = () => {
 
     switch (data_type) {
       case "WebSite":
-        structuredData.url = window.location.href;
+        structuredData.url = window.location.href.slice(0, -1);
         structuredData.name = "Patrick Samson";
 
         break;
