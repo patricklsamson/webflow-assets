@@ -137,7 +137,8 @@ th, td {
 }
 
 nav a,
-footer a {
+footer a,
+.text-style-none a {
   text-decoration: none;
 }
 
