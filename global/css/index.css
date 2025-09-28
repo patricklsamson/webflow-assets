@@ -136,7 +136,7 @@ th, td {
   text-align: initial;
 }
 
-nav a,
+nav:not(.w-dropdown-list) a,
 footer a,
 .text-style-none a {
   text-decoration: none;
