@@ -882,7 +882,7 @@ const initCookie = (
   modalIdentifier,
   acceptIdentifier,
   denyIdentifier,
-  expiry = 1
+  expiry = 0
 ) => {
   if (document.cookie.includes("cookie_consent_accepted")) {
     const modal = document.getElementById(modalIdentifier);
@@ -898,13 +898,18 @@ const initCookie = (
     if (cookieButtons.length > 0) {
       cookieButtons.forEach((button) => {
         button.addEventListener("click", function () {
-          const date = new Date();
-
-          date.setDate(date.getDate() + expiry);
-
-          document.cookie = `cookie_consent_accepted=${
+          let cookie = `cookie_consent_accepted=${
             this.id === acceptIdentifier
-          }; expires=${date.toUTCString()}`;
+          };`;
+
+          if (expiry > 0) {
+            const date = new Date();
+
+            date.setDate(date.getDate() + expiry);
+            cookie += ` expires=${date.toUTCString()}`;
+          }
+
+          document.cookie = cookie;
         });
       });
     }
