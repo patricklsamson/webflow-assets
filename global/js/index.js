@@ -4,17 +4,19 @@ const injectSourceCodes = (sourceCodes) => {
       const { type, url, location } = sourceCode;
       const domTarget = document[location ? location : "head"];
 
-      if (type === "stylesheet") {
-        const link = document.createElement("link");
+      if (domTarget) {
+        if (type === "stylesheet") {
+          const link = document.createElement("link");
 
-        link.setAttribute("rel", "stylesheet");
-        link.setAttribute("href", url);
-        domTarget.appendChild(link);
-      } else {
-        const script = document.createElement("script");
+          link.setAttribute("rel", "stylesheet");
+          link.setAttribute("href", url);
+          domTarget.appendChild(link);
+        } else {
+          const script = document.createElement("script");
 
-        script.setAttribute("src", url);
-        domTarget.appendChild(script);
+          script.setAttribute("src", url);
+          domTarget.appendChild(script);
+        }
       }
     });
   }
