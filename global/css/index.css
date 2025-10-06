@@ -132,7 +132,7 @@ table {
 }
 
 th, td {
-  height: 1px;
+  height: 0rem;
   text-align: initial;
 }
 
