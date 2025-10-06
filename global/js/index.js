@@ -124,13 +124,13 @@ const initInputDropdowns = () => {
 
           options.forEach((option) => {
             if (option === currentOption) {
+              setValue(dropdown, option);
               option.classList.add("is-active");
             } else {
               option.classList.remove("is-active");
             }
           });
 
-          setValue(dropdown, currentOption);
           toggle.dispatchEvent(new Event("mousedown"));
           toggle.dispatchEvent(new Event("mouseup"));
           toggle.click();
