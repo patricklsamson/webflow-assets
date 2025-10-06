@@ -115,7 +115,7 @@ html.wf-design-mode .wf-slot {
   white-space: normal;
 }
 
-.w-dropdown-list:not(.w--open) {
+.w-dropdown-list[style*="display"]:not(.w--open) {
   display: none !important;
 }
 
