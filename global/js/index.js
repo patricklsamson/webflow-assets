@@ -89,6 +89,48 @@ const initStructuredData = () => {
   }
 };
 
+const initInputDropdowns = () => {
+  const inputDropdowns = document.querySelectorAll("[data-dropdown='input']");
+
+  if (inputDropdowns.length > 0) {
+    const setValue = (dropdown, option) => {
+      const valueSource = option.querySelector("[data-value='source']");
+      const value = valueSource ? valueSource.innerText : option.innerText;
+      const valueTargets = dropdown.querySelectorAll("[data-value='target']");
+
+      valueTargets.forEach((valueTarget) => {
+        if (valueTarget.tagName === "INPUT") {
+          valueTarget.value = value;
+        } else {
+          valueTarget.innerHTML = value;
+        }
+      });
+    };
+
+    inputDropdowns.forEach((dropdown) => {
+      const selectedOption = dropdown.querySelector(
+        ".is-active[data-dropdown='option']"
+      );
+
+      if (selectedOption) {
+        setValue(dropdown, selectedOption);
+      }
+
+      const toggle = dropdown.querySelector("w-dropdown-toggle");
+      const options = dropdown.querySelectorAll("[data-dropdown='option']");
+
+      options.forEach((option) => {
+        option.addEventListener("click", function () {
+          setValue(dropdown, this);
+          toggle.dispatchEvent(new Event("mousedown"));
+          toggle.dispatchEvent(new Event("mouseup"));
+          toggle.click();
+        });
+      });
+    });
+  }
+};
+
 const requestApi = async (
   url,
   {
