@@ -93,47 +93,32 @@ const initInputDropdowns = () => {
   const inputDropdowns = document.querySelectorAll("[data-dropdown='input']");
 
   if (inputDropdowns.length > 0) {
-    const setValue = (dropdown, option) => {
-      if (option) {
-        const valueSource = option.querySelector("[data-value='source']");
-        const value = valueSource ? valueSource.innerText : option.innerText;
-        const valueTargets = dropdown.querySelectorAll("[data-value='target']");
-
-        valueTargets.forEach((valueTarget) => {
-          if (valueTarget.tagName === "INPUT") {
-            valueTarget.value = value;
-          } else {
-            valueTarget.innerHTML = value;
-          }
-        });
-      }
-    };
-
     inputDropdowns.forEach((dropdown) => {
-      setValue(
-        dropdown,
-        dropdown.querySelector(".is-active[data-dropdown='option']")
-      );
-
+      const { multiple } = dropdown.dataset;
       const toggle = dropdown.querySelector("w-dropdown-toggle");
       const options = dropdown.querySelectorAll("[data-dropdown='option']");
+      let initialState = true;
 
       options.forEach((option) => {
         option.addEventListener("click", function () {
-          const currentOption = this;
+          const { default_option } = this.dataset;
+          const valueSource = this.querySelector("[data-value='source']");
+          const value = valueSource ? valueSource.innerText : this.innerText;
+          const valueTarget = dropdown.querySelector("[data-value='target']");
 
-          options.forEach((option) => {
-            if (option === currentOption) {
-              setValue(dropdown, option);
-              option.classList.add("is-active");
-            } else {
-              option.classList.remove("is-active");
-            }
-          });
+          valueTarget.innerHTML = multiple && !initialState && !default_option
+            ? `${valueTarget.innerHTML}, ${value}`
+            : value;
 
-          toggle.dispatchEvent(new Event("mousedown"));
-          toggle.dispatchEvent(new Event("mouseup"));
-          toggle.click();
+          if (multiple) {
+            initialState = default_option === "true";
+          }
+
+          if (!multiple) {
+            toggle.dispatchEvent(new Event("mousedown"));
+            toggle.dispatchEvent(new Event("mouseup"));
+            toggle.click();
+          }
         });
       });
     });
