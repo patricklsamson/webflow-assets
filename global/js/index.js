@@ -97,24 +97,37 @@ const initInputDropdowns = () => {
       const { multiple } = dropdown.dataset;
       const toggle = dropdown.querySelector("w-dropdown-toggle");
       const options = dropdown.querySelectorAll("[data-dropdown='option']");
-      let initialState = true;
 
       options.forEach((option) => {
-        option.addEventListener("click", function () {
-          const { default_option } = this.dataset;
-          const valueSource = this.querySelector("[data-value='source']");
-          const value = valueSource ? valueSource.innerText : this.innerText;
-          const valueTarget = dropdown.querySelector("[data-value='target']");
+        const valueSource = option.querySelector("[data-value='source']");
+        const value = valueSource ? valueSource.innerHTML : option.innerText;
+        const valueTarget = dropdown.querySelector("[data-value='target']");
+        const { default_value } = valueTarget.dataset;
+        const input = option.querySelector("input");
 
-          valueTarget.innerHTML = multiple && !initialState && !default_option
-            ? `${valueTarget.innerHTML}, ${value}`
-            : value;
-
+        input.addEventListener("change", function () {
           if (multiple) {
-            initialState = default_option === "true";
+            if (this.checked) {
+              if (valueTarget.innerHTML === default_value) {
+                valueTarget.innerHTML = value;
+              } else {
+                valueTarget.innerHTML += `, ${value}`;
+              }
+            } else {
+              const currentValues = valueTarget.innerHTML.split(", ");
+
+              valueTarget.innerHTML = currentValues.filter((currentValue) => (
+                currentValue !== value
+              )).join(", ");
+            }
+
+            if (valueTarget.innerHTML === "") {
+              valueTarget.innerHTML = default_value;
+            }
           }
 
           if (!multiple) {
+            valueTarget.innerHTML = value;
             toggle.dispatchEvent(new Event("mousedown"));
             toggle.dispatchEvent(new Event("mouseup"));
             toggle.click();
