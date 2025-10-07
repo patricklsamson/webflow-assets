@@ -144,6 +144,7 @@ footer a,
 
 a.w-inline-block {
   display: inline-flex;
+  vertical-align: middle;
 }
 
 a path[fill],
@@ -239,6 +240,10 @@ html.wf-design-mode [data-field_error].hide {
 
 [class*="text-resizer"][class*="w-variant"] * {
   font-size: inherit;
+}
+
+[class*="text-colorizer"][class*="w-variant"] * {
+  color: inherit;
 }
 
 .component_grid[data-wf--grid--gutter-size="xsmall"] .component_grid-column {
