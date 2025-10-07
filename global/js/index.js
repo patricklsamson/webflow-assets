@@ -99,10 +99,13 @@ const initInputDropdowns = () => {
       const options = dropdown.querySelectorAll("[data-dropdown='option']");
 
       options.forEach((option) => {
+        const valueTarget = dropdown.querySelector("[data-value='target']");
+
+        const defaultValue = valueTarget.dataset.default_value ||
+          valueTarget.innerHTML;
+
         const valueSource = option.querySelector("[data-value='source']");
         const value = valueSource ? valueSource.innerHTML : option.innerText;
-        const valueTarget = dropdown.querySelector("[data-value='target']");
-        const defaultValue = valueTarget.innerHTML;
         const input = option.querySelector("input");
 
         input.addEventListener("change", function () {
