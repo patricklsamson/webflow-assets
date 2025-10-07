@@ -102,13 +102,13 @@ const initInputDropdowns = () => {
         const valueSource = option.querySelector("[data-value='source']");
         const value = valueSource ? valueSource.innerHTML : option.innerText;
         const valueTarget = dropdown.querySelector("[data-value='target']");
-        const { default_value } = valueTarget.dataset;
+        const defaultValue = valueTarget.innerHTML;
         const input = option.querySelector("input");
 
         input.addEventListener("change", function () {
           if (multiple) {
             if (this.checked) {
-              if (valueTarget.innerHTML === default_value) {
+              if (valueTarget.innerHTML === defaultValue) {
                 valueTarget.innerHTML = value;
               } else {
                 valueTarget.innerHTML += `, ${value}`;
@@ -122,7 +122,7 @@ const initInputDropdowns = () => {
             }
 
             if (valueTarget.innerHTML === "") {
-              valueTarget.innerHTML = default_value;
+              valueTarget.innerHTML = defaultValue;
             }
           }
 
