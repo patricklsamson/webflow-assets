@@ -161,6 +161,8 @@ svg,
 video {
   display: inline-block;
   vertical-align: middle;
+  width: auto;
+  height: auto;
   max-width: 100%;
 }
 
@@ -169,8 +171,6 @@ svg {
 }
 
 video {
-  width: auto;
-  height: auto;
   object-fit: cover;
 }
 
@@ -196,8 +196,8 @@ video {
 }
 
 [class*="icon"] svg {
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
 }
 
 [data-marker]:after {
