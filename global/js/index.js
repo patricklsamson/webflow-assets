@@ -89,6 +89,21 @@ const initStructuredData = () => {
   }
 };
 
+const initDarkMode = (onMatch, onUnmatch) => {
+  const runOnDarkMode = (media) => {
+    if (media.matches) {
+      onMatch && onMatch();
+    } else {
+      onUnmatch && onUnmatch();
+    }
+  };
+
+  const darkModeMedia = window.matchMedia("(prefers-color-scheme: dark)");
+
+  runOnDarkMode(darkModeMedia);
+  darkModeMedia.addEventListener("change", runOnDarkMode);
+};
+
 const initInputDropdowns = () => {
   const inputDropdowns = document.querySelectorAll("[data-dropdown='input']");
 
