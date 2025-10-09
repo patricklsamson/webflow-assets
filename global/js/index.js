@@ -709,7 +709,7 @@ const initSlider = (identifier, config) => {
   if (sliderElement.classList.contains("w-dyn-list")) {
     const sliderWrapper = sliderElement.querySelector(".swiper-wrapper");
 
-    sliderWrapper.setAttribute("role", "group");
+    sliderWrapper.removeAttribute("role");
   }
 
   if (paginationTypes.some((type) => type === config.pagination)) {
