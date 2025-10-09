@@ -706,6 +706,12 @@ const initSlider = (identifier, config) => {
   const { parentNode, dataset: { breakpoint } } = sliderElement;
   const paginationTypes = ["bullets", "progressbar", "fraction"];
 
+  if (sliderElement.classList.contains("w-dyn-list")) {
+    const sliderWrapper = sliderElement.querySelector(".swiper-wrapper");
+
+    sliderWrapper.setAttribute("role", "group");
+  }
+
   if (paginationTypes.some((type) => type === config.pagination)) {
     const { id } = parentNode.querySelector(".swiper-pagination");
     const paginationConfig = { el: `#${id}`, type: config.pagination };
