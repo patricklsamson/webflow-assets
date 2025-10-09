@@ -100,6 +100,7 @@ html.wf-design-mode .wf-slot {
 
 .w-nav-brand,
 .w-nav-link {
+  margin: 0rem;
   padding: 0rem;
 }
 
