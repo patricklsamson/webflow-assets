@@ -704,7 +704,6 @@ const initBottomAnchors = (breakpoint = 992) => {
 const initSlider = (identifier, config) => {
   const sliderElement = document.querySelector(identifier);
   const { parentNode, dataset: { breakpoint } } = sliderElement;
-  const paginationTypes = ["bullets", "progressbar", "fraction"];
 
   if (sliderElement.classList.contains("w-dyn-list")) {
     const sliderWrapper = sliderElement.querySelector(".swiper-wrapper");
@@ -712,11 +711,16 @@ const initSlider = (identifier, config) => {
     sliderWrapper.removeAttribute("role");
   }
 
-  if (paginationTypes.some((type) => type === config.pagination)) {
+  if (config.pagination) {
     const { id } = parentNode.querySelector(".swiper-pagination");
-    const paginationConfig = { el: `#${id}`, type: config.pagination };
 
-    if (config.pagination === "bullets") {
+    const type = typeof config.pagination === "string"
+      ? config.pagination
+      : config.pagination.type;
+
+    const paginationConfig = { el: `#${id}`, type };
+
+    if (type === "bullets") {
       const { className } = parentNode.querySelector(
         ".swiper-pagination-bullet"
       );
@@ -729,7 +733,7 @@ const initSlider = (identifier, config) => {
       paginationConfig.clickable = true;
     }
 
-    if (config.pagination === "progressbar") {
+    if (type === "progressbar") {
       const { className } = parentNode.querySelector(
         ".swiper-pagination-progressbar-fill"
       );
@@ -737,20 +741,39 @@ const initSlider = (identifier, config) => {
       paginationConfig.progressbarFillClass = className;
     }
 
-    config.pagination = paginationConfig;
+    config.pagination = Object.prototype.toString.call(
+      config.pagination
+    ) === "[object Object]"
+      ? { ...config.pagination, ...paginationConfig }
+      : paginationConfig;
   }
 
-  if (config.navigation === true) {
+  if (config.navigation) {
     const { id: prevId } = parentNode.querySelector(".swiper-button-prev");
     const { id: nextId } = parentNode.querySelector(".swiper-button-next");
 
-    config.navigation = { prevEl: `#${prevId}`, nextEl: `#${nextId}` };
+    const navigationConfig = {
+      prevEl: `#${prevId}`,
+      nextEl: `#${nextId}`,
+      addIcons: false
+    };
+
+    config.navigation = Object.prototype.toString.call(
+      config.navigation
+    ) === "[object Object]"
+      ? { ...config.navigation, ...navigationConfig }
+      : navigationConfig;
   }
 
-  if (config.scrollbar === true) {
+  if (config.scrollbar) {
     const { id } = parentNode.querySelector(".swiper-scrollbar");
+    const scrollbarConfig = { el: `#${id}`, draggable: true };
 
-    config.scrollbar = { el: `#${id}`, draggable: true };
+    config.scrollbar = Object.prototype.toString.call(
+      config.scrollbar
+    ) === "[object Object]"
+      ? { ...config.scrollbar, ...scrollbarConfig }
+      : scrollbarConfig;
   }
 
   let slider = null;
