@@ -701,9 +701,13 @@ const initBottomAnchors = (breakpoint = 992) => {
   }
 };
 
-const initSlider = (identifier, config) => {
+const initSlider = (identifier, config, effectConfig) => {
   const sliderElement = document.querySelector(identifier);
-  const { parentNode, dataset: { breakpoint } } = sliderElement;
+
+  const {
+    parentNode,
+    dataset: { breakpoint, effect_breakpoint }
+  } = sliderElement;
 
   if (sliderElement.classList.contains("w-dyn-list")) {
     const sliderWrapper = sliderElement.querySelector(".swiper-wrapper");
@@ -777,6 +781,44 @@ const initSlider = (identifier, config) => {
   }
 
   let slider = null;
+
+  if (effectConfig) {
+    if (effect_breakpoint) {
+      const runOnMatch = (media) => {
+        config.init = false;
+
+        const resolvedConfig = media.matches
+          ? { ...config, ...effectConfig }
+          : config;
+
+        if (slider) {
+          slider.destroy();
+          slider = null;
+        }
+
+        slider = new Swiper(identifier, resolvedConfig);
+        slider.init();
+      };
+
+      const resolvedBreakpoint = parseInt(effect_breakpoint);
+
+      const media = window.matchMedia(
+        `only screen and (${resolvedBreakpoint >= 0 ? "min" : "max"}-width: ${
+          resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
+        }px)`
+      );
+
+      runOnMatch(media);
+
+      window.addEventListener("resize", () => {
+        runOnMatch(media);
+      });
+
+      media.addEventListener("change", runOnMatch);
+    } else {
+      config = { ...config, ...effectConfig };
+    }
+  }
 
   if (breakpoint) {
     const resolvedBreakpoint = parseInt(breakpoint);
