@@ -109,8 +109,9 @@ const initInputDropdowns = () => {
 
   if (inputDropdowns.length > 0) {
     inputDropdowns.forEach((dropdown) => {
-      const { multiple } = dropdown.dataset;
-      const toggle = dropdown.querySelector("w-dropdown-toggle");
+      const { dropdown_close_delay, dropdown_multiple } = dropdown.dataset;
+      const toggle = dropdown.querySelector(".w-dropdown-toggle");
+      const list = dropdown.querySelector(".w-dropdown-list");
       const options = dropdown.querySelectorAll("[data-dropdown='option']");
 
       options.forEach((option) => {
@@ -124,7 +125,7 @@ const initInputDropdowns = () => {
         const input = option.querySelector("input");
 
         input.addEventListener("change", function () {
-          if (multiple) {
+          if (dropdown_multiple) {
             if (this.checked) {
               if (valueTarget.innerHTML === defaultValue) {
                 valueTarget.innerHTML = value;
@@ -144,11 +145,17 @@ const initInputDropdowns = () => {
             }
           }
 
-          if (!multiple) {
+          if (!dropdown_multiple) {
             valueTarget.innerHTML = value;
             toggle.dispatchEvent(new Event("mousedown"));
             toggle.dispatchEvent(new Event("mouseup"));
             toggle.click();
+
+            setTimeout(() => {
+              toggle.classList.remove("w--open");
+              toggle.setAttribute("aria-expanded", "false");
+              list.classList.remove("w--open");
+            }, parseInt(dropdown_close_delay) || 250);
           }
         });
       });
