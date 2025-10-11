@@ -82,13 +82,13 @@ a.w-inline-block {
   vertical-align: middle;
 }
 
-a path[fill],
-button path[fill] {
+a svg:not(.retain-color) path[fill],
+button svg:not(.retain-color) path[fill] {
   fill: currentColor;
 }
 
-a path[stroke],
-button path[stroke] {
+a svg:not(.retain-color) path[stroke],
+button svg:not(.retain-color) path[stroke] {
   stroke: currentColor;
 }
 
