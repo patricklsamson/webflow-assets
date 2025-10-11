@@ -708,13 +708,9 @@ const initBottomAnchors = (breakpoint = 992) => {
   }
 };
 
-const initSlider = (identifier, config, effectConfig) => {
+const initSlider = (identifier, config, effectConfigSet) => {
   const sliderElement = document.querySelector(identifier);
-
-  const {
-    parentNode,
-    dataset: { breakpoint, effect_breakpoint }
-  } = sliderElement;
+  const { parentNode, dataset: { breakpoint } } = sliderElement;
 
   if (sliderElement.classList.contains("w-dyn-list")) {
     const sliderWrapper = sliderElement.querySelector(".swiper-wrapper");
@@ -789,30 +785,37 @@ const initSlider = (identifier, config, effectConfig) => {
 
   let slider = null;
 
-  if (effectConfig) {
-    if (effect_breakpoint) {
+  if (!breakpoint && effectConfigSet) {
+    const initialState = sliderElement.innerHTML;
+    const effectBreakpointConfigs = Object.entries(effectConfigSet);
+
+    for (
+      const [
+        effectBreakpoint,
+        effectBreakpointConfig
+      ] of effectBreakpointConfigs
+    ) {
       const runOnMatch = (media) => {
         config.init = false;
 
         const resolvedConfig = media.matches
-          ? { ...config, ...effectConfig }
+          ? { ...config, ...effectBreakpointConfig }
           : config;
 
         if (slider) {
           slider.destroy();
           slider = null;
+          sliderElement.innerHTML = initialState;
         }
 
-        slider = new Swiper(identifier, resolvedConfig);
-        slider.init();
+        setTimeout(() => {
+          slider = new Swiper(identifier, resolvedConfig);
+          slider.init();
+        }, 125);
       };
 
-      const resolvedBreakpoint = parseInt(effect_breakpoint);
-
       const media = window.matchMedia(
-        `only screen and (${resolvedBreakpoint >= 0 ? "min" : "max"}-width: ${
-          resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
-        }px)`
+        `only screen and (min-width: ${effectBreakpoint}px)`
       );
 
       runOnMatch(media);
@@ -822,8 +825,6 @@ const initSlider = (identifier, config, effectConfig) => {
       });
 
       media.addEventListener("change", runOnMatch);
-    } else {
-      config = { ...config, ...effectConfig };
     }
   }
 
@@ -833,6 +834,26 @@ const initSlider = (identifier, config, effectConfig) => {
     const runOnMatch = (media) => {
       if (media.matches && !slider) {
         config.init = false;
+
+        if (effectConfigSet) {
+          const effectBreakpointConfigs = Object.fromEntries(
+            Object.entries(effectConfigSet).reverse()
+          );
+
+          for (
+            const [
+              effectBreakpoint,
+              effectBreakpointConfig
+            ] of effectBreakpointConfigs
+          ) {
+            if (window.innerWidth >= effectBreakpoint) {
+              config = { ...config, ...effectBreakpointConfig };
+
+              break;
+            }
+          }
+        }
+
         slider = new Swiper(identifier, config);
         slider.init();
       }
