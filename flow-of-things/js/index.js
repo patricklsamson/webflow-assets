@@ -1,6 +1,10 @@
 injectSourceCodes([
   {
     type: "stylesheet",
+    url: "https://cdn.jsdelivr.net/gh/patricklsamson/webflow-assets@main/global/css/vendors/finsweet.min.css"
+  },
+  {
+    type: "stylesheet",
     url: "https://cdn.jsdelivr.net/gh/patricklsamson/webflow-assets@main/global/css/index.min.css"
   },
   {
