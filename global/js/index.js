@@ -785,49 +785,6 @@ const initSlider = (identifier, config, effectConfigSet) => {
 
   let slider = null;
 
-  if (!breakpoint && effectConfigSet) {
-    const initialState = sliderElement.innerHTML;
-    const effectBreakpointConfigs = Object.entries(effectConfigSet);
-
-    for (
-      const [
-        effectBreakpoint,
-        effectBreakpointConfig
-      ] of effectBreakpointConfigs
-    ) {
-      const runOnMatch = (media) => {
-        config.init = false;
-
-        const resolvedConfig = media.matches
-          ? { ...config, ...effectBreakpointConfig }
-          : config;
-
-        if (slider) {
-          slider.destroy();
-          slider = null;
-          sliderElement.innerHTML = initialState;
-        }
-
-        setTimeout(() => {
-          slider = new Swiper(identifier, resolvedConfig);
-          slider.init();
-        }, 125);
-      };
-
-      const media = window.matchMedia(
-        `only screen and (min-width: ${effectBreakpoint}px)`
-      );
-
-      runOnMatch(media);
-
-      window.addEventListener("resize", () => {
-        runOnMatch(media);
-      });
-
-      media.addEventListener("change", runOnMatch);
-    }
-  }
-
   if (breakpoint) {
     const resolvedBreakpoint = parseInt(breakpoint);
 
@@ -878,7 +835,46 @@ const initSlider = (identifier, config, effectConfigSet) => {
 
     media.addEventListener("change", runOnMatch);
   } else {
-    slider = new Swiper(identifier, config);
+    if (effectConfigSet) {
+      const effectBreakpointConfigs = Object.entries(effectConfigSet);
+
+      for (
+        const [
+          effectBreakpoint,
+          effectBreakpointConfig
+        ] of effectBreakpointConfigs
+      ) {
+        const runOnMatch = (media) => {
+          config.init = false;
+
+          const resolvedConfig = media.matches
+            ? { ...config, ...effectBreakpointConfig }
+            : config;
+
+          if (slider) {
+            slider.destroy();
+            slider = null;
+          }
+
+          slider = new Swiper(identifier, resolvedConfig);
+          slider.init();
+        };
+
+        const media = window.matchMedia(
+          `only screen and (min-width: ${effectBreakpoint}px)`
+        );
+
+        runOnMatch(media);
+
+        window.addEventListener("resize", () => {
+          runOnMatch(media);
+        });
+
+        media.addEventListener("change", runOnMatch);
+      }
+    } else {
+      slider = new Swiper(identifier, config);
+    }
   }
 };
 
