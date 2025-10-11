@@ -440,11 +440,7 @@ const initMasonry = (identifier, configSet) => {
 
         const previousConfig = Object.values(configSet).reduce(
           (init, item, i) => {
-            if (i <= index) {
-              return { ...init, ...item };
-            }
-
-            return init;
+            return i <= index ? {  ...init, ...item } : init;
           },
           {}
         );
