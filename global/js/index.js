@@ -429,9 +429,8 @@ const initMasonry = (identifier, configSet) => {
 
     if (configSet.baseWidth) {
       const resolvedConfig = resolveConfig(configSet);
-      let masonry = null;
+      const masonry = new MiniMasonry(resolvedConfig);
 
-      masonry = new MiniMasonry(resolvedConfig);
       masonries.push(masonry);
     } else {
       const breakpoints = Object.keys(configSet);
@@ -822,7 +821,8 @@ const initSlider = (identifier, config, effectConfigSet) => {
         media.addEventListener("change", runOnMatch);
       }
     } else {
-      slider = new Swiper(identifier, config);
+      const slider = new Swiper(identifier, config);
+
       sliders.push(slider);
     }
 
