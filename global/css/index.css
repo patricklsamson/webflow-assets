@@ -141,7 +141,6 @@ video {
   color: var(--text-color--text-error-light);
 }
 
-label:not([data-default_option="true"])
 [type="checkbox"]:checked + .form_dropdown-item,
 [type="radio"]:checked + .form_dropdown-item {
   color: var(--text-color--text-alternate);

@@ -116,10 +116,7 @@ const initInputDropdowns = () => {
 
       options.forEach((option) => {
         const valueTarget = dropdown.querySelector("[data-value='target']");
-
-        const defaultValue = valueTarget.dataset.default_value ||
-          valueTarget.innerHTML;
-
+        const defaultValue = valueTarget.innerHTML;
         const valueSource = option.querySelector("[data-value='source']");
         const value = valueSource ? valueSource.innerHTML : option.innerText;
         const input = option.querySelector("input");
