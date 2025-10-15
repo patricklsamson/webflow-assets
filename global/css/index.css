@@ -159,8 +159,7 @@ html.wf-design-mode [data-field_error].hide {
   display: block !important;
 }
 
-[class*="generic-image"][class*="w-variant"] *,
-[class*="generic-picture"][class*="w-variant"] * {
+[class*="generic-image"][class*="w-variant"] * {
   width: inherit;
   height: inherit;
 }
