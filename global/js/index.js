@@ -531,67 +531,46 @@ const getVisibility = (element) => {
 };
 
 const lazyLoadAssets = () => {
-  const assets = Array.from(document.querySelectorAll('[data-lazy="true"]'));
+  const loadAssets = () => {
+    const assets = document.querySelectorAll('[data-loading="lazy"]');
 
-  if (assets.length > 0) {
-    if ("IntersectionObserver" in window) {
-      const assetObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(({ isIntersecting, target }) => {
-          if (isIntersecting) {
-            if (target.tagName === "VIDEO") {
-              for (const { dataset: { src } } of target.children) {
-                source.src = src;
-              }
-
-              target.load();
-            }
-
-            if (target.tagName === "DIV") {
-              target.style.backgroundImage = `url(${
-                target.dataset.src
-              })`;
-            }
-
-            target.removeAttribute("data-lazy");
-            observer.unobserve(target);
-          }
-        });
-      });
-
+    if (assets.length > 0) {
       assets.forEach((asset) => {
-        assetObserver.observe(asset);
+        const { top, bottom, left, right } = asset.getBoundingClientRect();
+        const { innerHeight, innerWidth } = window;
+
+        if (
+          top < innerHeight && bottom > 0 && left < innerWidth && right > 0
+        ) {
+          if (asset.tagName === "VIDEO") {
+            for (const source of asset.children) {
+              source.src = source.dataset.src;
+            }
+
+            asset.load();
+          }
+
+          if (asset.tagName === "DIV") {
+            asset.style.backgroundImage = `url(${asset.dataset.src})`;
+          }
+
+          asset.removeAttribute("data-loading");
+        }
       });
     } else {
-      const loadAssets = () => {
-        assets.forEach((asset) => {
-          const { top, bottom, left, right } = asset.getBoundingClientRect();
-          const { innerHeight, innerWidth } = window;
-
-          if (
-            top < innerHeight && bottom > 0 && left < innerWidth && right > 0
-          ) {
-            if (asset.tagName === "VIDEO") {
-              for (const { dataset: { src } } of asset.children) {
-                source.src = src;
-              }
-
-              asset.load();
-            }
-
-            if (asset.tagName === "DIV") {
-              asset.style.backgroundImage = `url(${asset.dataset.src})`;
-            }
-
-            asset.removeAttribute("data-lazy");
-          }
-        });
-      };
-
-      loadAssets();
-      window.addEventListener("scroll", loadAssets);
-      window.addEventListener("resize", loadAssets);
-      window.addEventListener("orientationchange", loadAssets);
+      window.removeEventListener("scroll", loadAssets);
+      window.removeEventListener("resize", loadAssets);
+      window.removeEventListener("orientationchange", loadAssets);
     }
+  };
+
+  const assets = document.querySelectorAll('[data-loading="lazy"]');
+
+  if (assets.length > 0) {
+    loadAssets();
+    window.addEventListener("scroll", loadAssets);
+    window.addEventListener("resize", loadAssets);
+    window.addEventListener("orientationchange", loadAssets);
   }
 };
 
