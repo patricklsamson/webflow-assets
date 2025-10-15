@@ -135,9 +135,8 @@ video {
   height: 100%;
 }
 
-[data-marker]:after {
-  content: attr(data-marker);
-  padding-left: 0.25em;
+.label-required:after {
+  content: " *";
   color: var(--text-color--text-error-light);
 }
 
