@@ -92,6 +92,7 @@ button svg:not(.retain-color) path[stroke] {
   stroke: currentColor;
 }
 
+picture,
 svg,
 video {
   display: inline-block;
