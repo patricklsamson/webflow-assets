@@ -55,7 +55,7 @@ html.wf-design-mode .wf-slot {
 }
 
 .w-lightbox-backdrop {
-  z-index: var(--_index---index-lightbox-backdrop);
+  z-index: var(--_index---index-lightbox-backdrop, 99999999);
 }
 
 address {
@@ -138,20 +138,20 @@ video {
 
 .label-required:after {
   content: " *";
-  color: var(--text-color--text-error-light);
+  color: var(--text-color--text-error-light, #dc3545);
 }
 
 [type="checkbox"]:checked + .form_dropdown-item,
 [type="radio"]:checked + .form_dropdown-item {
-  color: var(--text-color--text-alternate);
-  background-color: var(--background-color--background-secondary);
+  color: var(--text-color--text-alternate, #fff);
+  background-color: var(--background-color--background-secondary, #2d62ff);
 }
 
 [type="checkbox"]:checked + .form_checkbox-icon,
 [type="radio"]:checked + .form_radio-icon {
-  color: var(--text-color--text-alternate);
-  background-color: var(--background-color--background-secondary);
-  border-color: var(--border-color--border-secondary);
+  color: var(--text-color--text-alternate, #fff);
+  background-color: var(--background-color--background-secondary, #2d62ff);
+  border-color: var(--border-color--border-secondary, #2d62ff);
 }
 
 html.wf-design-mode [data-message="loading"].hide,
