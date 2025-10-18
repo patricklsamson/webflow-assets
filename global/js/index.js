@@ -1037,6 +1037,47 @@ const initCookie = (
   }
 };
 
+const initProgressBars = () => {
+  const progressBarInputs = document.querySelectorAll("[data-progress_source]");
+
+  if (progressBarInputs.length > 0) {
+    const sleep = (waitTime) => new Promise(
+      (resolve) => setTimeout(resolve, waitTime)
+    );
+
+    progressBarInputs.forEach((input) => {
+      input.addEventListener("change", async function () {
+        const progressBar = document.querySelector(
+          `[data-progress_target="${this.dataset.progress_source}"]`
+        );
+
+        const percentageInput = parseInt(this.value);
+
+        const waitTime = (
+          parseInt(progressBar.dataset.progress_transition) || 500
+        ) / percentageInput;
+
+        const percentageDisplay = this.nextElementSibling;
+        let percentageDisplayValue = parseInt(percentageDisplay.innerText);
+
+        progressBar.style.width = `${percentageInput}%`;
+
+        if (percentageInput > percentageDisplayValue) {
+          while (percentageInput > percentageDisplayValue) {
+            await sleep(waitTime);
+            percentageDisplay.innerText = ++percentageDisplayValue;
+          }
+        } else {
+          while (percentageInput < percentageDisplayValue) {
+            await sleep(waitTime);
+            percentageDisplay.innerText = --percentageDisplayValue;
+          }
+        }
+      });
+    });
+  }
+};
+
 const initToc = () => {
   const tocSources = document.querySelectorAll("[data-toc_source]");
 
