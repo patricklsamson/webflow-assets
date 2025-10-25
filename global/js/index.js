@@ -1038,43 +1038,133 @@ const initCookie = (
 };
 
 const initProgressBars = () => {
-  const progressBarInputs = document.querySelectorAll("[data-progress_source]");
-
-  if (progressBarInputs.length > 0) {
+  const setLevel = async (
+    source,
+    progressBar,
+    levelTarget,
+    currentLevel,
+    waitTime
+  ) => {
     const sleep = (waitTime) => new Promise(
       (resolve) => setTimeout(resolve, waitTime)
     );
 
-    progressBarInputs.forEach((input) => {
-      input.addEventListener("change", async function () {
-        const progressBar = document.querySelector(
-          `[data-progress_target="${this.dataset.progress_source}"]`
-        );
+    progressBar.style.width = `${levelTarget}%`;
 
-        const percentageInput = parseInt(this.value);
+    if (levelTarget > currentLevel) {
+      while (levelTarget > currentLevel) {
+        await sleep(waitTime);
+        source.innerHTML = ++currentLevel;
+      }
+    } else {
+      while (levelTarget < currentLevel) {
+        await sleep(waitTime);
+        source.innerHTML = --currentLevel;
+      }
+    }
+  };
 
-        const waitTime = (
-          parseInt(progressBar.dataset.progress_transition) || 500
-        ) / percentageInput;
+  const triggerProgressSources = document.querySelectorAll(
+    "[data-progress_type='trigger'][data-progress_source]"
+  );
 
-        const percentageDisplay = this.nextElementSibling;
-        let percentageDisplayValue = parseInt(percentageDisplay.innerText);
+  if (triggerProgressSources.length > 0) {
+    triggerProgressSources.forEach((source) => {
+      const { progress_source } = source.dataset;
 
-        progressBar.style.width = `${percentageInput}%`;
+      const progressBar = document.querySelector(
+        `[data-progress_bar="${progress_source}"]`
+      );
 
-        if (percentageInput > percentageDisplayValue) {
-          while (percentageInput > percentageDisplayValue) {
-            await sleep(waitTime);
-            percentageDisplay.innerText = ++percentageDisplayValue;
-          }
-        } else {
-          while (percentageInput < percentageDisplayValue) {
-            await sleep(waitTime);
-            percentageDisplay.innerText = --percentageDisplayValue;
-          }
-        }
+      const triggers = document.querySelectorAll(
+        `[data-progress_source="${progress_source}"]`
+      );
+
+      triggers.forEach((trigger) => {
+        trigger.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const { progress_level } = this.dataset;
+          const levelTarget = parseInt(progress_level);
+          const currentLevel = parseInt(source.innerHTML);
+          const { progress_transition } = progressBar.dataset;
+
+          const waitTime = (
+            parseInt(progress_transition) || 500
+          ) / levelTarget;
+
+          setLevel(
+            source,
+            progressBar,
+            levelTarget,
+            currentLevel,
+            waitTime
+          );
+        });
       });
     });
+  }
+
+  const loadProgressSources = document.querySelectorAll(
+    "[data-progress_type='load'][data-progress_source]"
+  );
+
+  if (loadProgressSources.length > 0) {
+    const loadProgressBars = () => {
+      const sources = document.querySelectorAll(
+        "[data-progress_type='load'][data-progress_source]"
+      );
+
+      if (sources.length > 0) {
+        sources.forEach((source) => {
+          const { top, bottom, left, right } = source.getBoundingClientRect();
+          const { innerHeight, innerWidth } = window;
+
+          if (
+            top < innerHeight && bottom > 0 && left < innerWidth && right > 0
+          ) {
+            const { progress_source, progress_level } = source.dataset;
+            const levelTarget = parseInt(progress_level);
+            const currentLevel = parseInt(source.innerHTML);
+
+            const progressBar = document.querySelector(
+              `[data-progress_bar="${progress_source}"]`
+            );
+
+            const { progress_transition } = progressBar.dataset;
+
+            const waitTime = (
+              parseInt(progress_transition) || 500
+            ) / levelTarget;
+
+            setLevel(
+              source,
+              progressBar,
+              levelTarget,
+              currentLevel,
+              waitTime
+            );
+
+            source.removeAttribute("data-progress_type");
+          }
+        });
+      } else {
+        window.removeEventListener("scroll", loadProgressBars);
+        window.removeEventListener("resize", loadProgressBars);
+        window.removeEventListener("orientationchange", loadProgressBars);
+      }
+    };
+
+    const sources = document.querySelectorAll(
+      "[data-progress_type='load'][data-progress_source]"
+    );
+
+    if (sources.length > 0) {
+      loadProgressBars();
+      window.addEventListener("scroll", loadProgressBars);
+      window.addEventListener("resize", loadProgressBars);
+      window.addEventListener("orientationchange", loadProgressBars);
+    }
   }
 };
 
