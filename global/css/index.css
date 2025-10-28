@@ -54,6 +54,10 @@ html.wf-design-mode .wf-slot {
   display: none !important;
 }
 
+.w-dropdown-list.w--open {
+  display: block !important;
+}
+
 .w-lightbox-backdrop {
   z-index: var(--_index---index-lightbox-backdrop, 99999999);
 }
