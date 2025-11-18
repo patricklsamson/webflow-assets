@@ -464,7 +464,7 @@ const initMediaMatch = (breakpoint, onMatch, onUnmatch) => {
 };
 
 const initMasonry = (identifier, configSet) => {
-  const resolveConfig = (config, previousConfig) => {
+  const resolveConfig = (config, configIndex) => {
     config.container = identifier;
 
     if (config.surroundingGutter === undefined) {
@@ -479,7 +479,18 @@ const initMasonry = (identifier, configSet) => {
       config.wedge = true;
     }
 
-    return previousConfig ? { ...previousConfig, ...config } : config;
+    if (configIndex) {
+      const previousConfig = Object.values(configSet).reduce(
+        (init, item, i) => {
+          return i <= configIndex ? {  ...init, ...item } : init;
+        },
+        {}
+      );
+
+      return { ...previousConfig, ...config };
+    }
+
+    return config;
   };
 
   const handleInitMasonries = () => {
@@ -496,19 +507,9 @@ const initMasonry = (identifier, configSet) => {
       for (const [index, breakpoint] of breakpoints.entries()) {
         let masonry = null;
 
-        const previousConfig = Object.values(configSet).reduce(
-          (init, item, i) => {
-            return i <= index ? {  ...init, ...item } : init;
-          },
-          {}
-        );
-
         const runOnMatch = (media) => {
           if (media.matches && !masonry) {
-            const resolvedConfig = resolveConfig(
-              configSet[breakpoint],
-              previousConfig
-            );
+            const resolvedConfig = resolveConfig(configSet[breakpoint], index);
 
             masonry = new MiniMasonry(resolvedConfig);
             masonries.push(masonry);
@@ -1378,6 +1379,58 @@ const initAutoplayTabs = () => {
       });
     });
   });
+};
+
+const initZoomer = (identifier, configSet, initializationFlag) => {
+  if (initializationFlag) {
+    return false;
+  }
+
+  if (configSet.maxScale) {
+    new Zoomist(identifier, configSet);
+  } else {
+    const resolveConfig = (config, configIndex) => {
+      const previousConfig = Object.values(configSet).reduce(
+        (init, item, i) => {
+          return i <= configIndex ? {  ...init, ...item } : init;
+        },
+        {}
+      );
+
+      return { ...previousConfig, ...config };
+    };
+
+    const breakpoints = Object.keys(configSet);
+
+    for (const [index, breakpoint] of breakpoints.entries()) {
+      let zoomer = null;
+
+      const runOnMatch = (media) => {
+        if (media.matches && !zoomer) {
+          const resolvedConfig = resolveConfig(configSet[breakpoint], index);
+
+          zoomer = new Zoomist(identifier, resolvedConfig);
+        }
+
+        if (!media.matches && zoomer) {
+          zoomer.destroy(true);
+          zoomer = null;
+        }
+      };
+
+      const media = window.matchMedia(
+        `only screen and (min-width: ${breakpoint}px)`
+      );
+
+      runOnMatch(media);
+
+      window.addEventListener("resize", () => {
+        runOnMatch(media);
+      });
+
+      media.addEventListener("change", runOnMatch);
+    }
+  }
 };
 
 const initTimeToRead = (
