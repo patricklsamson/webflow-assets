@@ -1381,55 +1381,12 @@ const initAutoplayTabs = () => {
   });
 };
 
-const initZoomer = (identifier, configSet, initializationFlag) => {
-  if (initializationFlag) {
-    return false;
-  }
+const initZoomer = (identifier, config) => {
+  const zoomerContainer = document.querySelector(identifier);
 
-  if (configSet.maxScale) {
-    new Zoomist(identifier, configSet);
-  } else {
-    const resolveConfig = (config, configIndex) => {
-      const previousConfig = Object.values(configSet).reduce(
-        (init, item, i) => {
-          return i <= configIndex ? {  ...init, ...item } : init;
-        },
-        {}
-      );
-
-      return { ...previousConfig, ...config };
-    };
-
-    const breakpoints = Object.keys(configSet);
-
-    for (const [index, breakpoint] of breakpoints.entries()) {
-      let zoomer = null;
-
-      const runOnMatch = (media) => {
-        if (media.matches && !zoomer) {
-          const resolvedConfig = resolveConfig(configSet[breakpoint], index);
-
-          zoomer = new Zoomist(identifier, resolvedConfig);
-        }
-
-        if (!media.matches && zoomer) {
-          zoomer.destroy(true);
-          zoomer = null;
-        }
-      };
-
-      const media = window.matchMedia(
-        `only screen and (min-width: ${breakpoint}px)`
-      );
-
-      runOnMatch(media);
-
-      window.addEventListener("resize", () => {
-        runOnMatch(media);
-      });
-
-      media.addEventListener("change", runOnMatch);
-    }
+  if (!zoomerContainer.classList.contains("zoomer-initialized")) {
+    new Zoomist(identifier, config);
+    zoomerContainer.classList.add("zoomer-initialized");
   }
 };
 
