@@ -104,6 +104,81 @@ const initDarkMode = (onMatch, onUnmatch) => {
   darkModeMedia.addEventListener("change", runOnDarkMode);
 };
 
+const initFilters = () => {
+  const filterMap = {};
+
+  const setDisplay = () => {
+    const filterTargets = Array.from(
+      document.querySelectorAll("[data-filter='target']")
+    );
+
+    for (const target of filterTargets) {
+      const resolvedFilterMapEntries = Object.entries(filterMap).filter(
+        ([_, values]) => (values.length > 0)
+      );
+
+      const isMatch = resolvedFilterMapEntries.every(([filter, values]) => {
+        const filterConditions = Array.from(
+          target.querySelectorAll(`[data-filter_condition="${filter}"]`)
+        );
+
+        return filterConditions.length > 0 &&
+          filterConditions.some((condition) => (
+            values.includes(condition.dataset.filter_condition_value)
+          ));
+      });
+
+      if (resolvedFilterMapEntries.length > 0 && !isMatch) {
+        target.classList.add("hide");
+      } else {
+        target.classList.remove("hide");
+      }
+    }
+  };
+
+  const filterSources = document.querySelectorAll("[data-filter_source]");
+
+  filterSources.forEach((source) => {
+    if (source.tagName === "INPUT") {
+      if (source.type === "radio" || source.type === "checkbox") {
+        source.addEventListener("change", function () {
+          const { filter_source, filter_source_value } = this.dataset;
+
+          if (this.checked) {
+            filterMap[filter_source] = filterMap[filter_source]
+              ? [...filterMap[filter_source], filter_source_value]
+              : [filter_source_value]
+          } else {
+            filterMap[filter_source] = filterMap[filter_source].filter(
+              (filter) => (filter !== filter_source_value)
+            );
+          }
+
+          setDisplay();
+        });
+      }
+
+      if (source.type === "text") {
+        source.addEventListener("keyup", function () {
+          const { value, dataset: { filter_source } } = this;
+
+          filterMap[filter_source] = [value];
+          setDisplay();
+        });
+      }
+    }
+
+    if (source.tagName === "SELECT") {
+      source.addEventListener("change", function () {
+        const { value, dataset: { filter_source } } = this;
+
+        filterMap[filter_source] = [value];
+        setDisplay();
+      });
+    }
+  });
+};
+
 const initInputDropdowns = () => {
   const inputDropdowns = document.querySelectorAll("[data-dropdown='input']");
 
@@ -154,37 +229,61 @@ const initInputDropdowns = () => {
         });
       }
 
-      options.forEach((option) => {
-        const input = option.querySelector("input");
+      if (valueTarget) {
+        options.forEach((option) => {
+          const input = option.querySelector("input");
 
-        if (input) {
-          const defaultValue = valueTarget.innerHTML;
-          const valueSource = option.querySelector("[data-value='source']");
-          const value = valueSource ? valueSource.innerHTML : option.innerText;
+          if (input) {
+            const defaultValue = valueTarget.innerHTML;
+            const valueSource = option.querySelector("[data-value='source']");
 
-          input.addEventListener("change", function () {
-            if (dropdown_multiple) {
-              if (this.checked) {
-                if (valueTarget.innerHTML === defaultValue) {
-                  valueTarget.innerHTML = value;
+            const value = valueSource
+              ? valueSource.innerHTML
+              : option.innerText;
+
+            input.addEventListener("change", function () {
+              if (dropdown_multiple) {
+                if (this.checked) {
+                  if (valueTarget.innerHTML === defaultValue) {
+                    valueTarget.innerHTML = value;
+                  } else {
+                    valueTarget.innerHTML += `, ${value}`;
+                  }
                 } else {
-                  valueTarget.innerHTML += `, ${value}`;
+                  const currentValues = valueTarget.innerHTML.split(", ");
+
+                  valueTarget.innerHTML = currentValues.filter(
+                    (currentValue) => (currentValue !== value)
+                  ).join(", ");
                 }
-              } else {
-                const currentValues = valueTarget.innerHTML.split(", ");
 
-                valueTarget.innerHTML = currentValues.filter((currentValue) => (
-                  currentValue !== value
-                )).join(", ");
+                if (valueTarget.innerHTML === "") {
+                  valueTarget.innerHTML = defaultValue;
+                }
               }
 
-              if (valueTarget.innerHTML === "") {
-                valueTarget.innerHTML = defaultValue;
-              }
-            }
+              if (!dropdown_multiple) {
+                valueTarget.innerHTML = value;
+                toggle.dispatchEvent(new Event("mousedown"));
+                toggle.dispatchEvent(new Event("mouseup"));
+                toggle.click();
 
-            if (!dropdown_multiple) {
-              valueTarget.innerHTML = value;
+                setTimeout(() => {
+                  toggle.classList.remove("w--open");
+                  toggle.setAttribute("aria-expanded", "false");
+                  list.classList.remove("w--open");
+                }, parseInt(dropdown_close_delay) || 250);
+              }
+            });
+          } else {
+            option.addEventListener("click", function () {
+              const valueSource = this.querySelector("[data-value='source']");
+
+              const value = valueSource
+                ? valueSource.innerHTML
+                : option.innerText;
+
+              valueTarget.value = value;
               toggle.dispatchEvent(new Event("mousedown"));
               toggle.dispatchEvent(new Event("mouseup"));
               toggle.click();
@@ -194,29 +293,10 @@ const initInputDropdowns = () => {
                 toggle.setAttribute("aria-expanded", "false");
                 list.classList.remove("w--open");
               }, parseInt(dropdown_close_delay) || 250);
-            }
-          });
-        } else {
-          option.addEventListener("click", function () {
-            const valueSource = this.querySelector("[data-value='source']");
-
-            const value = valueSource
-              ? valueSource.innerHTML
-              : option.innerText;
-
-            valueTarget.value = value;
-            toggle.dispatchEvent(new Event("mousedown"));
-            toggle.dispatchEvent(new Event("mouseup"));
-            toggle.click();
-
-            setTimeout(() => {
-              toggle.classList.remove("w--open");
-              toggle.setAttribute("aria-expanded", "false");
-              list.classList.remove("w--open");
-            }, parseInt(dropdown_close_delay) || 250);
-          });
-        }
-      });
+            });
+          }
+        });
+      }
     });
   }
 };
