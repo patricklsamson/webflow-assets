@@ -192,10 +192,18 @@ const initInputDropdowns = () => {
       const search = dropdown.querySelector("[data-dropdown='search']");
 
       if (search) {
-        search.addEventListener("keyup", function (e) {
+        const fixSpacePropagation = (e) => {
           if (e.code === "Space") {
             e.stopPropagation();
           }
+        };
+
+        search.addEventListener("keydown", fixSpacePropagation);
+        search.addEventListener("keypress", fixSpacePropagation);
+        search.addEventListener("input", fixSpacePropagation);
+
+        search.addEventListener("keyup", function (e) {
+          fixSpacePropagation(e);
 
           const searchValue = this.value.toLowerCase();
 
@@ -229,61 +237,43 @@ const initInputDropdowns = () => {
         });
       }
 
-      if (valueTarget) {
-        options.forEach((option) => {
-          const input = option.querySelector("input");
+      options.forEach((option) => {
+        const input = option.querySelector("input");
 
-          if (input) {
-            const defaultValue = valueTarget.innerHTML;
-            const valueSource = option.querySelector("[data-value='source']");
+        if (input) {
+          const defaultValue = valueTarget.innerHTML;
+          const valueSource = option.querySelector("[data-value='source']");
 
-            const value = valueSource
-              ? valueSource.innerHTML
-              : option.innerText;
+          const value = valueSource
+            ? valueSource.innerHTML
+            : option.innerText;
 
-            input.addEventListener("change", function () {
-              if (dropdown_multiple) {
-                if (this.checked) {
-                  if (valueTarget.innerHTML === defaultValue) {
-                    valueTarget.innerHTML = value;
-                  } else {
-                    valueTarget.innerHTML += `, ${value}`;
-                  }
+          input.addEventListener("change", function () {
+            if (dropdown_multiple && valueTarget) {
+              if (this.checked) {
+                if (valueTarget.innerHTML === defaultValue) {
+                  valueTarget.innerHTML = value;
                 } else {
-                  const currentValues = valueTarget.innerHTML.split(", ");
-
-                  valueTarget.innerHTML = currentValues.filter(
-                    (currentValue) => (currentValue !== value)
-                  ).join(", ");
+                  valueTarget.innerHTML += `, ${value}`;
                 }
+              } else {
+                const currentValues = valueTarget.innerHTML.split(", ");
 
-                if (valueTarget.innerHTML === "") {
-                  valueTarget.innerHTML = defaultValue;
-                }
+                const newValue = currentValues.filter(
+                  (currentValue) => (currentValue !== value)
+                ).join(", ")
+
+                valueTarget.innerHTML = newValue === ""
+                  ? defaultValue
+                  : newValue;
               }
+            }
 
-              if (!dropdown_multiple) {
+            if (!dropdown_multiple) {
+              if (valueTarget) {
                 valueTarget.innerHTML = value;
-                toggle.dispatchEvent(new Event("mousedown"));
-                toggle.dispatchEvent(new Event("mouseup"));
-                toggle.click();
-
-                setTimeout(() => {
-                  toggle.classList.remove("w--open");
-                  toggle.setAttribute("aria-expanded", "false");
-                  list.classList.remove("w--open");
-                }, parseInt(dropdown_close_delay) || 250);
               }
-            });
-          } else {
-            option.addEventListener("click", function () {
-              const valueSource = this.querySelector("[data-value='source']");
 
-              const value = valueSource
-                ? valueSource.innerHTML
-                : option.innerText;
-
-              valueTarget.value = value;
               toggle.dispatchEvent(new Event("mousedown"));
               toggle.dispatchEvent(new Event("mouseup"));
               toggle.click();
@@ -293,10 +283,32 @@ const initInputDropdowns = () => {
                 toggle.setAttribute("aria-expanded", "false");
                 list.classList.remove("w--open");
               }, parseInt(dropdown_close_delay) || 250);
-            });
-          }
-        });
-      }
+            }
+          });
+        } else {
+          option.addEventListener("click", function () {
+            if (valueTarget) {
+              const valueSource = this.querySelector("[data-value='source']");
+
+              const value = valueSource
+                ? valueSource.innerHTML
+                : option.innerText;
+
+              valueTarget.value = value;
+            }
+
+            toggle.dispatchEvent(new Event("mousedown"));
+            toggle.dispatchEvent(new Event("mouseup"));
+            toggle.click();
+
+            setTimeout(() => {
+              toggle.classList.remove("w--open");
+              toggle.setAttribute("aria-expanded", "false");
+              list.classList.remove("w--open");
+            }, parseInt(dropdown_close_delay) || 250);
+          });
+        }
+      });
     });
   }
 };
