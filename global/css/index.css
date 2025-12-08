@@ -77,7 +77,10 @@ th, td {
 
 nav:not(.w-dropdown-list) a,
 footer a,
-.text-style-none a {
+.text-style-none a,
+nav:not(.w-dropdown-list) .link,
+footer .link,
+.text-style-none .link {
   text-decoration: none;
 }
 
