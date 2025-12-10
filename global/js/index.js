@@ -1058,25 +1058,29 @@ const resolveSpans = () => {
 
   if (texts.length > 0) {
     texts.forEach((text) => {
-      const spanClasses = text.dataset.span_style.split("|");
-      let index = 0;
+      const { span_style } = text.dataset;
 
-      const resolvedText = text.innerHTML.replace(
-        /\|([^|]+?)\|/g,
-        (_, content) => {
-          const spanClass = spanClasses[index];
+      if (span_style.length > 0) {
+        const spanClasses = span_style.split("|");
+        let index = 0;
 
-          if (spanClasses.length > 1) {
-            index++;
+        const resolvedText = text.innerHTML.replace(
+          /\|([^|]+?)\|/g,
+          (_, content) => {
+            const spanClass = spanClasses[index];
+
+            if (spanClasses.length > 1) {
+              index++;
+            }
+
+            return spanClass
+              ? `<span class="${spanClass}">${content}</span>`
+              : content;
           }
+        );
 
-          return spanClass
-            ? `<span class="${spanClass}">${content}</span>`
-            : content;
-        }
-      );
-
-      text.innerHTML = resolvedText;
+        text.innerHTML = resolvedText;
+      }
     });
   }
 };
