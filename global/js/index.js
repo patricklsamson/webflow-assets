@@ -264,11 +264,9 @@ const initInputDropdowns = () => {
           input.addEventListener("change", function () {
             if (dropdown_multiple && valueTarget) {
               if (this.checked) {
-                if (valueTarget.innerHTML === defaultValue) {
-                  valueTarget.innerHTML = value;
-                } else {
-                  valueTarget.innerHTML += `, ${value}`;
-                }
+                valueTarget.innerHTML = valueTarget.innerHTML === defaultValue
+                  ? value
+                  : `${valueTarget.innerHTML}, ${value}`;
               } else {
                 const currentValues = valueTarget.innerHTML.split(", ");
 
@@ -308,6 +306,44 @@ const initInputDropdowns = () => {
       });
     });
   }
+};
+
+const initInputTriggers = () => {
+  const triggers = document.querySelectorAll("[data-input_trigger]");
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("change", function () {
+      const { type, checked, dataset, dataset: { input_trigger } } = this;
+
+      const target = document.querySelector(
+        `[data-input_target="${input_trigger}"]`
+      );
+
+      const sourceValue = Object.keys(dataset).find((key) => (
+        key.includes("source_value")
+      ));
+
+      if (target && sourceValue) {
+        if (type === "radio") {
+          target.value = checked ? dataset[sourceValue] : "";
+        }
+
+        if (type === "checkbox") {
+          if (checked) {
+            target.value = target.value === ""
+              ? dataset[sourceValue]
+              : `${target.value}, ${dataset[sourceValue]}`;
+          } else {
+            target.value = target.value === ""
+              ? ""
+              : target.value.split(", ").filter(
+                (value) => (value !== dataset[sourceValue])
+              ).join(", ");
+          }
+        }
+      }
+    });
+  });
 };
 
 const requestApi = async (
