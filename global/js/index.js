@@ -185,11 +185,9 @@ const initInputDropdowns = () => {
   if (inputDropdowns.length > 0) {
     inputDropdowns.forEach((dropdown) => {
       const { dropdown_close_delay, dropdown_multiple } = dropdown.dataset;
-      const toggle = dropdown.querySelector(".w-dropdown-toggle");
-      const list = dropdown.querySelector(".w-dropdown-list");
+      const search = dropdown.querySelector("[data-dropdown='search']");
       const options = dropdown.querySelectorAll("[data-dropdown='option']");
       const valueTarget = dropdown.querySelector("[data-value='target']");
-      const search = dropdown.querySelector("[data-dropdown='search']");
 
       if (search) {
         const fixSpacePropagation = (e) => {
@@ -237,6 +235,21 @@ const initInputDropdowns = () => {
         });
       }
 
+      const closeDropdown = () => {
+        const toggle = dropdown.querySelector(".w-dropdown-toggle");
+        const list = dropdown.querySelector(".w-dropdown-list");
+
+        toggle.dispatchEvent(new Event("mousedown"));
+        toggle.dispatchEvent(new Event("mouseup"));
+        toggle.click();
+
+        setTimeout(() => {
+          toggle.classList.remove("w--open");
+          toggle.setAttribute("aria-expanded", "false");
+          list.classList.remove("w--open");
+        }, parseInt(dropdown_close_delay) || 250);
+      };
+
       options.forEach((option) => {
         const input = option.querySelector("input");
 
@@ -274,15 +287,7 @@ const initInputDropdowns = () => {
                 valueTarget.innerHTML = value;
               }
 
-              toggle.dispatchEvent(new Event("mousedown"));
-              toggle.dispatchEvent(new Event("mouseup"));
-              toggle.click();
-
-              setTimeout(() => {
-                toggle.classList.remove("w--open");
-                toggle.setAttribute("aria-expanded", "false");
-                list.classList.remove("w--open");
-              }, parseInt(dropdown_close_delay) || 250);
+              closeDropdown();
             }
           });
         } else {
@@ -297,15 +302,7 @@ const initInputDropdowns = () => {
               valueTarget.value = value;
             }
 
-            toggle.dispatchEvent(new Event("mousedown"));
-            toggle.dispatchEvent(new Event("mouseup"));
-            toggle.click();
-
-            setTimeout(() => {
-              toggle.classList.remove("w--open");
-              toggle.setAttribute("aria-expanded", "false");
-              list.classList.remove("w--open");
-            }, parseInt(dropdown_close_delay) || 250);
+            closeDropdown();
           });
         }
       });
