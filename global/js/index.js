@@ -877,68 +877,89 @@ const initSlider = (identifier, config, effectConfigSet) => {
   }
 
   if (config.pagination) {
-    const { id } = parentNode.querySelector(".swiper-pagination");
+    const pagination = parentNode.querySelector(".swiper-pagination");
 
-    const type = typeof config.pagination === "string"
-      ? config.pagination
-      : config.pagination.type;
+    if (pagination) {
+      const { id } = pagination;
 
-    const paginationConfig = { el: `#${id}`, type };
+      const type = typeof config.pagination === "string"
+        ? config.pagination
+        : config.pagination.type;
 
-    if (type === "bullets") {
-      const { className } = parentNode.querySelector(
-        ".swiper-pagination-bullet"
-      );
+      const paginationConfig = { el: `#${id}`, type };
 
-      paginationConfig.bulletClass = className.replace(
-        "swiper-pagination-bullet-active",
-        ""
-      );
+      if (type === "bullets") {
+        const bullet = parentNode.querySelector(
+          ".swiper-pagination-bullet"
+        );
 
-      paginationConfig.clickable = true;
+        if (bullet) {
+          const { className } = bullet;
+
+          paginationConfig.bulletClass = className.replace(
+            "swiper-pagination-bullet-active",
+            ""
+          );
+
+          paginationConfig.clickable = true;
+        }
+      }
+
+      if (type === "progressbar") {
+        const progressBar = parentNode.querySelector(
+          ".swiper-pagination-progressbar-fill"
+        );
+
+        if (progressBar) {
+          const { className } = progressBar;
+
+          paginationConfig.progressbarFillClass = className;
+        }
+      }
+
+      config.pagination = Object.prototype.toString.call(
+        config.pagination
+      ) === "[object Object]"
+        ? { ...config.pagination, ...paginationConfig }
+        : paginationConfig;
     }
-
-    if (type === "progressbar") {
-      const { className } = parentNode.querySelector(
-        ".swiper-pagination-progressbar-fill"
-      );
-
-      paginationConfig.progressbarFillClass = className;
-    }
-
-    config.pagination = Object.prototype.toString.call(
-      config.pagination
-    ) === "[object Object]"
-      ? { ...config.pagination, ...paginationConfig }
-      : paginationConfig;
   }
 
   if (config.navigation) {
-    const { id: prevId } = parentNode.querySelector(".swiper-button-prev");
-    const { id: nextId } = parentNode.querySelector(".swiper-button-next");
+    const previousButton = parentNode.querySelector(".swiper-button-prev");
+    const nextButton = parentNode.querySelector(".swiper-button-next");
 
-    const navigationConfig = {
-      prevEl: `#${prevId}`,
-      nextEl: `#${nextId}`,
-      addIcons: false
-    };
+    if (previousButton && nextButton) {
+      const { id: prevId } = previousButton;
+      const { id: nextId } = nextButton;
 
-    config.navigation = Object.prototype.toString.call(
-      config.navigation
-    ) === "[object Object]"
-      ? { ...config.navigation, ...navigationConfig }
-      : navigationConfig;
+      const navigationConfig = {
+        prevEl: `#${prevId}`,
+        nextEl: `#${nextId}`,
+        addIcons: false
+      };
+
+      config.navigation = Object.prototype.toString.call(
+        config.navigation
+      ) === "[object Object]"
+        ? { ...config.navigation, ...navigationConfig }
+        : navigationConfig;
+    }
   }
 
   if (config.scrollbar) {
-    const { id } = parentNode.querySelector(".swiper-scrollbar");
-    const scrollbarConfig = { el: `#${id}`, draggable: true };
+    const scrollbar = parentNode.querySelector(".swiper-scrollbar");
 
-    config.scrollbar = Object.prototype.toString.call(
-      config.scrollbar
-    ) === "[object Object]"
-      ? { ...config.scrollbar, ...scrollbarConfig }
-      : scrollbarConfig;
+    if (scrollbar) {
+      const { id } = scrollbar;
+      const scrollbarConfig = { el: `#${id}`, draggable: true };
+
+      config.scrollbar = Object.prototype.toString.call(
+        config.scrollbar
+      ) === "[object Object]"
+        ? { ...config.scrollbar, ...scrollbarConfig }
+        : scrollbarConfig;
+    }
   }
 
   const handleInitSliders = () => {
