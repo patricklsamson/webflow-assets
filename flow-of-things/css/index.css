@@ -43,18 +43,18 @@ html.wf-design-mode .masonry_item {
 
 .page-wrapper[data-theme="light"] {
   --background-color--background-primary: var(
-    --base-color-neutral--white,
+    --base-color-neutral-misc--white,
     #fff
   );
 
-  --text-color--text-primary: var(--base-color-neutral--black, #000);
+  --text-color--text-primary: var(--base-color-neutral-misc--black, #000);
 }
 
 .page-wrapper[data-theme="dark"] {
   --background-color--background-primary: var(
-    --base-color-neutral--neutral-800,
+    --base-color-neutral-misc--neutral-800,
     #111
   );
 
-  --text-color--text-primary: var(--base-color-neutral--white, #fff);
+  --text-color--text-primary: var(--base-color-neutral-misc--white, #fff);
 }
