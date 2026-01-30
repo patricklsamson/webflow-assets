@@ -785,7 +785,9 @@ const initResponsiveGsapInteractions = () => {
   const interactionElements = Array.from(
     document.body.querySelectorAll("*")
   ).filter((element) => (
-    Object.keys(element.dataset).some((key) => (key.includes("interaction_")))
+    Object.keys(element.dataset).some((key) => (
+      key.includes("interaction_")
+    )) && element.dataset.breakpoint
   ));
 
   if (interactionElements.length > 0) {
