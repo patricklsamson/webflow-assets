@@ -109,7 +109,7 @@ const initFilters = () => {
 
   const setDisplay = () => {
     const filterTargets = Array.from(
-      document.querySelectorAll("[data-filter='target']")
+      document.querySelectorAll("[data-filter_target]")
     );
 
     for (const target of filterTargets) {
@@ -117,14 +117,14 @@ const initFilters = () => {
         ([_, values]) => (values.length > 0)
       );
 
-      const isMatch = resolvedFilterMapEntries.every(([filter, values]) => {
-        const filterConditions = Array.from(
-          target.querySelectorAll(`[data-filter_condition="${filter}"]`)
+      const isMatch = resolvedFilterMapEntries.every(([source, values]) => {
+        const matchedFilterTargets = Array.from(
+          document.querySelectorAll(`[data-filter_target="${source}"]`)
         );
 
-        return filterConditions.length > 0 &&
-          filterConditions.some((condition) => (
-            values.includes(condition.dataset.filter_condition_value)
+        return matchedFilterTargets.length > 0 &&
+          matchedFilterTargets.some((target) => (
+            values.includes(target.dataset.filter_target_value)
           ));
       });
 
@@ -150,7 +150,7 @@ const initFilters = () => {
               : [filter_source_value]
           } else {
             filterMap[filter_source] = filterMap[filter_source].filter(
-              (filter) => (filter !== filter_source_value)
+              (value) => (value !== filter_source_value)
             );
           }
 
@@ -187,7 +187,10 @@ const initInputDropdowns = () => {
       const { dropdown_close_delay, dropdown_multiple } = dropdown.dataset;
       const search = dropdown.querySelector("[data-dropdown='search']");
       const options = dropdown.querySelectorAll("[data-dropdown='option']");
-      const valueTarget = dropdown.querySelector("[data-value='target']");
+
+      const valueTarget = dropdown.querySelector(
+        "[data-dropdown='value-target']"
+      );
 
       if (search) {
         const fixSpacePropagation = (e) => {
@@ -206,7 +209,9 @@ const initInputDropdowns = () => {
           const searchValue = this.value.toLowerCase();
 
           options.forEach((option) => {
-            const valueSource = option.querySelector("[data-value='source']");
+            const valueSource = option.querySelector(
+              "[data-dropdown='value-source']"
+            );
 
             const value = valueSource
               ? valueSource.innerHTML.toLowerCase()
@@ -255,7 +260,10 @@ const initInputDropdowns = () => {
 
         if (input) {
           const defaultValue = valueTarget.innerHTML;
-          const valueSource = option.querySelector("[data-value='source']");
+
+          const valueSource = option.querySelector(
+            "[data-dropdown='value-source']"
+          );
 
           const value = valueSource
             ? valueSource.innerHTML
@@ -291,7 +299,9 @@ const initInputDropdowns = () => {
         } else {
           option.addEventListener("click", function () {
             if (valueTarget) {
-              const valueSource = this.querySelector("[data-value='source']");
+              const valueSource = this.querySelector(
+                "[data-dropdown='value-source']"
+              );
 
               const value = valueSource
                 ? valueSource.innerHTML
@@ -319,25 +329,25 @@ const initInputTriggers = () => {
         `[data-input_target="${input_trigger}"]`
       );
 
-      const sourceValue = Object.keys(dataset).find((key) => (
-        key.includes("source_value")
+      const triggerValue = Object.keys(dataset).find((key) => (
+        key.includes("input_trigger_value")
       ));
 
-      if (target && sourceValue) {
+      if (target && triggerValue) {
         if (type === "radio") {
-          target.value = checked ? dataset[sourceValue] : "";
+          target.value = checked ? dataset[triggerValue] : "";
         }
 
         if (type === "checkbox") {
           if (checked) {
             target.value = target.value === ""
               ? dataset[sourceValue]
-              : `${target.value}, ${dataset[sourceValue]}`;
+              : `${target.value}, ${dataset[triggerValue]}`;
           } else {
             target.value = target.value === ""
               ? ""
               : target.value.split(", ").filter(
-                (value) => (value !== dataset[sourceValue])
+                (value) => (value !== dataset[triggerValue])
               ).join(", ");
           }
         }
@@ -430,7 +440,7 @@ const initFormSubmit = (
 
   if (form) {
     const mainSubmitButton = form.querySelector("[type='submit']");
-    const submitButton = form.querySelector("[data-button='submit']");
+    const submitButton = form.querySelector("[data-form_button='submit']");
 
     submitButton.addEventListener("click", async function (e) {
       e.preventDefault();
@@ -453,7 +463,7 @@ const initFormSubmit = (
               validations.push(isValid);
 
               const errorMessage = document.querySelector(
-                `[data-field_error="${field.name}"]`
+                `[data-form_field_error="${field.name}"]`
               );
 
               if (errorMessage) {
@@ -490,7 +500,7 @@ const initFormSubmit = (
 
         const loadingMessage = loaderIdentifier
           ? document.getElementById(loaderIdentifier)
-          : parentNode.querySelector("[data-message='loading']");
+          : parentNode.querySelector("[data-form_message='loading']");
 
         const successMessage = parentNode.querySelector(".w-form-done");
         const errorMessage = parentNode.querySelector(".w-form-fail");
@@ -771,14 +781,16 @@ const injectSvgs = () => {
   }
 };
 
-const initResponsiveGsapAnimations = () => {
-  const animationElements = Array.from(document.querySelectorAll(
-    "[data-animation][data-breakpoint]"
+const initResponsiveGsapInteractions = () => {
+  const interactionElements = Array.from(
+    document.body.querySelectorAll("*")
+  ).filter((element) => (
+    Object.keys(element.dataset).some((key) => (key.includes("interaction_")))
   ));
 
-  if (animationElements.length > 0) {
-    const animationMap = animationElements.reduce((init, element) => {
-      const { breakpoint, animation } = element.dataset;
+  if (interactionElements.length > 0) {
+    const interactionMap = interactionElements.reduce((init, element) => {
+      const { breakpoint } = element.dataset;
 
       if (init[breakpoint]) {
         init[breakpoint].push(element);
@@ -789,7 +801,7 @@ const initResponsiveGsapAnimations = () => {
       return init;
     }, {});
 
-    Object.entries(animationMap).forEach(([breakpoint, elements]) => {
+    Object.entries(interactionMap).forEach(([breakpoint, elements]) => {
       const resolvedBreakpoint = parseInt(breakpoint);
 
       const media = window.matchMedia(`only screen and (${
@@ -801,7 +813,11 @@ const initResponsiveGsapAnimations = () => {
       const runOnMatch = (media) => {
         if (!media.matches) {
           elements.forEach((element) => {
-            element.setAttribute("data-animation", "none");
+            const attribute = Object.keys(element.dataset).find((key) => (
+              key.includes("interaction_")
+            ));
+
+            element.setAttribute(attribute, "none");
           });
         }
       };
@@ -1141,7 +1157,7 @@ const resolveSpans = () => {
 
 const openActiveAccordions = () => {
   const accordionHeaders = document.querySelectorAll(
-    "[data-active_accordion='true']"
+    "[data-accordion='active']"
   );
 
   if (accordionHeaders.length > 0) {
