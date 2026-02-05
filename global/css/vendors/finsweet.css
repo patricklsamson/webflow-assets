@@ -52,13 +52,13 @@ input[type="file"]:focus-visible {
 }
 
 @media only screen and (max-width: 767px) {
-  .hide-mobile-landscape{
+  .hide-mobile-landscape {
     display: none !important;
   }
 }
 
 @media only screen and (max-width: 479px) {
-  .hide-mobile{
+  .hide-mobile-portrait {
     display: none !important;
   }
 }
