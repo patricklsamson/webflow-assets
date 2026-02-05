@@ -134,6 +134,16 @@ video {
   display: none;
 }
 
+html:not(.wf-design-mode) [data-interaction_state="initial"] {
+  opacity: 0;
+}
+
+html.wf-design-mode .button_icon-wrapper {
+  width: 1rem;
+  height: 1rem;
+  overflow: hidden;
+}
+
 [class*="icon"] {
   flex: 0 0 auto;
 }
@@ -164,6 +174,12 @@ video {
 html.wf-design-mode [data-message="loading"].hide,
 html.wf-design-mode [data-field_error].hide {
   display: block !important;
+}
+
+[class*="generic-image"][class*="w-variant"] *,
+[class*="zoomer"][class*="w-variant"] {
+  width: inherit;
+  height: inherit;
 }
 
 [class*="generic-image"][class*="w-variant"] * {
