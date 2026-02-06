@@ -104,6 +104,125 @@ const initDarkMode = (onMatch, onUnmatch) => {
   darkModeMedia.addEventListener("change", runOnDarkMode);
 };
 
+const initAria = () => {
+  const ariaElements = document.querySelectorAll("[data-aria]");
+
+  if (ariaElements.length > 0) {
+    ariaElements.forEach((element) => {
+      const { aria } = element.dataset;
+
+      if (aria === "expansion") {
+        element.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const expansion = this.getAttribute("aria-expanded") === "true"
+            ? "false"
+            : "true";
+
+          this.setAttribute("aria-expanded", expansion);
+        });
+      }
+    });
+  }
+};
+
+const initMatchHeight = () => {
+  const elements = Array.from(document.querySelectorAll("[data-match_height]"));
+
+  if (elements.length > 0) {
+    const setHeight = (elementSets, isReset) => {
+      for (const matchElements of elementSets) {
+        let maxHeight = 0;
+
+        matchElements.forEach((element) => {
+          element.style.height = "auto";
+        });
+
+        if (!isReset) {
+          matchElements.forEach((element) => {
+            const { offsetHeight } = element;
+
+            if (offsetHeight > maxHeight) {
+              maxHeight = offsetHeight;
+            }
+          });
+
+          matchElements.forEach((element) => {
+            element.style.height = `${maxHeight}px`;
+          });
+        }
+      }
+    };
+
+    const nonBreakpointMap = elements.filter((element) => (
+      !element.dataset.breakpoint
+    )).reduce((init, element) => {
+      const { match_height } = element.dataset;
+
+      if (init[match_height]) {
+        init[match_height].push(element);
+      } else {
+        init[match_height] = [element];
+      }
+
+      return init;
+    }, {});
+
+
+    if (Object.keys(nonBreakpointMap).length > 0) {
+      const nonBreakpointElementSets = Object.values(nonBreakpointMap);
+
+      setHeight(nonBreakpointElementSets);
+
+      window.addEventListener("resize", () => {
+        setNormalHeight(nonBreakpointElementSets);
+      });
+
+      window.addEventListener("orientationchange", () => {
+        setNormalHeight(nonBreakpointElementSets);
+      });
+    }
+
+    const breakpointMap = elements.filter((element) => (
+      element.dataset.breakpoint
+    )).reduce((init, element) => {
+      const { breakpoint, match_height } = element.dataset;
+
+      if (init[breakpoint] && init[breakpoint][match_height]) {
+        init[breakpoint][match_height].push(element);
+      } else {
+        init[breakpoint] = { [match_height]: [element] };
+      }
+
+      return init;
+    }, {});
+
+    if (Object.keys(breakpointMap).length > 0) {
+      Object.entries(breakpointMap).forEach(([breakpoint, elementMap]) => {
+        const resolvedBreakpoint = parseInt(breakpoint);
+
+        const media = window.matchMedia(`only screen and (${
+          resolvedBreakpoint >= 0 ? "min" : "max"
+        }-width: ${
+          resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
+        }px)`);
+
+        const runOnMatch = (media) => {
+          setHeight(Object.values(elementMap), !media.matches);
+        };
+
+        runOnMatch(media);
+
+        window.addEventListener("resize", () => {
+          runOnMatch(media);
+        });
+
+        media.addEventListener("change", runOnMatch);
+      });
+    }
+  }
+};
+
 const initFilters = () => {
   const filterMap = {};
 
@@ -1268,133 +1387,92 @@ const initCookie = (
 };
 
 const initProgressBars = () => {
-  const setLevel = async (
-    source,
-    progressBar,
-    levelTarget,
-    currentLevel,
-    waitTime
-  ) => {
+  const setValue = async (progressBar, targetValue) => {
     const sleep = (waitTime) => new Promise(
-      (resolve) => setTimeout(resolve, waitTime)
+      (resolve) => setTimeout(resolve, parseInt(waitTime) || 250)
     );
 
-    progressBar.style.width = `${levelTarget}%`;
+    const { progress_transition } = progressBar.dataset;
 
-    if (levelTarget > currentLevel) {
-      while (levelTarget > currentLevel) {
-        await sleep(waitTime);
-        source.innerHTML = ++currentLevel;
+    const progressFill = progressBar.querySelector(
+      "[data-progress_target='fill']"
+    );
+
+    const progressValue = progressBar.querySelector(
+      "[data-progress_target='value']"
+    );
+
+    let resolvedTargetValue = parseInt(targetValue);
+    let resolvedCurrentValue = parseInt(progressValue.innerHTML);
+
+    progressFill.style.width = `${resolvedTargetValue}%`;
+
+    if (resolvedTargetValue > resolvedCurrentValue) {
+      while (resolvedTargetValue > resolvedCurrentValue) {
+        await sleep(progress_transition);
+        resolvedCurrentValue++;
+        progressValue.innerHTML = resolvedCurrentValue;
+        progressValue.setAttribute("aria-valuenow", resolvedCurrentValue);
       }
     } else {
-      while (levelTarget < currentLevel) {
-        await sleep(waitTime);
-        source.innerHTML = --currentLevel;
+      while (resolvedTargetValue < resolvedCurrentValue) {
+        await sleep(progress_transition);
+        resolvedCurrentValue--;
+        progressValue.innerHTML = resolvedCurrentValue;
+        progressValue.setAttribute("aria-valuenow", resolvedCurrentValue);
       }
     }
   };
 
-  const triggerProgressSources = document.querySelectorAll(
-    "[data-progress_type='trigger'][data-progress_source]"
+  const triggerSources = document.querySelectorAll(
+    "[data-progress_type='trigger'][data-progress_trigger_source]"
   );
 
-  if (triggerProgressSources.length > 0) {
-    triggerProgressSources.forEach((source) => {
-      const { progress_source } = source.dataset;
+  if (triggerSources.length > 0) {
+    triggerSources.forEach((source) => {
+      source.addEventListener("click", function () {
+        const { progress_trigger_source, progress_valuemax } = this.dataset;
 
-      const progressBar = document.querySelector(
-        `[data-progress_bar="${progress_source}"]`
-      );
+        const progressBar = document.querySelector(
+          `[data-progress_trigger_target='${progress_trigger_source}']`
+        );
 
-      const triggers = document.querySelectorAll(
-        `[data-progress_source="${progress_source}"]`
-      );
-
-      triggers.forEach((trigger) => {
-        trigger.addEventListener("click", function (e) {
-          e.preventDefault();
-
-          const { progress_level } = this.dataset;
-          const levelTarget = parseInt(progress_level);
-          const currentLevel = parseInt(source.innerHTML);
-          const { progress_transition } = progressBar.dataset;
-
-          const waitTime = (
-            parseInt(progress_transition) || 500
-          ) / levelTarget;
-
-          setLevel(
-            source,
-            progressBar,
-            levelTarget,
-            currentLevel,
-            waitTime
-          );
-        });
+        setValue(progressBar, progress_valuemax);
       });
     });
   }
 
-  const loadProgressSources = document.querySelectorAll(
-    "[data-progress_type='load'][data-progress_source]"
-  );
+  const loadSources = document.querySelectorAll("[data-progress_type='load']");
 
-  if (loadProgressSources.length > 0) {
+  if (loadSources.length > 0) {
     const loadProgressBars = () => {
-      const sources = document.querySelectorAll(
-        "[data-progress_type='load'][data-progress_source]"
-      );
+      const sources = document.querySelectorAll("[data-progress_type='load']");
 
       if (sources.length > 0) {
         sources.forEach((source) => {
           const { top, bottom, left, right } = source.getBoundingClientRect();
-          const { innerHeight, innerWidth } = window;
+          const { innerWidth, innerHeight } = window;
 
           if (
             top < innerHeight && bottom > 0 && left < innerWidth && right > 0
           ) {
-            const { progress_source, progress_level } = source.dataset;
-            const levelTarget = parseInt(progress_level);
-            const currentLevel = parseInt(source.innerHTML);
+            const targetValue = source.getAttribute("aria-valuemax");
 
-            const progressBar = document.querySelector(
-              `[data-progress_bar="${progress_source}"]`
-            );
-
-            const { progress_transition } = progressBar.dataset;
-
-            const waitTime = (
-              parseInt(progress_transition) || 500
-            ) / levelTarget;
-
-            setLevel(
-              source,
-              progressBar,
-              levelTarget,
-              currentLevel,
-              waitTime
-            );
-
+            setValue(source, targetValue);
             source.removeAttribute("data-progress_type");
+          } else {
+            window.removeEventListener("scroll", loadProgressBars);
+            window.removeEventListener("resize", loadProgressBars);
+            window.removeEventListener("orientationchange", loadProgressBars);
           }
         });
-      } else {
-        window.removeEventListener("scroll", loadProgressBars);
-        window.removeEventListener("resize", loadProgressBars);
-        window.removeEventListener("orientationchange", loadProgressBars);
       }
     };
 
-    const sources = document.querySelectorAll(
-      "[data-progress_type='load'][data-progress_source]"
-    );
-
-    if (sources.length > 0) {
-      loadProgressBars();
-      window.addEventListener("scroll", loadProgressBars);
-      window.addEventListener("resize", loadProgressBars);
-      window.addEventListener("orientationchange", loadProgressBars);
-    }
+    loadProgressBars();
+    window.addEventListener("scroll", loadProgressBars);
+    window.addEventListener("resize", loadProgressBars);
+    window.addEventListener("orientationchange", loadProgressBars);
   }
 };
 

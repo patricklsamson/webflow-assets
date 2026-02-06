@@ -42,6 +42,12 @@ html.wf-design-mode .wf-slot {
   background-color: transparent;
 }
 
+.w-nav-overlay {
+  display: block !important;
+  height: auto !important;
+  min-height: calc(100vh - var(--_base---element-height--height-nav, 0vh));
+}
+
 .w-dropdown {
   z-index: auto;
 }
