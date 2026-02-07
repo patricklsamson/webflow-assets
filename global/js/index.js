@@ -37,17 +37,13 @@ const initStructuredData = () => {
 
     switch (data_type) {
       case "WebSite":
-        structuredData.url = window.location.href.slice(0, -1);
         structuredData.name = "Patrick Samson";
+        structuredData.url = window.location.href.slice(0, -1);
 
         break;
       case "WebPage":
-        structuredData.url = window.location.href;
         structuredData.name = document.title;
-
-        structuredData.description = document.querySelector(
-          "meta[name='description']"
-        ).content;
+        structuredData.url = window.location.href;
 
         break;
       case "Article":
@@ -56,10 +52,6 @@ const initStructuredData = () => {
         structuredData.headline = document.querySelector(
           "[data-article='headline']"
         ).innerText;
-
-        structuredData.image = document.querySelector(
-          "[data-article='image']"
-        ).src;
 
         const date = new Date(
           document.querySelector("[data-article='date']").innerText
@@ -74,7 +66,6 @@ const initStructuredData = () => {
         }-${day >= 10 ? day : `0${day}`}`
 
         structuredData.datePublished = resolvedDate;
-        structuredData.dateModified = resolvedDate;
 
         structuredData.author = {
           "@type": "Person",
