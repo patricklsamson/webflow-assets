@@ -46,6 +46,7 @@ html.wf-design-mode .wf-slot {
   display: block !important;
   height: auto !important;
   min-height: calc(100vh - var(--_base---element-height--height-nav, 0vh));
+  top: 100% !important;
 }
 
 .w-dropdown {
