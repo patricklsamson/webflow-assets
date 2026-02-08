@@ -1,7 +1,7 @@
 /* FINSWEET GLOBAL STYLES */
 *[tabindex]:focus-visible,
 input[type="file"]:focus-visible {
-  outline: 0.125rem solid var(--border-color--border-focus, #4d65ff);
+  outline: 0.125rem solid var(--base-color-system--field-state-400, #4d65ff);
   outline-offset: 0.125rem;
 }
 
