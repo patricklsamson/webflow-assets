@@ -168,14 +168,14 @@ html.wf-design-mode .button_icon-wrapper {
 [type="checkbox"]:checked + .form_dropdown-item,
 [type="radio"]:checked + .form_dropdown-item {
   color: var(--text-color--text-alternate, #fff);
-  background-color: var(--background-color--background-secondary, #2d62ff);
+  background-color: var(--base-color-system--check-state, #3898ec);
 }
 
 [type="checkbox"]:checked + .form_checkbox-icon,
 [type="radio"]:checked + .form_radio-icon {
   color: var(--text-color--text-alternate, #fff);
-  background-color: var(--background-color--background-secondary, #2d62ff);
-  border-color: var(--border-color--border-secondary, #2d62ff);
+  background-color: var(--base-color-system--check-state, #3898ec);
+  border-color: var(--base-color-system--check-state, #3898ec);
 }
 
 html.wf-design-mode [data-message="loading"].hide,
