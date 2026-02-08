@@ -178,6 +178,10 @@ html.wf-design-mode .button_icon-wrapper {
   border-color: var(--base-color-system--field-state-400, #3898ec);
 }
 
+[type="radio"]:checked + .form_radio-icon {
+  outline-color: var(--base-color-system--field-state-400, #3898ec);
+}
+
 html.wf-design-mode [data-message="loading"].hide,
 html.wf-design-mode [data-field_error].hide {
   display: block !important;
