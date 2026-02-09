@@ -141,7 +141,9 @@ video {
   display: none;
 }
 
-html:not(.wf-design-mode) [data-interaction_state="initial"] {
+html:not(.wf-design-mode) [data-interaction_start="self"],
+html:not(.wf-design-mode) [data-interaction_start="children"] > *,
+html:not(.wf-design-mode) [data-interaction_start="letter"] .gsap_split_letter {
   opacity: 0;
 }
 
@@ -168,7 +170,7 @@ html.wf-design-mode .button_icon-wrapper {
 [type="checkbox"]:checked + .form_dropdown-item,
 [type="radio"]:checked + .form_dropdown-item {
   color: var(--text-color--text-alternate, #fff);
-  background-color: var(--base-color-system--field-state-400, #3898ec);
+  background-color: var(--base-color-system--field-state-500, #4d65ff);
 }
 
 [type="checkbox"]:checked + .form_checkbox-icon,
