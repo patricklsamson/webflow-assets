@@ -46,6 +46,9 @@ html.wf-design-mode .wf-slot {
   display: block !important;
   height: auto !important;
   min-height: calc(100vh - var(--_base---element-height--height-nav, 0vh));
+}
+
+[data-animation="default"] .w-nav-overlay {
   top: 100% !important;
 }
 
