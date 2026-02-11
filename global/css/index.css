@@ -42,16 +42,6 @@ html.wf-design-mode .wf-slot {
   background-color: transparent;
 }
 
-.w-nav-overlay {
-  display: block !important;
-  height: auto !important;
-  min-height: calc(100vh - var(--_base---element-height--height-nav, 100vh));
-}
-
-[data-animation="default"] .w-nav-overlay {
-  top: 100% !important;
-}
-
 .w-dropdown {
   z-index: auto;
 }
@@ -142,6 +132,55 @@ video {
 
 .text-style-1line *:not(*:first-child) {
   display: none;
+}
+
+.show {
+  display: block !important;
+}
+
+.show-large-screen,
+.show-xlarge-screen,
+.show-xxlarge-screen,
+.show-tablet,
+.show-mobile-landscape,
+.show-mobile-portrait {
+  display: none !important;
+}
+
+@media only screen and (min-width: 1280px) {
+  .show-large-screen {
+    display: block !important;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .show-xlarge-screen {
+    display: block !important;
+  }
+}
+
+@media only screen and (min-width: 1920px) {
+  .show-xxlarge-screen {
+    display: block !important;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .show-tablet {
+    display: block !important;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .show-mobile-landscape {
+    display: block !important;
+  }
+}
+
+@media only screen and (max-width: 479px) {
+  .show-mobile-portrait {
+    display: block !important;
+  }
 }
 
 html:not(.wf-design-mode) [data-interaction_start="self"],
