@@ -59,7 +59,7 @@ html.wf-design-mode .wf-slot {
 }
 
 .w-lightbox-backdrop {
-  z-index: var(--_index---index-lightbox-backdrop, 99999999);
+  z-index: var(--_index---index-lightbox-backdrop, 2000);
 }
 
 address {
