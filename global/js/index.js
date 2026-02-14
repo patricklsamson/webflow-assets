@@ -5,17 +5,17 @@ const injectSourceCodes = (sourceCodes) => {
       const domTarget = document[location ? location : "head"];
 
       if (domTarget) {
-        if (type === "stylesheet") {
+        if (type === "script") {
+          const script = document.createElement("script");
+
+          script.setAttribute("src", url);
+          domTarget.appendChild(script);
+        } else {
           const link = document.createElement("link");
 
           link.setAttribute("rel", "stylesheet");
           link.setAttribute("href", url);
           domTarget.appendChild(link);
-        } else {
-          const script = document.createElement("script");
-
-          script.setAttribute("src", url);
-          domTarget.appendChild(script);
         }
       }
     });
@@ -945,52 +945,106 @@ const initResponsiveGsapInteractions = () => {
   }
 };
 
-const initBottomAnchors = (breakpoint = 992) => {
-  const triggers = Array.from(
-    document.querySelectorAll("[data-bottom_href]")
-  ).filter((trigger) => trigger.dataset.bottom_href);
+const initLenis = (config) => {
+  const lenis = new Lenis(config);
 
-  if (triggers.length > 0) {
-    const runOnMatch = (media) => {
-      if (media.matches) {
-        triggers.forEach((trigger) => {
-          trigger.addEventListener("click", function (e) {
-            e.preventDefault();
+  if (gsap && ScrollTrigger) {
+    lenis.on("scroll", ScrollTrigger.update);
 
-            const { bottom_href, bottom_delay } = this.dataset;
-
-            const target = document.querySelector(
-              `[data-bottom_id="${bottom_href}"]`
-            );
-
-            if (target) {
-              setTimeout(() => {
-                window.scrollTo({
-                  top: (
-                    target.getBoundingClientRect().top + window.scrollY
-                  ) - window.innerHeight,
-                  behavior: "smooth",
-                });
-              }, parseInt(bottom_delay) || 0);
-            }
-          });
-        });
-      }
-    };
-
-    const media = window.matchMedia(
-      `only screen and (${breakpoint >= 0 ? "min" : "max"}-width: ${
-        breakpoint >= 0 ? breakpoint : breakpoint * -1
-      }px)`
-    );
-
-    runOnMatch(media);
-
-    window.addEventListener("resize", () => {
-      runOnMatch(media);
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
     });
 
-    media.addEventListener("change", runOnMatch);
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  return lenis;
+};
+
+const initScrollAnchors = () => {
+  const triggers = Array.from(
+    document.querySelectorAll("[data-scroll_href]")
+  ).filter((trigger) => trigger.dataset.scroll_href);
+
+  if (triggers.length > 0) {
+    const setScrollTriggers = (triggers, scrollBottom) => {
+      triggers.forEach((trigger) => {
+        trigger.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const { scroll_href, scroll_delay, scroll_duration } = this.dataset;
+
+          const target = document.querySelector(
+            `[data-scroll_id="${scroll_href}"]`
+          );
+
+          const { top } = target.getBoundingClientRect();
+
+          if (target) {
+            setTimeout(() => {
+              if (typeof lenis !== undefined) {
+                lenis.scrollTo((top + lenis.scroll) - (
+                  scrollBottom ? window.innerHeight : 0
+                ), {
+                  duration: parseInt(scroll_duration) || 1.2
+                });
+              }
+
+              window.scrollTo({
+                top: (top + window.scrollY) - (
+                  scrollBottom ? window.innerHeight : 0
+                ),
+                behavior: "smooth",
+              });
+            }, parseInt(scroll_delay) || 0);
+          }
+        });
+      });
+    };
+
+    const nonBreakpointTriggers = triggers.filter((trigger) => (
+      !trigger.dataset.breakpoint
+    ));
+
+    if (nonBreakpointTriggers.length > 0) {
+      setScrollTriggers(nonBreakpointTriggers);
+    }
+
+    const breakpointMap = triggers.reduce((init, trigger) => {
+      const { scroll_bottom_breakpoint } = trigger.dataset;
+
+      if (init[scroll_bottom_breakpoint]) {
+        init[scroll_bottom_breakpoint].push(trigger);
+      } else {
+        init[scroll_bottom_breakpoint] = [trigger];
+      }
+
+      return init;
+    }, {});
+
+    if (Object.keys(breakpointMap).length > 0) {
+      Object.entries(breakpointMap).forEach(([breakpoint, triggers]) => {
+        const resolvedBreakpoint = parseInt(breakpoint);
+
+        const media = window.matchMedia(`only screen and (${
+          resolvedBreakpoint >= 0 ? "min" : "max"
+        }-width: ${
+          resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
+        }px)`);
+
+        const runOnMatch = (media) => {
+          setScrollTriggers(triggers, media.matches);
+        };
+
+        runOnMatch(media);
+
+        window.addEventListener("resize", () => {
+          runOnMatch(media);
+        });
+
+        media.addEventListener("change", runOnMatch);
+      });
+    }
   }
 };
 

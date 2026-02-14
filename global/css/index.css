@@ -1,4 +1,3 @@
-/* BASE GLOBAL STYLES */
 .w-webflow-badge {
   display: none !important;
 }
@@ -82,11 +81,6 @@ nav:not(.w-dropdown-list) .link,
 footer .link,
 .text-style-none .link {
   text-decoration: none;
-}
-
-a.w-inline-block {
-  display: inline-flex;
-  vertical-align: middle;
 }
 
 a svg:not(.retain-color) path[fill],
@@ -189,12 +183,6 @@ html:not(.wf-design-mode) [data-interaction_start="letter"] .gsap_split_letter {
   opacity: 0;
 }
 
-html.wf-design-mode .button_icon-wrapper {
-  width: 1rem;
-  height: 1rem;
-  overflow: hidden;
-}
-
 [class*="icon"] {
   flex: 0 0 auto;
 }
@@ -231,13 +219,14 @@ html.wf-design-mode [data-field_error].hide {
   display: block !important;
 }
 
-[class*="generic-image"][class*="w-variant"] *,
-[class*="zoomer"][class*="w-variant"] {
-  width: inherit;
-  height: inherit;
+html.wf-design-mode .button_icon-wrapper {
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
 }
 
-[class*="generic-image"][class*="w-variant"] * {
+[class*="generic-image"][class*="w-variant"] *,
+[class*="zoomer"][class*="w-variant"] {
   width: inherit;
   height: inherit;
 }
@@ -533,4 +522,3 @@ html.wf-design-mode [data-field_error].hide {
     order: 12;
   }
 }
-/* BASE GLOBAL STYLES */
