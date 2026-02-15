@@ -192,6 +192,11 @@ html:not(.wf-design-mode) [data-interaction_start="letter"] .gsap_split_letter {
   height: 100%;
 }
 
+html.wf-design-mode .icon-rich-text {
+  width: 1em;
+  height: 1em;
+}
+
 .label-required:after {
   content: " *";
   color: var(--text-color--text-error-light, #dc3545);
@@ -217,12 +222,6 @@ html:not(.wf-design-mode) [data-interaction_start="letter"] .gsap_split_letter {
 html.wf-design-mode [data-message="loading"].hide,
 html.wf-design-mode [data-field_error].hide {
   display: block !important;
-}
-
-html.wf-design-mode .button_icon-wrapper {
-  width: 1em;
-  height: 1em;
-  overflow: hidden;
 }
 
 [class*="generic-image"][class*="w-variant"] *,
