@@ -978,24 +978,43 @@ const initScrollAnchors = () => {
             `[data-scroll_id="${scroll_href}"]`
           );
 
-          const { top } = target.getBoundingClientRect();
-
           if (target) {
+            const { top } = target.getBoundingClientRect();
+
             setTimeout(() => {
-              if (typeof lenis !== undefined) {
+              if (typeof lenis === undefined) {
+                window.scrollTo({
+                  top: (top + window.scrollY) - (
+                    scrollBottom ? window.innerHeight : 0
+                  ),
+                  behavior: "smooth",
+                });
+              } else {
                 lenis.scrollTo((top + lenis.scroll) - (
                   scrollBottom ? window.innerHeight : 0
                 ), {
                   duration: parseInt(scroll_duration) || 1.2
                 });
               }
-
-              window.scrollTo({
-                top: (top + window.scrollY) - (
-                  scrollBottom ? window.innerHeight : 0
-                ),
-                behavior: "smooth",
-              });
+            }, parseInt(scroll_delay) || 0);
+          } else {
+            setTimeout(() => {
+              if (typeof lenis === undefined) {
+                window.scrollTo({
+                  top: (
+                    scroll_href === "top"
+                      ? 0
+                      : document.documentElement.scrollHeight
+                  ),
+                  behavior: "smooth",
+                });
+              } else {
+                lenis.scrollTo((
+                  scroll_href === "top" ? 0 : lenis.limit
+                ), {
+                  duration: parseInt(scroll_duration) || 1.2
+                });
+              }
             }, parseInt(scroll_delay) || 0);
           }
         });
