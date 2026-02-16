@@ -117,32 +117,34 @@ const initAria = () => {
   }
 };
 
-const initMatchHeight = () => {
+const initMatchHeight = (delay = 100) => {
   const elements = Array.from(document.querySelectorAll("[data-match_height]"));
 
   if (elements.length > 0) {
     const setHeight = (elementSets, isReset) => {
-      for (const matchElements of elementSets) {
-        let maxHeight = 0;
-
-        matchElements.forEach((element) => {
-          element.style.height = "auto";
-        });
-
-        if (!isReset) {
-          matchElements.forEach((element) => {
-            const { offsetHeight } = element;
-
-            if (offsetHeight > maxHeight) {
-              maxHeight = offsetHeight;
-            }
-          });
+      setTimeout(() => {
+        for (const matchElements of elementSets) {
+          let maxHeight = 0;
 
           matchElements.forEach((element) => {
-            element.style.height = `${maxHeight}px`;
+            element.style.height = "auto";
           });
+
+          if (!isReset) {
+            matchElements.forEach((element) => {
+              const { offsetHeight } = element;
+
+              if (offsetHeight > maxHeight) {
+                maxHeight = offsetHeight;
+              }
+            });
+
+            matchElements.forEach((element) => {
+              element.style.height = `${maxHeight}px`;
+            });
+          }
         }
-      }
+      }, delay);
     };
 
     const nonBreakpointMap = elements.filter((element) => (
