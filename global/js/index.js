@@ -100,7 +100,7 @@ const initAria = () => {
 
   if (ariaElements.length > 0) {
     ariaElements.forEach((element) => {
-      const { aria } = element.dataset;
+      const { aria, aria_collapse_target } = element.dataset;
 
       if (aria === "expansion") {
         element.addEventListener("click", function (e) {
@@ -112,6 +112,17 @@ const initAria = () => {
 
           this.setAttribute("aria-expanded", expansion);
         });
+
+        if (aria_collapse_target) {
+          const collapser = document.querySelector(
+            `[data-aria_collapse_source="${aria_collapse_target}"]`
+          );
+
+          collapser.addEventListener("click", (e) => {
+            e.preventDefault();
+            element.setAttribute("aria-expanded", "false");
+          });
+        }
       }
     });
   }
@@ -1163,6 +1174,44 @@ const initSlider = (identifier, config, effectConfigSet) => {
         ? { ...config.scrollbar, ...scrollbarConfig }
         : scrollbarConfig;
     }
+  }
+
+  if (config.loop) {
+    const currentBeforeInit = config.on && config.on.beforeInit
+      ? config.on.beforeInit
+      : null;
+
+    config.on = {
+      ...config.on,
+      beforeInit: (swiper) => {
+        const { el, wrapperEl } = swiper;
+
+        if (!el.classList.contains("init-slider-loop")) {
+          const slides = Array.from(wrapperEl.children);
+
+          slides.forEach((slide) => {
+            const clone = slide.cloneNode(true);
+
+            wrapperEl.appendChild(clone);
+          });
+
+          const webflow = window.Webflow;
+
+          if (webflow) {
+            webflow.destroy();
+            webflow.ready();
+            webflow.require("ix2") && webflow.require("ix2").init();
+            document.dispatchEvent(new Event("readystatechange"));
+          }
+
+          el.classList.add("init-slider-loop");
+        }
+
+        if (currentBeforeInit) {
+          currentBeforeInit(swiper);
+        }
+      }
+    };
   }
 
   const handleInitSliders = () => {
