@@ -179,6 +179,8 @@ video {
 
 html:not(.wf-design-mode) [data-interaction_start="self"],
 html:not(.wf-design-mode) [data-interaction_start="children"] > *,
+html:not(.wf-design-mode) [data-interaction_start="line"] .gsap_split_line,
+html:not(.wf-design-mode) [data-interaction_start="word"] .gsap_split_word,
 html:not(.wf-design-mode) [data-interaction_start="letter"] .gsap_split_letter {
   opacity: 0;
 }
