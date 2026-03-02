@@ -1898,7 +1898,7 @@ const resetWebflow = (version = "ix2") => {
   if (webflow) {
     webflow.destroy();
     webflow.ready();
-    webflow.require(version).init();
+    webflow.require(version) && webflow.require(version).init();
     document.dispatchEvent(new Event("readystatechange"));
   }
 };
@@ -1910,7 +1910,7 @@ const resetWebflowAfterWized = (onEndRequests, onceRequests) => {
     if (webflow) {
       webflow.destroy();
       webflow.ready();
-      webflow.require(version).init();
+      webflow.require(version) && webflow.require(version).init();
       document.dispatchEvent(new Event("readystatechange"));
     }
   };
