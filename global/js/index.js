@@ -971,7 +971,10 @@ const initLenis = (config) => {
     gsap.ticker.lagSmoothing(0);
   }
 
-  return lenis;
+  window.constants = {
+    ...window.constants,
+    lenis
+  }
 };
 
 const initScrollAnchors = () => {
@@ -995,24 +998,34 @@ const initScrollAnchors = () => {
             const { top } = target.getBoundingClientRect();
 
             setTimeout(() => {
-              if (typeof lenis === undefined) {
+              const { lenis } = window.constants || {};
+
+              if (lenis) {
+                lenis.scrollTo((top + lenis.scroll) - (
+                  scrollBottom ? window.innerHeight : 0
+                ), {
+                  duration: parseInt(scroll_duration) || 1.2
+                });
+              } else {
                 window.scrollTo({
                   top: (top + window.scrollY) - (
                     scrollBottom ? window.innerHeight : 0
                   ),
                   behavior: "smooth",
                 });
-              } else {
-                lenis.scrollTo((top + lenis.scroll) - (
-                  scrollBottom ? window.innerHeight : 0
-                ), {
-                  duration: parseInt(scroll_duration) || 1.2
-                });
               }
             }, parseInt(scroll_delay) || 0);
           } else {
             setTimeout(() => {
-              if (typeof lenis === undefined) {
+              const { lenis } = window.constants || {};
+
+              if (lenis) {
+                lenis.scrollTo((
+                  scroll_href === "top" ? 0 : lenis.limit
+                ), {
+                  duration: parseInt(scroll_duration) || 1.2
+                });
+              } else {
                 window.scrollTo({
                   top: (
                     scroll_href === "top"
@@ -1020,12 +1033,6 @@ const initScrollAnchors = () => {
                       : document.documentElement.scrollHeight
                   ),
                   behavior: "smooth",
-                });
-              } else {
-                lenis.scrollTo((
-                  scroll_href === "top" ? 0 : lenis.limit
-                ), {
-                  duration: parseInt(scroll_duration) || 1.2
                 });
               }
             }, parseInt(scroll_delay) || 0);
@@ -1892,26 +1899,55 @@ const runAfterFinsweetV2 = (callback) => {
   callback(window.FinsweetAttributes);
 };
 
-const resetWebflow = (version = "ix2") => {
+const resetWebflow = (version, callback) => {
   const webflow = window.Webflow;
 
   if (webflow) {
     webflow.destroy();
     webflow.ready();
-    webflow.require(version) && webflow.require(version).init();
+
+    if (version) {
+      const setVersion = webflow.require(version);
+
+      if (setVersion.init) {
+        setVersion.init();
+      }
+    }
+
     document.dispatchEvent(new Event("readystatechange"));
+
+    if (callback) {
+      callback();
+    }
   }
 };
 
-const resetWebflowAfterWized = (onEndRequests, onceRequests) => {
-  const resetWebflow = (version = "ix2") => {
+const resetWebflowAfterWized = (
+  onEndRequests,
+  onceRequests,
+  version,
+  callback
+) => {
+  const resetWebflow = () => {
     const webflow = window.Webflow;
 
     if (webflow) {
       webflow.destroy();
       webflow.ready();
-      webflow.require(version) && webflow.require(version).init();
+
+      if (version) {
+        const setVersion = webflow.require(version);
+
+        if (setVersion.init) {
+          setVersion.init();
+        }
+      }
+
       document.dispatchEvent(new Event("readystatechange"));
+
+      if (callback) {
+        callback();
+      }
     }
   };
 
