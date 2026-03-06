@@ -128,105 +128,6 @@ const initAria = () => {
   }
 };
 
-const initMatchHeight = (delay = 100) => {
-  const elements = Array.from(document.querySelectorAll("[data-match_height]"));
-
-  if (elements.length > 0) {
-    const setHeight = (elementSets, isReset) => {
-      setTimeout(() => {
-        for (const matchElements of elementSets) {
-          let maxHeight = 0;
-
-          matchElements.forEach((element) => {
-            element.style.height = "auto";
-          });
-
-          if (!isReset) {
-            matchElements.forEach((element) => {
-              const { offsetHeight } = element;
-
-              if (offsetHeight > maxHeight) {
-                maxHeight = offsetHeight;
-              }
-            });
-
-            matchElements.forEach((element) => {
-              element.style.height = `${maxHeight}px`;
-            });
-          }
-        }
-      }, delay);
-    };
-
-    const nonBreakpointMap = elements.filter((element) => (
-      !element.dataset.breakpoint
-    )).reduce((init, element) => {
-      const { match_height } = element.dataset;
-
-      if (init[match_height]) {
-        init[match_height].push(element);
-      } else {
-        init[match_height] = [element];
-      }
-
-      return init;
-    }, {});
-
-
-    if (Object.keys(nonBreakpointMap).length > 0) {
-      const nonBreakpointElementSets = Object.values(nonBreakpointMap);
-
-      setHeight(nonBreakpointElementSets);
-
-      window.addEventListener("resize", () => {
-        setNormalHeight(nonBreakpointElementSets);
-      });
-
-      window.addEventListener("orientationchange", () => {
-        setNormalHeight(nonBreakpointElementSets);
-      });
-    }
-
-    const breakpointMap = elements.filter((element) => (
-      element.dataset.breakpoint
-    )).reduce((init, element) => {
-      const { breakpoint, match_height } = element.dataset;
-
-      if (init[breakpoint] && init[breakpoint][match_height]) {
-        init[breakpoint][match_height].push(element);
-      } else {
-        init[breakpoint] = { [match_height]: [element] };
-      }
-
-      return init;
-    }, {});
-
-    if (Object.keys(breakpointMap).length > 0) {
-      Object.entries(breakpointMap).forEach(([breakpoint, elementMap]) => {
-        const resolvedBreakpoint = parseInt(breakpoint);
-
-        const media = window.matchMedia(`only screen and (${
-          resolvedBreakpoint >= 0 ? "min" : "max"
-        }-width: ${
-          resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
-        }px)`);
-
-        const runOnMatch = (media) => {
-          setHeight(Object.values(elementMap), !media.matches);
-        };
-
-        runOnMatch(media);
-
-        window.addEventListener("resize", () => {
-          runOnMatch(media);
-        });
-
-        media.addEventListener("change", runOnMatch);
-      });
-    }
-  }
-};
-
 const initFilters = () => {
   const filterMap = {};
 
@@ -721,6 +622,127 @@ const initMediaMatch = (breakpoint, onMatch, onUnmatch) => {
   media.addEventListener("change", runOnMatch);
 };
 
+const initMatchHeight = (delay = 100) => {
+  const elements = Array.from(document.querySelectorAll("[data-match_height]"));
+
+  if (elements.length > 0) {
+    const setHeight = (elementSets, isReset) => {
+      setTimeout(() => {
+        for (const matchElements of elementSets) {
+          let maxHeight = 0;
+
+          matchElements.forEach((element) => {
+            element.style.height = "auto";
+          });
+
+          if (!isReset) {
+            matchElements.forEach((element) => {
+              const { offsetHeight } = element;
+
+              if (offsetHeight > maxHeight) {
+                maxHeight = offsetHeight;
+              }
+            });
+
+            matchElements.forEach((element) => {
+              element.style.height = `${maxHeight}px`;
+            });
+          }
+        }
+      }, delay);
+    };
+
+    const nonBreakpointMap = elements.filter((element) => (
+      !element.dataset.match_height_breakpoint_min
+    )).reduce((init, element) => {
+      const { match_height } = element.dataset;
+
+      if (init[match_height]) {
+        init[match_height].push(element);
+      } else {
+        init[match_height] = [element];
+      }
+
+      return init;
+    }, {});
+
+
+    if (Object.keys(nonBreakpointMap).length > 0) {
+      const nonBreakpointElementSets = Object.values(nonBreakpointMap);
+
+      setHeight(nonBreakpointElementSets);
+
+      window.addEventListener("resize", () => {
+        setNormalHeight(nonBreakpointElementSets);
+      });
+
+      window.addEventListener("orientationchange", () => {
+        setNormalHeight(nonBreakpointElementSets);
+      });
+    }
+
+    const breakpointMap = elements.filter((element) => (
+      element.dataset.match_height_breakpoint_min
+    )).reduce((init, element) => {
+      const {
+        match_height,
+        match_height_breakpoint_min,
+        match_height_breakpoint_max
+      } = element.dataset;
+
+      const breakpoint = match_height_breakpoint_max
+        ? `${match_height_breakpoint_min}|${match_height_breakpoint_max}`
+        : match_height_breakpoint_min;
+
+      if (init[breakpoint] && init[breakpoint][match_height]) {
+        init[breakpoint][match_height].push(element);
+      } else {
+        init[breakpoint] = { [match_height]: [element] };
+      }
+
+      return init;
+    }, {});
+
+    if (Object.keys(breakpointMap).length > 0) {
+      Object.entries(breakpointMap).forEach(([breakpoint, elementMap]) => {
+        const breakpointSet = breakpoint.split("|");
+        const resolvedBreakpointMin = parseInt(breakpointSet[0]);
+        const resolvedBreakpointMax = parseInt(breakpointSet[1]);
+
+        const media = window.matchMedia(`only screen and (${
+          resolvedBreakpointMin >= 0 ? "min" : "max"
+        }-width: ${
+          resolvedBreakpointMin >= 0
+            ? resolvedBreakpointMin
+            : resolvedBreakpointMin * -1
+        }px)${
+          resolvedBreakpointMax
+            ? ` and (${
+              resolvedBreakpointMax >= 0 ? "min" : "max"
+            }-width: ${
+                resolvedBreakpointMax >= 0
+              ? resolvedBreakpointMax
+              : resolvedBreakpointMax * -1
+            } px)`
+            : ""
+        }`);
+
+        const runOnMatch = (media) => {
+          setHeight(Object.values(elementMap), !media.matches);
+        };
+
+        runOnMatch(media);
+
+        window.addEventListener("resize", () => {
+          runOnMatch(media);
+        });
+
+        media.addEventListener("change", runOnMatch);
+      });
+    }
+  }
+};
+
 const initMasonry = (identifier, configSet) => {
   const resolveConfig = (config, configIndex) => {
     config.container = identifier;
@@ -750,6 +772,8 @@ const initMasonry = (identifier, configSet) => {
 
     return config;
   };
+
+  const events = {};
 
   const handleInitMasonries = () => {
     const masonries = [];
@@ -785,22 +809,29 @@ const initMasonry = (identifier, configSet) => {
 
         runOnMatch(media);
 
-        window.addEventListener("resize", () => {
-          runOnMatch(media);
-        });
+        if (!events[breakpoint]) {
+          window.addEventListener("resize", () => {
+            runOnMatch(media);
+          });
 
-        media.addEventListener("change", runOnMatch);
+          media.addEventListener("change", runOnMatch);
+          events[breakpoint] = runOnMatch;
+        }
       }
     }
 
     return masonries;
   };
 
-  const { dataset: { breakpoint } } = document.querySelector(identifier);
+  const {
+    dataset: { masonry_breakpoint_min, masonry_breakpoint_max }
+  } = document.querySelector(identifier);
+
   let masonries = null;
 
-  if (breakpoint) {
-    const resolvedBreakpoint = parseInt(breakpoint);
+  if (masonry_breakpoint_min) {
+    const resolvedBreakpointMin = parseInt(masonry_breakpoint_min);
+    const resolvedBreakpointMax = parseInt(masonry_breakpoint_min);
 
     const initOnMatch = (media) => {
       if (media.matches && !masonries) {
@@ -814,9 +845,19 @@ const initMasonry = (identifier, configSet) => {
     };
 
     const media = window.matchMedia(
-      `only screen and (${resolvedBreakpoint >= 0 ? "min" : "max"}-width: ${
+      `only screen and (${resolvedBreakpointMin >= 0 ? "min" : "max"}-width: ${
         resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
-      }px)`
+      }px)${
+        resolvedBreakpointMax
+          ? ` and (${
+            resolvedBreakpointMax >= 0 ? "min" : "max"
+          }-width: ${
+            resolvedBreakpointMax >= 0
+              ? resolvedBreakpointMax
+              : resolvedBreakpointMax * -1
+          }px)`
+          : ""
+      }`
     );
 
     initOnMatch(media);
@@ -910,12 +951,19 @@ const initResponsiveGsapInteractions = () => {
   ).filter((element) => (
     Object.keys(element.dataset).some((key) => (
       key.includes("interaction_")
-    )) && element.dataset.breakpoint
+    )) && element.dataset.interaction_breakpoint_min
   ));
 
   if (interactionElements.length > 0) {
     const interactionMap = interactionElements.reduce((init, element) => {
-      const { breakpoint } = element.dataset;
+      const {
+        interaction_breakpoint_min,
+        interaction_breakpoint_max
+      } = element.dataset;
+
+      const breakpoint = interaction_breakpoint_max
+        ? `${interaction_breakpoint_min}|${interaction_breakpoint_max}`
+        : interaction_breakpoint_min;
 
       if (init[breakpoint]) {
         init[breakpoint].push(element);
@@ -927,13 +975,27 @@ const initResponsiveGsapInteractions = () => {
     }, {});
 
     Object.entries(interactionMap).forEach(([breakpoint, elements]) => {
-      const resolvedBreakpoint = parseInt(breakpoint);
+      const breakpointSet = breakpoint.split("|");
+      const resolvedBreakpointMin = parseInt(breakpointSet[0]);
+      const resolvedBreakpointMax = parseInt(breakpointSet[1]);
 
       const media = window.matchMedia(`only screen and (${
-        resolvedBreakpoint >= 0 ? "min" : "max"
+        resolvedBreakpointMin >= 0 ? "min" : "max"
       }-width: ${
-        resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
-      }px)`);
+        resolvedBreakpointMin >= 0
+          ? resolvedBreakpointMin
+          : resolvedBreakpointMin * -1
+      }px)${
+        resolvedBreakpointMax
+          ? ` and (${
+            resolvedBreakpointMax >= 0 ? "min" : "max"
+          }-width: ${
+            resolvedBreakpointMax >= 0
+              ? resolvedBreakpointMax
+              : resolvedBreakpointMax * -1
+          }px)`
+          : ""
+      }`);
 
       const runOnMatch = (media) => {
         if (!media.matches) {
@@ -983,66 +1045,69 @@ const initScrollAnchors = () => {
   ).filter((trigger) => trigger.dataset.scroll_href);
 
   if (triggers.length > 0) {
+    function scrollPage(e) {
+      e.preventDefault();
+
+      const { scroll_href, scroll_delay, scroll_duration } = this.dataset;
+
+      const target = document.querySelector(
+        `[data-scroll_id="${scroll_href}"]`
+      );
+
+      if (target) {
+        const { top } = target.getBoundingClientRect();
+
+        setTimeout(() => {
+          const { lenis } = window.constants || {};
+
+          if (lenis) {
+            lenis.scrollTo((top + lenis.scroll) - (
+              scrollBottom ? window.innerHeight : 0
+            ), {
+              duration: parseInt(scroll_duration) || 1.2
+            });
+          } else {
+            window.scrollTo({
+              top: (top + window.scrollY) - (
+                scrollBottom ? window.innerHeight : 0
+              ),
+              behavior: "smooth",
+            });
+          }
+        }, parseInt(scroll_delay) || 0);
+      } else {
+        setTimeout(() => {
+          const { lenis } = window.constants || {};
+
+          if (lenis) {
+            lenis.scrollTo((
+              scroll_href === "top" ? 0 : lenis.limit
+            ), {
+              duration: parseInt(scroll_duration) || 1.2
+            });
+          } else {
+            window.scrollTo({
+              top: (
+                scroll_href === "top"
+                  ? 0
+                  : document.documentElement.scrollHeight
+              ),
+              behavior: "smooth",
+            });
+          }
+        }, parseInt(scroll_delay) || 0);
+      }
+    }
+
     const setScrollTriggers = (triggers, scrollBottom) => {
       triggers.forEach((trigger) => {
-        trigger.addEventListener("click", function (e) {
-          e.preventDefault();
-
-          const { scroll_href, scroll_delay, scroll_duration } = this.dataset;
-
-          const target = document.querySelector(
-            `[data-scroll_id="${scroll_href}"]`
-          );
-
-          if (target) {
-            const { top } = target.getBoundingClientRect();
-
-            setTimeout(() => {
-              const { lenis } = window.constants || {};
-
-              if (lenis) {
-                lenis.scrollTo((top + lenis.scroll) - (
-                  scrollBottom ? window.innerHeight : 0
-                ), {
-                  duration: parseInt(scroll_duration) || 1.2
-                });
-              } else {
-                window.scrollTo({
-                  top: (top + window.scrollY) - (
-                    scrollBottom ? window.innerHeight : 0
-                  ),
-                  behavior: "smooth",
-                });
-              }
-            }, parseInt(scroll_delay) || 0);
-          } else {
-            setTimeout(() => {
-              const { lenis } = window.constants || {};
-
-              if (lenis) {
-                lenis.scrollTo((
-                  scroll_href === "top" ? 0 : lenis.limit
-                ), {
-                  duration: parseInt(scroll_duration) || 1.2
-                });
-              } else {
-                window.scrollTo({
-                  top: (
-                    scroll_href === "top"
-                      ? 0
-                      : document.documentElement.scrollHeight
-                  ),
-                  behavior: "smooth",
-                });
-              }
-            }, parseInt(scroll_delay) || 0);
-          }
-        });
+        trigger.removeEventListener("click", scrollPage);
+        trigger.addEventListener("click", scrollPage);
       });
     };
 
     const nonBreakpointTriggers = triggers.filter((trigger) => (
-      !trigger.dataset.breakpoint
+      !trigger.dataset.scroll_breakpoint_min
     ));
 
     if (nonBreakpointTriggers.length > 0) {
@@ -1050,12 +1115,19 @@ const initScrollAnchors = () => {
     }
 
     const breakpointMap = triggers.reduce((init, trigger) => {
-      const { scroll_bottom_breakpoint } = trigger.dataset;
+      const {
+        scroll_breakpoint_min,
+        scroll_breakpoint_max
+      } = trigger.dataset;
 
-      if (init[scroll_bottom_breakpoint]) {
-        init[scroll_bottom_breakpoint].push(trigger);
+      const breakpoint = scroll_breakpoint_max
+        ? `${scroll_breakpoint_min}|${scroll_breakpoint_max}`
+        : scroll_breakpoint_min;
+
+      if (init[breakpoint]) {
+        init[breakpoint].push(trigger);
       } else {
-        init[scroll_bottom_breakpoint] = [trigger];
+        init[breakpoint] = [trigger];
       }
 
       return init;
@@ -1063,13 +1135,27 @@ const initScrollAnchors = () => {
 
     if (Object.keys(breakpointMap).length > 0) {
       Object.entries(breakpointMap).forEach(([breakpoint, triggers]) => {
-        const resolvedBreakpoint = parseInt(breakpoint);
+        const breakpointSet = breakpoint.split("|");
+        const resolvedBreakpointMin = parseInt(breakpointSet[0]);
+        const resolvedBreakpointMax = parseInt(breakpointSet[1]);
 
         const media = window.matchMedia(`only screen and (${
-          resolvedBreakpoint >= 0 ? "min" : "max"
+          resolvedBreakpointMin >= 0 ? "min" : "max"
         }-width: ${
-          resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
-        }px)`);
+          resolvedBreakpointMin >= 0
+            ? resolvedBreakpointMin
+            : resolvedBreakpointMin * -1
+        }px)${
+          resolvedBreakpointMax
+            ? ` and (${
+              resolvedBreakpointMax >= 0 ? "min" : "max"
+            }-width: ${
+              resolvedBreakpointMax >= 0
+                ? resolvedBreakpointMax
+                : resolvedBreakpointMax * -1
+            }px)`
+            : ""
+        }`);
 
         const runOnMatch = (media) => {
           setScrollTriggers(triggers, media.matches);
@@ -1089,7 +1175,11 @@ const initScrollAnchors = () => {
 
 const initSlider = (identifier, config, effectConfigSet) => {
   const sliderElement = document.querySelector(identifier);
-  const { parentNode, dataset: { breakpoint } } = sliderElement;
+
+  const {
+    parentNode,
+    dataset: { slider_breakpoint_min, slider_breakpoint_max }
+  } = sliderElement;
 
   if (sliderElement.classList.contains("w-dyn-list")) {
     const sliderWrapper = sliderElement.querySelector(".swiper-wrapper");
@@ -1196,18 +1286,35 @@ const initSlider = (identifier, config, effectConfigSet) => {
         if (!el.classList.contains("init-slider-loop")) {
           const slides = Array.from(wrapperEl.children);
 
-          slides.forEach((slide) => {
-            const clone = slide.cloneNode(true);
+          const slidesWidth = slides.reduce((init, slide) => (
+            init + slide.offsetWidth
+          ), 0);
 
-            wrapperEl.appendChild(clone);
-          });
+          const sliderWidth = el.offsetWidth * 2;
+          let currentWidth = slidesWidth;
+
+          while (sliderWidth > currentWidth) {
+            slides.forEach((slide) => {
+              const clone = slide.cloneNode(true);
+
+              wrapperEl.appendChild(clone);
+            });
+
+            currentWidth += slidesWidth;
+          }
 
           const webflow = window.Webflow;
 
           if (webflow) {
             webflow.destroy();
             webflow.ready();
-            webflow.require("ix2") && webflow.require("ix2").init();
+
+            const setVersion = webflow.require("ix2");
+
+            if (setVersion && setVersion.init) {
+              setVersion.init();
+            }
+
             document.dispatchEvent(new Event("readystatechange"));
           }
 
@@ -1220,6 +1327,8 @@ const initSlider = (identifier, config, effectConfigSet) => {
       }
     };
   }
+
+  const events = {};
 
   const handleInitSliders = () => {
     const sliders = [];
@@ -1253,11 +1362,14 @@ const initSlider = (identifier, config, effectConfigSet) => {
 
         runOnMatch(media);
 
-        window.addEventListener("resize", () => {
-          runOnMatch(media);
-        });
+        if (!events[breakpoint]) {
+          window.addEventListener("resize", () => {
+            runOnMatch(media);
+          });
 
-        media.addEventListener("change", runOnMatch);
+          media.addEventListener("change", runOnMatch);
+          events[breakpoint] = runOnMatch;
+        }
       }
     } else {
       const slider = new Swiper(identifier, config);
@@ -1270,8 +1382,9 @@ const initSlider = (identifier, config, effectConfigSet) => {
 
   let sliders = null;
 
-  if (breakpoint) {
-    const resolvedBreakpoint = parseInt(breakpoint);
+  if (slider_breakpoint_min) {
+    const resolvedBreakpointMin = parseInt(slider_breakpoint_min);
+    const resolvedBreakpointMax = parseInt(slider_breakpoint_max);
 
     const initOnMatch = (media) => {
       if (media.matches && !sliders) {
@@ -1285,9 +1398,21 @@ const initSlider = (identifier, config, effectConfigSet) => {
     };
 
     const media = window.matchMedia(
-      `only screen and (${resolvedBreakpoint >= 0 ? "min" : "max"}-width: ${
-        resolvedBreakpoint >= 0 ? resolvedBreakpoint : resolvedBreakpoint * -1
-      }px)`
+      `only screen and (${resolvedBreakpointMin >= 0 ? "min" : "max"}-width: ${
+        resolvedBreakpointMin >= 0
+          ? resolvedBreakpointMin
+          : resolvedBreakpointMin * -1
+      }px)${
+        resolvedBreakpointMax
+          ? ` and (${
+            resolvedBreakpointMax >= 0 ? "min" : "max"
+          }-width: ${
+            resolvedBreakpointMax >= 0
+              ? resolvedBreakpointMax
+              : resolvedBreakpointMax * -1
+          }px)`
+          : ""
+      }`
     );
 
     initOnMatch(media);
@@ -1909,7 +2034,7 @@ const resetWebflow = (version, callback) => {
     if (version) {
       const setVersion = webflow.require(version);
 
-      if (setVersion.init) {
+      if (setVersion && setVersion.init) {
         setVersion.init();
       }
     }
@@ -1938,7 +2063,7 @@ const resetWebflowAfterWized = (
       if (version) {
         const setVersion = webflow.require(version);
 
-        if (setVersion.init) {
+        if (setVersion && setVersion.init) {
           setVersion.init();
         }
       }
